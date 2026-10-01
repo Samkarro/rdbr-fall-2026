@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import "./styles/header.styles.css";
+import GlobalSearch from "./search";
 
 const placeholderUser = {
   username: "Jane Doe",
@@ -75,7 +76,7 @@ export default function KinoHeader() {
           <p className="header-text">SESSIONS</p>
         </div>
         <div className="header-components-actions-container">
-          {/* TODO: Separate search bar component */}
+          <GlobalSearch></GlobalSearch>
           <div className="header-components-auth-buttons">
             {/* TODO: properly handle null value - to avoid flashing before promise resolves */}
             {!isLoggedIn ? LoggedOutButtons() : LoggedInButtons()}

@@ -17,6 +17,12 @@
   letter-spacing: 6%;
 }
 
+.header-components-actions-container {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
 .header-components-logged-out {
   display: flex;
   gap: 12px;
