@@ -1,0 +1,37 @@
+.header-search-container {
+  width: 380px;
+  height: 41px;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 4;
+  border-radius: 40px;
+  background-color: var(--tint-white);
+}
+
+.search-icon {
+  height: 14px;
+  width: 14px;
+}
+
+.header-search {
+  height: 18px;
+  width: 100%;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: Archivo;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--text-primary);
+  overflow: cover;
+}
+
+.header-search::placeholder {
+  color: var(--text-primary);
+  opacity: 1;
+}
+
+.header-search:focus::placeholder {
+  color: transparent;
+}
