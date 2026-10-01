@@ -1,0 +1,23 @@
+.header-components-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 0px 60px;
+}
+
+.header-components-logos-container {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.header-text {
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 6%;
+}
+
+.header-components-logged-out {
+  display: flex;
+  gap: 12px;
+}

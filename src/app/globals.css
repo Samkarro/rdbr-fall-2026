@@ -6,6 +6,7 @@
   --bg-card: #1e2031;
   --bg-raised: #2a2c3d;
   --color-red: #ec3013;
+  --color-red-hover: rgb(196, 42, 18);
   --color-orange: #e27e04;
   --color-green: #4ade80;
   --tint-white: #ffffff1a;
@@ -64,4 +65,44 @@ header {
 
   padding-top: 30px;
   padding-bottom: 40px;
+}
+
+.clickable:hover {
+  cursor: pointer;
+}
+
+.disabled:hover {
+  cursor: not-allowed;
+}
+
+/* Custom Components */
+
+.custom-button-large {
+  padding: 13px 22px;
+  border-radius: 30px;
+  border: none;
+  background: none;
+  font-family: Archivo;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.red-button {
+  background-color: var(--color-red);
+  color: var(--text-primary);
+  transition: background-color 200ms ease;
+}
+
+.red-button:hover {
+  background-color: var(--color-red-hover);
+}
+
+.white-button {
+  background-color: var(--text-primary);
+  color: var(--bg-page);
+  transition: background-color 200ms ease;
+}
+
+.white-button:hover {
+  background-color: var(--text-secondary);
 }
