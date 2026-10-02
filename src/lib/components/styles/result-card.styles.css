@@ -1,0 +1,50 @@
+.result-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+
+.result-card:hover {
+  background-color: var(--tint-white);
+}
+
+.result-card-movie-poster {
+  height: 56px;
+  width: 40px;
+  border-radius: 6px;
+}
+
+.result-card-movie-info-container {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.result-card-movie-info-text-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.result-card-pricing,
+.result-card-coming-soon,
+.result-card-movie-title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.result-card-movie-title {
+  color: var(--text-secondary);
+}
+
+.result-card-movie-detail {
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.result-card-coming-soon {
+  color: var(--color-orange);
+}

@@ -3,6 +3,8 @@ import { useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import "./styles/search.styles.css";
 import { searchFilms } from "../api/catalog.api";
+import ResultCard from "./result-card";
+import { Movie } from "../api/types/movie.types";
 
 export default function GlobalSearch() {
   const [results, setResults] = useState<any[]>([]);
@@ -24,9 +26,8 @@ export default function GlobalSearch() {
     controllerRef.current = controller;
 
     try {
-      const res: any = await searchFilms(searchQquery, controller.signal);
-      console.log(res);
-      setResults(res.data);
+      const res: Movie[] = await searchFilms(searchQquery, controller.signal);
+      setResults(res);
     } catch (err) {
       if ((err as Error).name !== "AbortError") console.error(err);
     }
@@ -87,12 +88,13 @@ export default function GlobalSearch() {
               <div className="results-panel-header">
                 <p className="results-panel-header-text">FILMS & EVENTS</p>
                 <p className="results-panel-header-amt">
+                  {/* FIXME: Results.length here is incorrect, need original length */}
                   {results.length} results
                 </p>
               </div>
               <div className="results-panel-list">
-                {results.map((el) => {
-                  return <p key={el.id}>{el.title}</p>;
+                {results.map((el: Movie) => {
+                  return <ResultCard key={el.id} movie={el} />;
                 })}
               </div>
             </div>
