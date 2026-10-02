@@ -1,15 +1,123 @@
 "use client";
+import { useRef, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 import "./styles/search.styles.css";
+import { searchFilms } from "../api/catalog.api";
+import ResultCard from "./result-card";
+import { Movie } from "../api/types/movie.types";
 
 export default function GlobalSearch() {
+  const [results, setResults] = useState<any[]>([]);
+  const [query, setQuery] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const controllerRef = useRef<AbortController | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleSearch = useDebouncedCallback(async (term: string) => {
+    controllerRef.current?.abort();
+
+    const searchQquery = term.trim();
+    if (!searchQquery) {
+      setResults([]);
+      return;
+    }
+
+    const controller = new AbortController();
+    controllerRef.current = controller;
+
+    try {
+      const res: Movie[] = await searchFilms(searchQquery, controller.signal);
+      setResults(res);
+    } catch (err) {
+      if ((err as Error).name !== "AbortError") console.error(err);
+    }
+  }, 300);
+
   return (
-    <div className="header-search-container">
-      <img className="search-icon" src="/search.svg" />
+    <div
+      className="header-search-container"
+      onFocus={() => setIsOpen(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) setIsOpen(false);
+      }}
+      // Making sure here that clicking anything within the container focuses the input element
+      onMouseDown={(e) => {
+        const target = e.target as HTMLElement;
+        if (target === inputRef.current || target.closest(".search-panel"))
+          return;
+        e.preventDefault();
+        inputRef.current?.focus();
+      }}
+    >
+      <img className="search-icon" src="/search.svg" alt="" />
       <input
+        ref={inputRef}
         className="header-search"
         type="text"
         placeholder="Search films and live events"
+        value={query}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          handleSearch(e.target.value);
+        }}
       />
+
+      {/* Search results box */}
+      {/* TODO: Debounce the switching logic too */}
+      {isOpen && (
+        <div className="results-panel">
+          {!query.trim() ? (
+            <div className="results-panel-alt">
+              <div className="circle-container">
+                <img src="/popcorn.svg" />
+              </div>
+              <div className="results-panel-message">
+                <p className="results-panel-message-title">
+                  What do you want to watch?
+                </p>
+                <p className="results-panel-message-sub">
+                  Search by title, director or cast
+                </p>
+              </div>
+              <button className="clickable custom-button-large results-panel-cta">
+                Browse all sessions
+              </button>
+            </div>
+          ) : results.length > 0 ? (
+            <div className="results-panel-list-container">
+              <div className="results-panel-header">
+                <p className="results-panel-header-text">FILMS & EVENTS</p>
+                <p className="results-panel-header-amt">
+                  {/* FIXME: Results.length here is incorrect, need original length */}
+                  {results.length} results
+                </p>
+              </div>
+              <div className="results-panel-list">
+                {results.map((el: Movie) => {
+                  return <ResultCard key={el.id} movie={el} query={query} />;
+                })}
+              </div>
+            </div>
+          ) : (
+            <div className="results-panel-alt">
+              <div className="circle-container">
+                <img className="results-magnifier-svg" src="/search.svg" />
+              </div>
+              <div className="results-panel-message">
+                <p className="results-panel-message-title">
+                  No results for "{query}"
+                </p>
+                <p className="results-panel-message-sub">
+                  Check the spelling or try another film or live event
+                </p>
+              </div>
+              <button className="clickable custom-button-large results-panel-cta">
+                Browse all sessions
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
