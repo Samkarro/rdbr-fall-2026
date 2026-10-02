@@ -5,3 +5,8 @@ export async function searchFilms(query: string, signal: AbortSignal) {
   const res = await api<{ data: Movie[] }>(`/search?q=${encodeURIComponent(query)}`, { signal });
   return res.data;
 }
+
+export async function getFeaturedTitles() {
+  const res = await api<{ data: Movie[] }>("/movies/featured", {});
+  return res.data;
+}

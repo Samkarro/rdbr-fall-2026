@@ -50,6 +50,8 @@ a {
 }
 
 header {
+  position: fixed;
+  z-index: 1;
   background: linear-gradient(
     to bottom,
     black,
@@ -97,4 +99,8 @@ header {
   background-color: var(--text-primary);
   color: var(--bg-page);
   transition: background-color 200ms ease;
+}
+
+#hero {
+  height: 5000px;
 }
