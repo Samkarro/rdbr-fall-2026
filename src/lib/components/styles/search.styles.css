@@ -1,4 +1,5 @@
 .header-search-container {
+  position: relative;
   width: 380px;
   height: 41px;
   padding: 6px 12px;
@@ -34,4 +35,18 @@
 
 .header-search:focus::placeholder {
   color: transparent;
+}
+
+.results-panel {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0px;
+
+  width: 380px;
+  padding: 8px;
+  border-radius: 16px;
+  border: 1px solid var(--bg-raised);
+
+  background-color: var(--bg-page);
+  box-shadow: var(--shadow);
 }
