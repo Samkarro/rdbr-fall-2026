@@ -77,13 +77,14 @@ header {
 /* Custom Components */
 
 .custom-button-large {
-  padding: 13px 22px;
+  padding: 16px 22px;
   border-radius: 99px;
   border: none;
   background: none;
   font-family: Archivo;
   font-weight: 800;
   font-size: 14px;
+  text-box: trim-both cap alphabetic;
 }
 
 .red-button {

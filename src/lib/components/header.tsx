@@ -22,7 +22,7 @@ function getInitials(name: string) {
 // Main component
 export default function KinoHeader() {
   // TODO: Handle authorization detection
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(true);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(false);
 
   // Buttons sections for authorization states
   function LoggedInButtons() {

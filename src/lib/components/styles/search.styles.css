@@ -50,3 +50,59 @@
   background-color: var(--bg-page);
   box-shadow: var(--shadow);
 }
+
+.results-panel-alt {
+  width: 100%;
+  height: 100%;
+  padding: 32px 0px 28px 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.circle-container {
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--tint-white);
+}
+
+.results-magnifier-svg {
+  width: 20px;
+  height: 20px;
+}
+
+.results-panel-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.results-panel-cta {
+  background-color: var(--tint-white);
+  color: var(--text-primary);
+  transition: background-color 200ms ease;
+}
+
+.results-panel-cta:hover {
+  background-color: rgba(255, 255, 255, 0.125);
+}
+
+.results-panel-message-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.results-panel-message-sub {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
