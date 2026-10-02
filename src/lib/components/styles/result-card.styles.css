@@ -14,6 +14,7 @@
   height: 56px;
   width: 40px;
   border-radius: 6px;
+  font-size: 10px;
 }
 
 .result-card-movie-info-container {
@@ -47,4 +48,13 @@
 
 .result-card-coming-soon {
   color: var(--color-orange);
+}
+
+.result-card-highlight {
+  background: none;
+  color: var(--text-primary);
+}
+
+.result-card-poster-placeholder {
+  background-color: var(--tint-white);
 }

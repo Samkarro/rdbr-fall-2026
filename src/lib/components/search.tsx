@@ -94,7 +94,7 @@ export default function GlobalSearch() {
               </div>
               <div className="results-panel-list">
                 {results.map((el: Movie) => {
-                  return <ResultCard key={el.id} movie={el} />;
+                  return <ResultCard key={el.id} movie={el} query={query} />;
                 })}
               </div>
             </div>
