@@ -83,7 +83,19 @@ export default function GlobalSearch() {
               </button>
             </div>
           ) : results.length > 0 ? (
-            results.map((el) => <p key={el.id}>{el.title}</p>)
+            <div className="results-panel-list-container">
+              <div className="results-panel-header">
+                <p className="results-panel-header-text">FILMS & EVENTS</p>
+                <p className="results-panel-header-amt">
+                  {results.length} results
+                </p>
+              </div>
+              <div className="results-panel-list">
+                {results.map((el) => {
+                  return <p key={el.id}>{el.title}</p>;
+                })}
+              </div>
+            </div>
           ) : (
             <div className="results-panel-alt">
               <div className="circle-container">
