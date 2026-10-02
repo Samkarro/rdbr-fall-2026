@@ -10,6 +10,7 @@
   inset: 0;
   opacity: 0;
   transition: opacity 800ms;
+  z-index: 0;
 }
 
 .hero-fade.active {
@@ -23,6 +24,14 @@
   display: block;
 }
 
+.hero-image-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0));
+}
+
 .hero-content {
   position: absolute;
   left: 40px;
@@ -30,6 +39,8 @@
   width: 580px;
   display: flex;
   flex-direction: column;
+  gap: 15px;
+  z-index: 2;
 }
 
 .hero-content-title {
@@ -71,4 +82,9 @@
 
   background-color: var(--tint-white);
   color: var(--text-primary);
+}
+
+.hero-section-synopsis {
+  line-height: 130%;
+  font-size: 14px;
 }

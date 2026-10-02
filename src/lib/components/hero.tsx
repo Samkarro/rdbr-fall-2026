@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Movie } from "../api/types/movie.types";
+import { MovieDetail, MovieFormat } from "../api/types/movie.types";
 import "./styles/hero.styles.css";
 
 const INTERVAL_MS = 5000;
 
-export default function HeroSection({ movies }: { movies: Movie[] }) {
+export default function HeroSection({ movies }: { movies: MovieDetail[] }) {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -36,6 +36,8 @@ export default function HeroSection({ movies }: { movies: Movie[] }) {
               alt=""
               loading={i === 0 ? "eager" : "lazy"}
             />
+            {/* FIXME: Z-indexes are very random. standardize */}
+            <div className="hero-image-overlay"></div>
             <div className="hero-content">
               <div className="hero-content-red-label premiere-label">
                 PREMIERE · WEEK OF{" "}
@@ -53,7 +55,16 @@ export default function HeroSection({ movies }: { movies: Movie[] }) {
                   <img src="/stopwatch.svg" />
                   {movie.runtimeMinutes} Min
                 </div>
+                {movie.formats &&
+                  movie.formats.map((format: MovieFormat) => {
+                    return (
+                      <div key={format.id} className="hero-content-gray-label">
+                        {format.name.toUpperCase()}
+                      </div>
+                    );
+                  })}
               </div>
+              <p className="hero-section-synopsis">{movie.synopsis}</p>
             </div>
           </div>
         );
