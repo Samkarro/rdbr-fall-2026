@@ -2,6 +2,12 @@
   padding: 32px 70px;
 }
 
+.now-playing-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
 .now-playing-list {
   display: flex;
   gap: 17px;

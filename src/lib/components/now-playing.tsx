@@ -6,7 +6,12 @@ export default function ({ movies }: { movies: Movie[] }) {
   return (
     <section id="now-playing">
       <div className="now-playing-list-container">
-        <h1>Now Playing</h1>
+        <div className="homepage-heading-container">
+          <h1>Now Playing</h1>
+          <a className="label-m" href="">
+            See all
+          </a>
+        </div>
         <div className="now-playing-list">
           {movies.map((movie: Movie) => {
             return <NowPlayingCard key={movie.id} movie={movie} />;

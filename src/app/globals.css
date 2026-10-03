@@ -47,7 +47,7 @@ body {
 }
 
 a {
-  color: inherit;
+  color: var(--color-red);
   text-decoration: none;
 }
 
@@ -77,6 +77,13 @@ header {
   padding-bottom: 40px;
 }
 
+/* Text */
+
+.label-m {
+  font-weight: 600;
+  font-size: 14px;
+}
+
 .clickable:hover {
   cursor: pointer;
 }
@@ -86,6 +93,12 @@ header {
 }
 
 /* Custom Components */
+
+.homepage-heading-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
 
 .custom-button-large {
   padding: 13px 22px;

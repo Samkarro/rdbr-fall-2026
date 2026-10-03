@@ -73,7 +73,9 @@ export default function KinoHeader() {
       <div className="header-components-container">
         <div className="header-components-logos-container">
           {/* FIXME: This is actually text, convert it to spans */}
-          <img src="/kinoxii.svg" />
+          <span className="kinoxii-logo">
+            KINO <span style={{ color: "var(--color-red)" }}>XIII</span>
+          </span>
           <p className="header-text">SESSIONS</p>
         </div>
         <div className="header-components-actions-container">
