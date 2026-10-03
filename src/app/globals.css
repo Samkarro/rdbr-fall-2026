@@ -21,6 +21,7 @@
 
 html {
   height: 100%;
+  font-size: calc(min(100vw, 1920px) / 108);
 }
 
 html,
