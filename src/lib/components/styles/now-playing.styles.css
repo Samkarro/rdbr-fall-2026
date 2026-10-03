@@ -1,65 +1,64 @@
 #now-playing {
-  padding: calc(32px * var(--u)) calc(70px * var(--u));
+  padding: 32px 70px;
 }
 
 .now-playing-list {
   display: flex;
-  gap: calc(17px * var(--u));
+  gap: 17px;
   overflow: hidden;
 }
 
 .now-playing-card {
-  padding: calc(12px * var(--u));
+  padding: 12px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-  height: calc(452px * var(--u));
-  width: calc(260px * var(--u));
+  height: 452px;
+  width: 260px;
   background-color: var(--bg-card);
-  border-radius: calc(20px * var(--u));
+  border-radius: 20px;
 }
 
 .now-playing-card img {
-  width: calc(236px * var(--u));
-  height: calc(300px * var(--u));
+  width: 236px;
+  height: 300px;
   object-fit: cover;
-  border-radius: calc(14px * var(--u));
-  margin-bottom: calc();
+  border-radius: 14px;
 }
 
 .now-playing-card-info-container {
   display: flex;
   flex-direction: column;
-  gap: calc(7px * var(--u));
+  gap: 7px;
 }
 
 .now-playing-card-title {
-  font-weight: 800px;
-  font-size: calc(18px * var(--u));
+  font-weight: 800;
+  font-size: 18px;
 }
 
 .now-playing-card-sub {
-  font-weight: 400px;
-  font-size: calc(12px * var(--u));
+  font-weight: 400;
+  font-size: 12px;
   line-height: 130%;
   color: var(--text-secondary);
 }
 
 .now-playing-card-label {
-  padding: calc(4px * var(--u)) calc(7px * var(--u));
+  padding: 4px 7px;
   width: min-content;
   border-radius: 99px;
   background-color: var(--tint-red);
   color: var(--color-red);
-  font-size: calc(12px * var(--u));
+  font-size: 12px;
 }
 
 .now-playing-card-synopsis {
   position: absolute;
-  bottom: calc(57px * var(--u));
+  bottom: 57px;
   opacity: 0;
-  font-size: calc(14px * var(--u));
+  font-size: 14px;
   color: var(--text-secondary);
 }
 
@@ -70,6 +69,6 @@
 }
 
 .now-playing-card-price {
-  font-size: calc(12px * var(--u));
+  font-size: 12px;
   font-weight: 600;
 }

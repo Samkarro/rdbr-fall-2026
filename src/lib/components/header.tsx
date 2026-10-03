@@ -72,6 +72,7 @@ export default function KinoHeader() {
     <header>
       <div className="header-components-container">
         <div className="header-components-logos-container">
+          {/* FIXME: This is actually text, convert it to spans */}
           <img src="/kinoxii.svg" />
           <p className="header-text">SESSIONS</p>
         </div>
