@@ -34,7 +34,6 @@ export default function HeroSection({ movies }: { movies: MovieDetail[] }) {
 
     return () => {
       setTimeoutId(undefined);
-
       clearTimeout(id);
     };
   }, [index, movies.length]);
@@ -85,6 +84,15 @@ export default function HeroSection({ movies }: { movies: MovieDetail[] }) {
                   })}
               </div>
               <p className="hero-section-synopsis">{movie.synopsis}</p>
+              <div className="hero-section-cta-container">
+                <div className="custom-button-large clickable red-button">
+                  <img src="/ticket.svg" />
+                  Buy tickets
+                </div>
+                <div className="custom-button-large clickable gray-button">
+                  All sessions
+                </div>
+              </div>
             </div>
           </div>
         );
