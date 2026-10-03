@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import { MovieDetail, MovieFormat } from "../api/types/movie.types";
+import { Movie, MovieFormat } from "../api/types/movie.types";
 import "./styles/hero.styles.css";
 
 const INTERVAL_MS = 5000;
 
-export default function HeroSection({ movies }: { movies: MovieDetail[] }) {
+export default function HeroSection({ movies }: { movies: Movie[] }) {
   const [index, setIndex] = useState(0);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
 
@@ -99,7 +99,7 @@ export default function HeroSection({ movies }: { movies: MovieDetail[] }) {
       })}
       <div className="hero-progress-elements-container">
         <div className="hero-progress-bar-container">
-          {movies.map((movie: MovieDetail, i: number) => {
+          {movies.map((movie: Movie, i: number) => {
             return (
               <div
                 key={i}

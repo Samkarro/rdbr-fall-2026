@@ -1,3 +1,15 @@
 #now-playing {
   padding: 32px 70px;
 }
+
+.now-playing-list {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+}
+
+.now-playing-card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}

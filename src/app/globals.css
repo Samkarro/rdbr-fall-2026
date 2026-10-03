@@ -99,6 +99,10 @@ header {
   gap: 4px;
 }
 
+.custom-button-large.now-playing {
+  padding: 10px 22px;
+}
+
 .red-button {
   background-color: var(--color-red);
   color: var(--text-primary);
