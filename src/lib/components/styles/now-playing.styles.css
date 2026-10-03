@@ -39,25 +39,16 @@
   gap: 7px;
 }
 
-.now-playing-card-title {
-  font-weight: 800;
-  font-size: 18px;
-}
-
 .now-playing-card-sub {
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 130%;
   color: var(--text-secondary);
 }
 
-.now-playing-card-label {
+.now-playing-card-age-rating {
   padding: 4px 7px;
   width: min-content;
   border-radius: 99px;
   background-color: var(--tint-red);
   color: var(--color-red);
-  font-size: 12px;
 }
 
 .now-playing-card-synopsis {
@@ -72,9 +63,4 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.now-playing-card-price {
-  font-size: 12px;
-  font-weight: 600;
 }
