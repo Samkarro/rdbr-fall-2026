@@ -1,4 +1,5 @@
 :root {
+  --u: calc(1920 / 1728);
   --text-primary: #ffffff;
   --text-secondary: #a9a9a9;
   --text-disabled: #505261;
@@ -100,7 +101,7 @@ header {
 }
 
 .custom-button-large.now-playing {
-  padding: 10px 22px;
+  padding: calc(10px * var(--u)) calc(22px * var(--u));
 }
 
 .red-button {

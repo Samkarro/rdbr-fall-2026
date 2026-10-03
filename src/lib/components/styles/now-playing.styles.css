@@ -1,15 +1,75 @@
 #now-playing {
-  padding: 32px 70px;
+  padding: calc(32px * var(--u)) calc(70px * var(--u));
 }
 
 .now-playing-list {
   display: flex;
-  align-items: center;
-  gap: 17px;
+  gap: calc(17px * var(--u));
+  overflow: hidden;
 }
 
 .now-playing-card {
+  padding: calc(12px * var(--u));
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   position: relative;
+  height: calc(452px * var(--u));
+  width: calc(260px * var(--u));
+  background-color: var(--bg-card);
+  border-radius: calc(20px * var(--u));
+}
+
+.now-playing-card img {
+  width: calc(236px * var(--u));
+  height: calc(300px * var(--u));
+  object-fit: cover;
+  border-radius: calc(14px * var(--u));
+  margin-bottom: calc();
+}
+
+.now-playing-card-info-container {
+  display: flex;
+  flex-direction: column;
+  gap: calc(7px * var(--u));
+}
+
+.now-playing-card-title {
+  font-weight: 800px;
+  font-size: calc(18px * var(--u));
+}
+
+.now-playing-card-sub {
+  font-weight: 400px;
+  font-size: calc(12px * var(--u));
+  line-height: 130%;
+  color: var(--text-secondary);
+}
+
+.now-playing-card-label {
+  padding: calc(4px * var(--u)) calc(7px * var(--u));
+  width: min-content;
+  border-radius: 99px;
+  background-color: var(--tint-red);
+  color: var(--color-red);
+  font-size: calc(12px * var(--u));
+}
+
+.now-playing-card-synopsis {
+  position: absolute;
+  bottom: calc(57px * var(--u));
+  opacity: 0;
+  font-size: calc(14px * var(--u));
+  color: var(--text-secondary);
+}
+
+.now-playing-card-cta-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.now-playing-card-price {
+  font-size: calc(12px * var(--u));
+  font-weight: 600;
 }
