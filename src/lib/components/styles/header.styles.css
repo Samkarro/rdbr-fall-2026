@@ -16,12 +16,6 @@
   gap: 36px;
 }
 
-.header-text {
-  font-weight: 600;
-  font-size: 12px;
-  letter-spacing: 6%;
-}
-
 .header-components-actions-container {
   display: flex;
   align-items: center;

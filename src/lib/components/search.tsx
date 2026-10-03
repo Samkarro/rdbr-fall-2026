@@ -52,7 +52,7 @@ export default function GlobalSearch() {
       <img className="search-icon" src="/search.svg" alt="" />
       <input
         ref={inputRef}
-        className="header-search"
+        className="header-search body-m"
         type="text"
         placeholder="Search films and live events"
         value={query}
@@ -72,10 +72,8 @@ export default function GlobalSearch() {
                 <img src="/popcorn.svg" />
               </div>
               <div className="results-panel-message">
-                <p className="results-panel-message-title">
-                  What do you want to watch?
-                </p>
-                <p className="results-panel-message-sub">
+                <p className="label-m">What do you want to watch?</p>
+                <p className="results-panel-message-sub body-m">
                   Search by title, director or cast
                 </p>
               </div>
@@ -86,10 +84,12 @@ export default function GlobalSearch() {
           ) : results.length > 0 ? (
             <div className="results-panel-list-container">
               <div className="results-panel-header">
-                <p className="results-panel-header-text">FILMS & EVENTS</p>
+                <p className="results-panel-header-text overline">
+                  FILMS & EVENTS
+                </p>
                 <p className="results-panel-header-amt">
-                  {/* FIXME: Results.length here is incorrect, need original length */}
-                  {results.length} results
+                  {results.length}
+                  {results.length === 6 ? "+" : ""} results
                 </p>
               </div>
               <div className="results-panel-list">
@@ -104,10 +104,8 @@ export default function GlobalSearch() {
                 <img className="results-magnifier-svg" src="/search.svg" />
               </div>
               <div className="results-panel-message">
-                <p className="results-panel-message-title">
-                  No results for "{query}"
-                </p>
-                <p className="results-panel-message-sub">
+                <p className="label-m">No results for "{query}"</p>
+                <p className="results-panel-message-sub body-m">
                   Check the spelling or try another film or live event
                 </p>
               </div>
