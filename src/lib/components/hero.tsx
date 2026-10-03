@@ -7,6 +7,20 @@ const INTERVAL_MS = 5000;
 
 export default function HeroSection({ movies }: { movies: MovieDetail[] }) {
   const [index, setIndex] = useState(0);
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
+
+  const handleSeek = (previous: boolean) => {
+    clearTimeout(timeoutId);
+
+    if (previous) {
+      let newIndex = index - 1;
+      newIndex = newIndex < 0 ? movies.length - 1 : newIndex;
+      setIndex(newIndex);
+    } else {
+      let newIndex = (index + 1) % movies.length;
+      setIndex(newIndex);
+    }
+  };
 
   useEffect(() => {
     // Dynamic carousel sizing based on amt of featured stuff
@@ -16,7 +30,13 @@ export default function HeroSection({ movies }: { movies: MovieDetail[] }) {
       () => setIndex((i) => (i + 1) % movies.length),
       INTERVAL_MS,
     );
-    return () => clearTimeout(id);
+    setTimeoutId(id);
+
+    return () => {
+      setTimeoutId(undefined);
+
+      clearTimeout(id);
+    };
   }, [index, movies.length]);
 
   return (
@@ -69,6 +89,32 @@ export default function HeroSection({ movies }: { movies: MovieDetail[] }) {
           </div>
         );
       })}
+      <div className="hero-progress-elements-container">
+        <div className="hero-progress-bar-container">
+          {movies.map((movie: MovieDetail, i: number) => {
+            return (
+              <div
+                key={i}
+                className={`hero-progress-bar ${i === index ? "active" : ""}`}
+              ></div>
+            );
+          })}
+        </div>
+        <div className="hero-progress-button-container">
+          <div
+            className="hero-progress-button clickable"
+            onClick={() => handleSeek(true)}
+          >
+            <img src="/hero-left.svg" />
+          </div>
+          <div
+            className="hero-progress-button clickable"
+            onClick={() => handleSeek(false)}
+          >
+            <img src="/hero-right.svg" />
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

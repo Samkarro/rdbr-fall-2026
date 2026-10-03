@@ -29,13 +29,13 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0));
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1));
 }
 
 .hero-content {
   position: absolute;
-  left: 40px;
-  bottom: 40px;
+  left: 67px;
+  bottom: 179px;
   width: 580px;
   display: flex;
   flex-direction: column;
@@ -87,4 +87,59 @@
 .hero-section-synopsis {
   line-height: 130%;
   font-size: 14px;
+}
+
+.hero-progress-elements-container {
+  position: absolute;
+  bottom: 42px;
+
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  z-index: 2;
+  gap: 20px;
+  padding: 0px 67px;
+}
+
+.hero-progress-bar-container {
+  display: flex;
+  gap: 7px;
+  width: 100%;
+}
+
+.hero-progress-bar {
+  height: 3px;
+  width: 100%;
+  border-radius: 3px;
+  background-color: var(--text-primary);
+}
+
+.hero-progress-bar.active {
+  background-color: var(--color-red);
+}
+
+.hero-progress-button-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero-progress-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 54px;
+  width: 54px;
+  border-radius: 50%;
+  background-color: var(--overlay-scrim);
+  transition: 200ms;
+}
+
+.hero-progress-button:hover {
+  background-color: var(--bg-page);
+}
+
+.hero-progress-button img {
+  width: 34px;
+  height: 34px;
 }
