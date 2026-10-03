@@ -2,11 +2,19 @@ import { api } from "./server.api";
 import { Movie, MovieDetail, movieDetailSchema } from "./types/movie.types";
 
 export async function searchFilms(query: string, signal: AbortSignal) {
-  const res = await api<{ data: Movie[] }>(`/search?q=${encodeURIComponent(query)}`, { signal });
-  return res.data;
+  const { data: searchResults } = await api<{ data: Movie[] }>(`/search?q=${encodeURIComponent(query)}`, { signal });
+  return searchResults;
 }
 
 export async function getFeaturedTitles(): Promise<Movie[]> {
   const { data: featured } = await api<{ data: Movie[] }>("/movies/featured", {});
   return featured;
+}
+
+export async function getNowPlaying(limit?: number): Promise<Movie[]> {
+  const { data: nowPlaying } = await api<{ data: Movie[] }>(
+    `/movies/now-playing${limit && limit > 0 ? `?limit=${limit}` : ""}`,
+    {}
+  );
+  return nowPlaying;
 }
