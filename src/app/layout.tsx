@@ -18,7 +18,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={archivo.className}>
       <body>
         <KinoHeader></KinoHeader>
-        TEST{children}
+        {children}
       </body>
     </html>
   );

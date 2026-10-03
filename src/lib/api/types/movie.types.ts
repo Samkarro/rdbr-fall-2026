@@ -36,7 +36,15 @@ export const movieSchema = z.object({
   formats: z.array(formatSchema),
 });
 
+export const movieDetailSchema = movieSchema.extend({
+  synopsis: z.string(),
+  director: z.string().nullable(),
+  cast: z.string().nullable(),
+  availableDates: z.array(z.iso.date()),
+});
+
 export type Genre = z.infer<typeof genreSchema>;
-export type Format = z.infer<typeof formatSchema>;
+export type MovieFormat = z.infer<typeof formatSchema>;
 export type AgeRating = z.infer<typeof ageRatingSchema>;
 export type Movie = z.infer<typeof movieSchema>;
+export type MovieDetail = z.infer<typeof movieDetailSchema>;

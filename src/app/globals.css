@@ -50,6 +50,8 @@ a {
 }
 
 header {
+  position: fixed;
+  z-index: 3;
   background: linear-gradient(
     to bottom,
     black,
@@ -77,7 +79,7 @@ header {
 /* Custom Components */
 
 .custom-button-large {
-  padding: 16px 22px;
+  padding: 13px 22px;
   border-radius: 99px;
   border: none;
   background: none;
@@ -85,6 +87,9 @@ header {
   font-weight: 800;
   font-size: 14px;
   text-box: trim-both cap alphabetic;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .red-button {
@@ -97,4 +102,14 @@ header {
   background-color: var(--text-primary);
   color: var(--bg-page);
   transition: background-color 200ms ease;
+}
+
+.gray-button {
+  background-color: var(--tint-white);
+  color: var(--text-primary);
+  transition: background-color 200ms ease;
+}
+
+.gray-button:hover {
+  background-color: var(--text-secondary);
 }
