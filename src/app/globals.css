@@ -49,6 +49,13 @@ a {
   text-decoration: none;
 }
 
+h1 {
+  text-transform: uppercase;
+  color: var(--text-primary);
+  font-weight: 800;
+  font-size: 24px;
+}
+
 header {
   position: fixed;
   z-index: 3;
