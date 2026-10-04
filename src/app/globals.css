@@ -70,6 +70,11 @@ header {
   padding-bottom: 40px;
 }
 
+hr {
+  color: var(--bg-card);
+  margin: 8px 0px;
+}
+
 /* Text */
 
 .display {
