@@ -1,3 +1,8 @@
+.kinoxii-logo {
+  font-weight: 800;
+  font-size: 20px;
+}
+
 .header-components-container {
   display: flex;
   width: 100%;
@@ -9,12 +14,6 @@
   display: flex;
   align-items: center;
   gap: 36px;
-}
-
-.header-text {
-  font-weight: 600;
-  font-size: 12px;
-  letter-spacing: 6%;
 }
 
 .header-components-actions-container {

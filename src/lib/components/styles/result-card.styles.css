@@ -29,23 +29,13 @@
   gap: 3px;
 }
 
-.result-card-pricing,
-.result-card-coming-soon,
-.result-card-movie-title {
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.result-card-movie-title {
-  color: var(--text-secondary);
-}
-
+.result-card-movie-title,
 .result-card-movie-detail {
-  font-weight: 400;
-  font-size: 12px;
   color: var(--text-secondary);
 }
-
+.result-card-movie-detail::first-letter {
+  text-transform: uppercase;
+}
 .result-card-coming-soon {
   color: var(--color-orange);
 }

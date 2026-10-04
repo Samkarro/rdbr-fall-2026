@@ -48,19 +48,19 @@ export default function ResultCard({
           <div className="result-card-movie-poster result-card-poster-placeholder" />
         )}
         <div className="result-card-movie-info-text-container">
-          <p className="result-card-movie-title">
+          <p className="result-card-movie-title label-m">
             <HighlightedTitle title={movie.title} query={query} />
           </p>
-          <p className="result-card-movie-detail">
+          <p className="result-card-movie-detail body-s">
             {movie.kind} · {movie.ageRating.minAge}+ · {movie.runtimeMinutes}{" "}
             min
           </p>
         </div>
       </div>
       {movie.isComingSoon ? (
-        <p className="result-card-coming-soon">Coming Soon</p>
+        <p className="result-card-coming-soon label-m">Coming Soon</p>
       ) : (
-        <p className="result-card-pricing">from ₾{movie.fromPrice}</p>
+        <p className="result-card-pricing label-m">from ₾{movie.fromPrice}</p>
       )}
     </div>
   );

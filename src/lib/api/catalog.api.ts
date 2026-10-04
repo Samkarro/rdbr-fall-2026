@@ -2,23 +2,19 @@ import { api } from "./server.api";
 import { Movie, MovieDetail, movieDetailSchema } from "./types/movie.types";
 
 export async function searchFilms(query: string, signal: AbortSignal) {
-  const res = await api<{ data: Movie[] }>(`/search?q=${encodeURIComponent(query)}`, { signal });
-  return res.data;
+  const { data: searchResults } = await api<{ data: Movie[] }>(`/search?q=${encodeURIComponent(query)}`, { signal });
+  return searchResults;
 }
 
-export async function getFeaturedTitles(): Promise<MovieDetail[]> {
-  const { data: featured } = await api<{ data: Movie[] }>("/movies/featured", {
-    next: { revalidate: 300 },
-  });
+export async function getFeaturedTitles(): Promise<Movie[]> {
+  const { data: featured } = await api<{ data: Movie[] }>("/movies/featured", {});
+  return featured;
+}
 
-  const results = await Promise.allSettled(
-    featured.map(async (movie) => {
-      const res = await api<{ data: unknown }>(`/movies/${movie.slug}`, {
-        next: { revalidate: 300 },
-      });
-      return movieDetailSchema.parse(res.data);
-    })
+export async function getNowPlaying(limit?: number): Promise<Movie[]> {
+  const { data: nowPlaying } = await api<{ data: Movie[] }>(
+    `/movies/now-playing${limit && limit > 0 ? `?limit=${limit}` : ""}`,
+    {}
   );
-
-  return results.flatMap((r) => (r.status === "fulfilled" ? [r.value] : []));
+  return nowPlaying;
 }

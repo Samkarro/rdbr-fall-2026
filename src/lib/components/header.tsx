@@ -72,8 +72,10 @@ export default function KinoHeader() {
     <header>
       <div className="header-components-container">
         <div className="header-components-logos-container">
-          <img src="/kinoxii.svg" />
-          <p className="header-text">SESSIONS</p>
+          <span className="kinoxii-logo">
+            KINO <span style={{ color: "var(--color-red)" }}>XIII</span>
+          </span>
+          <p className="overline">SESSIONS</p>
         </div>
         <div className="header-components-actions-container">
           <GlobalSearch></GlobalSearch>

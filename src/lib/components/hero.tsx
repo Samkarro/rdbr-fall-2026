@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import { MovieDetail, MovieFormat } from "../api/types/movie.types";
+import { Movie, MovieFormat } from "../api/types/movie.types";
 import "./styles/hero.styles.css";
 
 const INTERVAL_MS = 5000;
 
-export default function HeroSection({ movies }: { movies: MovieDetail[] }) {
+export default function HeroSection({ movies }: { movies: Movie[] }) {
   const [index, setIndex] = useState(0);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
 
@@ -58,32 +58,35 @@ export default function HeroSection({ movies }: { movies: MovieDetail[] }) {
             {/* FIXME: Z-indexes are very random. standardize */}
             <div className="hero-image-overlay"></div>
             <div className="hero-content">
-              <div className="hero-content-red-label premiere-label">
+              <div className="hero-content-red-label premiere-label label-s">
                 PREMIERE · WEEK OF{" "}
                 {new Intl.DateTimeFormat("en-US", {
                   day: "numeric",
                   month: "short",
                 }).format(new Date(movie.releaseDate))}
               </div>
-              <p className="hero-content-title">{movie.title}</p>
+              <p className="hero-content-title display">{movie.title}</p>
               <div className="hero-content-labels">
-                <div className="hero-content-red-label">
-                  {movie.ageRating.minAge}+
+                <div className="hero-content-red-label label-s">
+                  {movie.ageRating.code}
                 </div>
-                <div className="hero-content-gray-label">
+                <div className="hero-content-gray-label label-s">
                   <img src="/stopwatch.svg" />
                   {movie.runtimeMinutes} Min
                 </div>
                 {movie.formats &&
                   movie.formats.map((format: MovieFormat) => {
                     return (
-                      <div key={format.id} className="hero-content-gray-label">
+                      <div
+                        key={format.id}
+                        className="hero-content-gray-label label-s"
+                      >
                         {format.name.toUpperCase()}
                       </div>
                     );
                   })}
               </div>
-              <p className="hero-section-synopsis">{movie.synopsis}</p>
+              <p className="hero-section-synopsis body-m">{movie.synopsis}</p>
               <div className="hero-section-cta-container">
                 <div className="custom-button-large clickable red-button">
                   <img src="/ticket.svg" />
@@ -99,7 +102,7 @@ export default function HeroSection({ movies }: { movies: MovieDetail[] }) {
       })}
       <div className="hero-progress-elements-container">
         <div className="hero-progress-bar-container">
-          {movies.map((movie: MovieDetail, i: number) => {
+          {movies.map((movie: Movie, i: number) => {
             return (
               <div
                 key={i}

@@ -24,6 +24,7 @@ export const movieSchema = z.object({
   slug: z.string(),
   title: z.string(),
   kind: z.enum(["film", "event"]),
+  synopsis: z.string(),
   runtimeMinutes: z.int().nonnegative(),
   posterUrl: z.url().nullable(),
   backdropUrl: z.url().nullable(),
@@ -37,7 +38,6 @@ export const movieSchema = z.object({
 });
 
 export const movieDetailSchema = movieSchema.extend({
-  synopsis: z.string(),
   director: z.string().nullable(),
   cast: z.string().nullable(),
   availableDates: z.array(z.iso.date()),

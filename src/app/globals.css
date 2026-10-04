@@ -1,4 +1,5 @@
 :root {
+  --u: calc(1920 / 1728);
   --text-primary: #ffffff;
   --text-secondary: #a9a9a9;
   --text-disabled: #505261;
@@ -20,6 +21,7 @@
 
 html {
   height: 100%;
+  font-size: calc(min(100vw, 1920px) / 108);
 }
 
 html,
@@ -45,7 +47,7 @@ body {
 }
 
 a {
-  color: inherit;
+  color: var(--color-red);
   text-decoration: none;
 }
 
@@ -68,6 +70,62 @@ header {
   padding-bottom: 40px;
 }
 
+/* Text */
+
+.display {
+  font-weight: 800;
+  font-size: 40px;
+}
+
+h1 {
+  font-weight: 800;
+  font-size: 24px;
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 20px;
+}
+
+h3 {
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.label-m {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.label-s {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.overline {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 6%;
+}
+
+.body-l {
+  font-size: 16px;
+  line-height: 130%;
+}
+
+.body-m {
+  font-size: 14px;
+  line-height: 130%;
+}
+
+.body-s {
+  font-size: 12px;
+  line-height: 130%;
+}
+
+/* Custom property adders */
+
 .clickable:hover {
   cursor: pointer;
 }
@@ -77,6 +135,16 @@ header {
 }
 
 /* Custom Components */
+
+.homepage-heading-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.homepage-heading-container h1 {
+  text-transform: uppercase;
+}
 
 .custom-button-large {
   padding: 13px 22px;
@@ -90,6 +158,10 @@ header {
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+.custom-button-large.now-playing {
+  padding: calc(10px * var(--u)) calc(22px * var(--u));
 }
 
 .red-button {
