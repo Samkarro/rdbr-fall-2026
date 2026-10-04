@@ -1,7 +1,13 @@
+html:has(.auth-modal-overlay),
+body:has(.auth-modal-overlay) {
+  overflow: hidden;
+}
+
 .auth-modal-overlay {
-  position: absolute;
-  height: 100vh;
-  width: 100vw;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overscroll-behavior: contain;
   top: 0px;
   background-color: #2424244d;
   backdrop-filter: blur(10px);

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import "./styles/auth-modal.styles.css";
+import { createPortal } from "react-dom";
 
 export default function AuthModal({
   type,
@@ -12,8 +13,15 @@ export default function AuthModal({
 }) {
   const [authType, setAuthType] = useState<"login" | "signup">(type);
 
-  return (
-    <div className="auth-modal-overlay" onClick={() => closeAuthModal()}>
+  // Rendering through a portal to prevent breaking modal overlay
+  return createPortal(
+    <div
+      className="auth-modal-overlay"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) closeAuthModal();
+      }}
+      role="dialog"
+    >
       <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
         {authType === "signup" ? (
           <div className="auth-modal-signup-container">
@@ -41,6 +49,7 @@ export default function AuthModal({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
