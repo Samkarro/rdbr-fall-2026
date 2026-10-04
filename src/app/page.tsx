@@ -6,6 +6,7 @@ import NowPlaying from "@/lib/components/now-playing";
 export default async function Home() {
   const featuredTitles = await getFeaturedTitles();
   const nowPlayingFilms = await getNowPlaying(6);
+  const comingSoonFilms = await getNowPlaying(4);
   return (
     <div>
       <main>
@@ -13,7 +14,7 @@ export default async function Home() {
         {/* TODO: Pass now playing titles */}
         <NowPlaying movies={nowPlayingFilms} />
         <hr />
-        <ComingSoon movies={nowPlayingFilms} />
+        <ComingSoon movies={comingSoonFilms} />
       </main>
     </div>
   );

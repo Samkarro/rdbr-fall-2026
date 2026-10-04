@@ -18,3 +18,11 @@ export async function getNowPlaying(limit?: number): Promise<Movie[]> {
   );
   return nowPlaying;
 }
+
+export async function getComingSoon(limit?: number): Promise<Movie[]> {
+  const { data: comingSoon } = await api<{ data: Movie[] }>(
+    `/movies/coming-soon${limit && limit > 0 ? `?limit=${limit}` : ""}`,
+    {}
+  );
+  return comingSoon;
+}
