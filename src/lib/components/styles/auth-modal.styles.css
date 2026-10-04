@@ -17,14 +17,48 @@ body:has(.auth-modal-overlay) {
   justify-content: center;
 }
 
-.auth-modal-signup-container {
-  background-color: var(--bg-page);
-  width: 400px;
-  height: 300px; /* plaaceholderr */
-}
-
+.auth-modal-signup-container,
 .auth-modal-login-container {
   background-color: var(--bg-page);
-  width: 400px;
-  height: 300px; /* plaaceholderr */
+  padding: 32px;
+  border-radius: 28px;
+  border: 1px solid var(--bg-raised);
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-modal-heading-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.auth-modal-login-container .auth-modal-heading-container {
+  width: 340px;
+}
+
+.auth-modal-signup-container .auth-modal-heading-container {
+  width: 410px;
+}
+
+.auth-modal-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.auth-modal-heading .body-s {
+  color: var(--text-secondary);
+}
+
+.auth-modal-cta-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+}
+
+.auth-modal-switch {
+  font-weight: 800;
+  color: var(--color-red);
 }
