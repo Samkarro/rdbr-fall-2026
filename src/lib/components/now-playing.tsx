@@ -13,6 +13,7 @@ export default function ({ movies }: { movies: Movie[] }) {
           </a>
         </div>
         <div className="now-playing-list">
+          <div className="now-playing-list-overlay"></div>
           {movies.map((movie: Movie) => {
             return <NowPlayingCard key={movie.id} movie={movie} />;
           })}
