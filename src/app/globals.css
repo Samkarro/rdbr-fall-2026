@@ -169,6 +169,11 @@ h3 {
   padding: calc(10px * var(--u)) calc(22px * var(--u));
 }
 
+.custom-button-large.disabled {
+  background-color: var(--text-disabled);
+  color: var(--text-secondary);
+}
+
 .red-button {
   background-color: var(--color-red);
   color: var(--text-primary);
