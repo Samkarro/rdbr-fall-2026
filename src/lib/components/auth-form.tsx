@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { api, ApiError } from "../api/server.api";
+import { useRouter } from "next/navigation";
+import { authenticate } from "../api/auth.api";
 
 export type AuthType = "login" | "signup";
 
@@ -43,42 +44,43 @@ export default function AuthForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [filled, setFilled] = useState(false);
   const [pending, setPending] = useState(false);
+  const router = useRouter();
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
-    const { password_confirmation, ...payload } = Object.fromEntries(
-      new FormData(e.currentTarget),
-    ) as Record<string, string>;
+    const data = Object.fromEntries(new FormData(e.currentTarget)) as Record<
+      string,
+      string
+    >;
 
-    if (isSignup && payload.password !== password_confirmation) {
+    if (isSignup && data.password !== data.password_confirmation) {
       setErrors({ password_confirmation: "Passwords do not match" });
       return;
     }
 
     setErrors({});
     setPending(true);
-    try {
-      await api(isSignup ? "/register" : "/login", {
-        method: "POST",
-        body: JSON.stringify({ password_confirmation, ...payload }),
-      });
+    const result = await authenticate(authType, data);
+    setPending(false);
+
+    if (result.ok) {
       onSuccess();
-    } catch (err) {
-      const body = err instanceof ApiError ? err.body : null;
-      const fieldErrors = Object.fromEntries(
-        Object.entries(body?.errors ?? {}).map(([k, v]) => [
-          k,
-          (v as string[])[0],
-        ]),
-      );
-      setErrors(
-        Object.keys(fieldErrors).length
-          ? fieldErrors
-          : { form: body?.message ?? "Something went wrong" },
-      );
-    } finally {
-      setPending(false);
+      router.refresh();
+      return;
     }
+
+    const body = result.body;
+    const fieldErrors = Object.fromEntries(
+      Object.entries(body?.errors ?? {}).map(([k, v]) => [
+        k,
+        (v as string[])[0],
+      ]),
+    );
+    setErrors(
+      Object.keys(fieldErrors).length
+        ? fieldErrors
+        : { form: body?.message ?? "Something went wrong" },
+    );
   }
 
   return (
