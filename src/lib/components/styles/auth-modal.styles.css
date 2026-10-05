@@ -25,6 +25,7 @@ body:has(.auth-modal-overlay) {
   border: 1px solid var(--bg-raised);
   display: flex;
   flex-direction: column;
+  gap: 24px;
 }
 
 .auth-modal-heading-container {
@@ -58,7 +59,50 @@ body:has(.auth-modal-overlay) {
   align-items: center;
 }
 
+.auth-modal-cta-text {
+  color: var(--text-secondary);
+}
+
 .auth-modal-switch {
   font-weight: 800;
   color: var(--color-red);
+}
+
+.auth-input {
+  width: 100%;
+}
+
+.auth-input input {
+  width: 100%;
+  background-color: var(--bg-card);
+  border-radius: 12px;
+  color: var(--text-primary);
+  padding: 0px 16px;
+  border: none;
+  height: 40px;
+  outline: none;
+  font-family: Archivo;
+}
+
+.auth-input label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.auth-modal-form-text-fields-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.auth-modal-form-text-fields-container button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.auth-modal-password-fields-container {
+  display: flex;
+  gap: 12;
 }

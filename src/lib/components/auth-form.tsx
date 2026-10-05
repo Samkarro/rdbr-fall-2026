@@ -20,7 +20,13 @@ function Field({
       <label className="label-s" htmlFor={name}>
         {label}
       </label>
-      <input id={name} name={name} aria-invalid={!!error} {...props} />
+      <input
+        id={name}
+        className="label-s"
+        name={name}
+        aria-invalid={!!error}
+        {...props}
+      />
       {error && <p className="auth-input-error body-s">{error}</p>}
     </div>
   );
@@ -86,51 +92,59 @@ export default function AuthForm({
         setFilled(values.every((v) => String(v).trim() !== ""));
       }}
     >
-      {isSignup && (
+      <div className="auth-modal-form-text-fields-container">
+        {isSignup && (
+          <Field
+            name="username"
+            label="Username"
+            autoComplete="username"
+            error={errors.username}
+            placeholder="User"
+          />
+        )}
         <Field
-          name="username"
-          label="Username"
-          autoComplete="username"
-          error={errors.username}
+          name="email"
+          label="Email"
+          type="email"
+          autoComplete="email"
+          error={errors.email}
+          placeholder="example@gmail.com"
         />
-      )}
-      <Field
-        name="email"
-        label="Email"
-        type="email"
-        autoComplete="email"
-        error={errors.email}
-      />
-      <Field
-        name="password"
-        label="Password"
-        type="password"
-        autoComplete={isSignup ? "new-password" : "current-password"}
-        error={errors.password}
-      />
-      {isSignup && (
-        <Field
-          name="password_confirmation"
-          label="Confirm password"
-          type="password"
-          autoComplete="new-password"
-          error={errors.password_confirmation}
-        />
-      )}
+        <div className="auth-modal-password-fields-container">
+          <Field
+            name="password"
+            label="Password"
+            type="password"
+            autoComplete={isSignup ? "new-password" : "current-password"}
+            placeholder="••••••••"
+            error={errors.password}
+          />
+          {isSignup && (
+            <Field
+              name="password_confirmation"
+              label="Confirm password"
+              type="password"
+              autoComplete="new-password"
+              placeholder="••••••••"
+              error={errors.password_confirmation}
+            />
+          )}
 
-      {errors.form && (
-        <p className="auth-input-error body-s" role="alert">
-          {errors.form}
-        </p>
-      )}
+          {errors.form && (
+            <p className="auth-input-error body-s" role="alert">
+              {errors.form}
+            </p>
+          )}
+        </div>
 
-      <button
-        type="submit"
-        className={`clickable custom-button-large red-button ${pending || !filled ? "disabled" : ""}`}
-        disabled={pending || !filled}
-      >
-        {isSignup ? "Sign up" : "Log in"}
-      </button>
+        <button
+          type="submit"
+          className={`clickable custom-button-large red-button ${pending || !filled ? "disabled" : ""}`}
+          disabled={pending || !filled}
+        >
+          {isSignup ? "Sign up" : "Log in"}
+        </button>
+      </div>
     </form>
   );
 }

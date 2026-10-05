@@ -61,7 +61,7 @@ export default function AuthModal({
           />
 
           <div className="auth-modal-cta-container">
-            <span className="body-m">
+            <span className="auth-modal-cta-text body-m">
               {prompt}{" "}
               <span
                 className="auth-modal-switch clickable"
