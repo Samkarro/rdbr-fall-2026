@@ -2,6 +2,7 @@
 import { useState } from "react";
 import "./styles/header.styles.css";
 import GlobalSearch from "./search";
+import AuthModal from "./auth-modal";
 
 const placeholderUser = {
   username: "Jane Doe",
@@ -23,6 +24,9 @@ function getInitials(name: string) {
 export default function KinoHeader() {
   // TODO: Handle authorization detection
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(false);
+  const [authModalOpen, setAuthModalOpen] = useState<"login" | "signup" | null>(
+    null,
+  );
 
   // Buttons sections for authorization states
   function LoggedInButtons() {
@@ -57,11 +61,17 @@ export default function KinoHeader() {
   function LoggedOutButtons() {
     return (
       <div className="header-components-logged-out">
-        <button className="custom-button-large clickable red-button">
+        <button
+          className="custom-button-large clickable red-button"
+          onClick={() => setAuthModalOpen("signup")}
+        >
           Sign Up
         </button>
         {/* TODO: Review hover color change - seems too dark at the moment */}
-        <button className="custom-button-large clickable white-button">
+        <button
+          className="custom-button-large clickable white-button"
+          onClick={() => setAuthModalOpen("login")}
+        >
           Log In
         </button>
       </div>
@@ -85,6 +95,12 @@ export default function KinoHeader() {
           </div>
         </div>
       </div>
+      {authModalOpen && (
+        <AuthModal
+          type={authModalOpen}
+          closeAuthModal={() => setAuthModalOpen(null)}
+        />
+      )}
     </header>
   );
 }
