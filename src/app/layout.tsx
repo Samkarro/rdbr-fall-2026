@@ -2,6 +2,7 @@ import { Archivo } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
 import KinoHeader from "@/lib/components/header";
+import KinoFooter from "@/lib/components/footer";
 
 export const metadata: Metadata = {
   title: "Kino XII",
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         <KinoHeader></KinoHeader>
         {children}
+        <KinoFooter></KinoFooter>
       </body>
     </html>
   );

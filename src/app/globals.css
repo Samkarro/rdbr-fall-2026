@@ -70,6 +70,11 @@ header {
   padding-bottom: 40px;
 }
 
+footer {
+  width: 100vw;
+  padding: 19px 34px;
+}
+
 hr {
   color: var(--bg-card);
   margin: 8px 0px;

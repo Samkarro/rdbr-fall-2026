@@ -1,0 +1,21 @@
+.footer-text-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 16px;
+}
+
+.kino-footer-text {
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.kino-footer-text span {
+  color: var(--color-red);
+}
+
+.kino-footer-copyright {
+  color: var(--text-secondary);
+}

@@ -83,7 +83,7 @@ export default function KinoHeader() {
       <div className="header-components-container">
         <div className="header-components-logos-container">
           <span className="kinoxii-logo">
-            KINO <span style={{ color: "var(--color-red)" }}>XIII</span>
+            KINO <span style={{ color: "var(--color-red)" }}>XII</span>
           </span>
           <p className="overline">SESSIONS</p>
         </div>
