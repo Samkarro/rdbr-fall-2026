@@ -26,19 +26,26 @@
   color: var(--text-secondary);
 }
 
-.venue-filter {
+.filter {
   display: flex;
   gap: 10px;
   align-items: center;
 }
 
-.venue-name {
+.filter-label {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-.venue-city {
+.filter-sublabel {
   color: var(--text-secondary);
   font-weight: 400;
+}
+
+.amt-filters-active {
+  width: 100%;
+  text-align: center;
+  color: var(--text-secondary);
+  margin-top: 37px;
 }

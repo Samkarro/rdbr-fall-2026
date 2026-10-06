@@ -9,4 +9,10 @@ export const venueSchema = z.object({
   formats: z.array(formatSchema),
 });
 
+export const timeBandSchema = z.object({
+  id: z.int(),
+  label: z.string()
+});
+
+export type TimeBand = z.infer<typeof timeBandSchema>;
 export type Venue = z.infer<typeof venueSchema>;
