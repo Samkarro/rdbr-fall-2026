@@ -42,3 +42,56 @@
   backdrop-filter: blur(10px);
   z-index: 1;
 }
+
+#movie-detail-booking {
+  padding: 34px 51px 140px 51px;
+}
+
+.movie-extensive-detail-text-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 441px;
+  gap: 17px;
+}
+.movie-extensive-detail-text-container h2 {
+  width: 100%;
+}
+
+.movie-extensive-detail-text-label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 7px;
+  width: 100%;
+}
+
+.movie-extensive-detail-text-label > p {
+  color: var(--text-primary);
+  text-transform: none;
+}
+
+.rating-note-container {
+  background-color: var(--tint-warning);
+  padding: 9px 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  border-radius: 12px;
+  width: 100%;
+}
+
+.rating-note-container p {
+  color: var(--color-orange);
+}
+
+.rating-note-heading {
+  text-transform: uppercase;
+}
+
+.rating-note-sub-container {
+  display: flex;
+  gap: 7px;
+}
