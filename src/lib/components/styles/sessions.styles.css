@@ -2,6 +2,10 @@
   padding: 111px 51px 130px 51px;
 }
 
+.sessions-heading-container {
+  margin-bottom: 36px;
+}
+
 .sessions-heading {
   margin-bottom: 6px;
 }

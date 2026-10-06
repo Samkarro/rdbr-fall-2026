@@ -1,0 +1,44 @@
+.session-filters-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+
+  width: 320px;
+  padding: 24px;
+
+  background-color: var(--bg-card);
+  border-radius: 16px;
+}
+
+.session-filters-container hr {
+  margin: none;
+  color: var(--bg-raised);
+}
+
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.filter-name {
+  color: var(--text-secondary);
+}
+
+.venue-filter {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.venue-name {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.venue-city {
+  color: var(--text-secondary);
+  font-weight: 400;
+}
