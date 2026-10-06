@@ -11,6 +11,7 @@ export default async function Home() {
   const featuredTitles = await getFeaturedTitles();
   const nowPlayingFilms = await getNowPlaying(6);
   const comingSoonFilms = await getComingSoon(4);
+
   return (
     <div>
       <main>

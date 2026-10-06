@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { api } from "./server.api";
 import { Movie, MovieDetail, movieDetailSchema } from "./types/movie.types";
 
@@ -26,3 +27,12 @@ export async function getComingSoon(limit?: number): Promise<Movie[]> {
   );
   return comingSoon;
 }
+
+export const getMovieDetail = cache(async (slug: string): Promise<MovieDetail> => {
+  const { data: movieDetail } = await api<{ data: MovieDetail }>(
+    `/movies/${slug}`,
+    {}
+  );
+
+  return movieDetail;
+})

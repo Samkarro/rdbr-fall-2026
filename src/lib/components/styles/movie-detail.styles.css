@@ -1,0 +1,97 @@
+#movie-detail-banner > img {
+  height: 567px;
+  width: 100vw;
+  object-fit: cover;
+  display: block;
+}
+#movie-detail-banner {
+  position: relative;
+}
+
+.detail-banner-content {
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+  page: 34px;
+  left: 60px;
+  bottom: 41px;
+  z-index: 2;
+  gap: 32px;
+}
+
+.detail-banner-content > img {
+  height: 374px;
+  width: 289px;
+  border-radius: 14px;
+  box-shadow: 0px 4px 64px 0px var(--shadow);
+}
+
+.detail-banner-text-content {
+  width: 580px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.movie-detail-image-overlay {
+  position: absolute;
+  top: 0px;
+  width: 100vw;
+  height: 567px;
+  background-color: var(--overlay-scrim);
+  backdrop-filter: blur(10px);
+  z-index: 1;
+}
+
+#movie-detail-booking {
+  padding: 34px 51px 140px 51px;
+}
+
+.movie-extensive-detail-text-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 441px;
+  gap: 17px;
+}
+.movie-extensive-detail-text-container h2 {
+  width: 100%;
+}
+
+.movie-extensive-detail-text-label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 7px;
+  width: 100%;
+}
+
+.movie-extensive-detail-text-label > p {
+  color: var(--text-primary);
+  text-transform: none;
+}
+
+.rating-note-container {
+  background-color: var(--tint-warning);
+  padding: 9px 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  border-radius: 12px;
+  width: 100%;
+}
+
+.rating-note-container p {
+  color: var(--color-orange);
+}
+
+.rating-note-heading {
+  text-transform: uppercase;
+}
+
+.rating-note-sub-container {
+  display: flex;
+  gap: 7px;
+}
