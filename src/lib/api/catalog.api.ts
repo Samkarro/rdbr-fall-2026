@@ -28,11 +28,16 @@ export async function getComingSoon(limit?: number): Promise<Movie[]> {
   return comingSoon;
 }
 
-export const getMovieDetail = cache(async (slug: string): Promise<MovieDetail> => {
+export const getMovieDetail = async (slug: string): Promise<MovieDetail> => {
   const { data: movieDetail } = await api<{ data: MovieDetail }>(
     `/movies/${slug}`,
     {}
   );
 
   return movieDetail;
+}
+
+export const getFilterOptions = cache(async () => {
+  const { data } = await api<{ data: any }>("/filter-options", { next: { revalidate: 3600, tags: ["filter-options"] } })
+  return data;
 })

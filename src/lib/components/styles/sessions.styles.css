@@ -1,0 +1,11 @@
+#sessions {
+  padding: 111px 51px 130px 51px;
+}
+
+.sessions-heading {
+  margin-bottom: 6px;
+}
+
+.sessions-sub {
+  color: var(--text-secondary);
+}
