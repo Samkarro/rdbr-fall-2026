@@ -11,13 +11,17 @@ export default function SessionCard({
   sessions: Session[];
 }) {
   return (
+    // TODO: Handle sold out cases
     <div className="session-card">
       <div className="session-card-movie-detail-container">
         <img src={movie.posterUrl ?? undefined} />
         <div className="session-card-movie-detail">
-          <h3 className="session-card-movie-heading">{movie.title}</h3>{" "}
-          <div className="session-card-movie-detail-label">
-            {movie.ageRating.code}
+          <div className="session-card-movie-heading-container">
+            {" "}
+            <h3 className="session-card-movie-heading">{movie.title}</h3>{" "}
+            <div className="session-card-movie-detail-label label-s">
+              {movie.ageRating.code}
+            </div>
           </div>
           <p className="session-card-movie-sub body-m">
             {movie.runtimeMinutes} min
@@ -30,7 +34,9 @@ export default function SessionCard({
             <div className="clickable">
               <div className="session-time-container ">
                 <h3>{session.time}</h3>
-                <div className="session-category">{session.format.name}</div>
+                <div className="session-category label-s">
+                  {session.format.name}
+                </div>
               </div>
               <div className="session-additional-info-container">
                 <div className="session-additional-info">
@@ -50,6 +56,7 @@ export default function SessionCard({
                     />
                     {session.seatsLeft} left
                   </p>
+                  <p className="session-price label-s">₾{session.price}</p>
                 </div>
               </div>
             </div>

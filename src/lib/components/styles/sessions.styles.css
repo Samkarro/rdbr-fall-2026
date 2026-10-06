@@ -18,3 +18,11 @@
   display: flex;
   gap: 51px;
 }
+
+.sessions-movie-list {
+  width: 100%;
+}
+
+.sessions-movie-list hr {
+  margin: 32px 0px;
+}
