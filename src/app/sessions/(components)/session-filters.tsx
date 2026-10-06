@@ -26,7 +26,7 @@ export default function SessionFilters({ filters }: { filters: any }) {
 
     params.delete(key);
     next.forEach((v) => params.append(key, v));
-    params.delete("page"); // filters changed -> back to page 1
+    params.delete("page");
 
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
@@ -118,8 +118,14 @@ function FilterOption({
   children: React.ReactNode;
 }) {
   return (
-    <label className="filter">
-      <input type="checkbox" checked={checked} onChange={onChange} />
+    <label className="filter clickable">
+      {checked && <img src="./check.svg" />}
+      <input
+        className={`clickable ${checked ? "checked" : ""}`}
+        type="checkbox"
+        checked={checked}
+        onChange={onChange}
+      />
       <span className="filter-label label-m">{children}</span>
     </label>
   );

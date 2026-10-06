@@ -27,6 +27,7 @@
 }
 
 .filter {
+  position: relative;
   display: flex;
   gap: 10px;
   align-items: center;
@@ -48,4 +49,24 @@
   text-align: center;
   color: var(--text-secondary);
   margin-top: 37px;
+}
+
+.filter > input {
+  appearance: none;
+  height: 18px;
+  width: 18px;
+  border-radius: 5px;
+  border: 2px solid var(--text-disabled);
+}
+
+.filter > input.checked {
+  background-color: var(--color-red);
+  border: none;
+}
+
+.filter > img {
+  position: absolute;
+  left: 4px;
+  width: 9.5px;
+  height: 7.1px;
 }
