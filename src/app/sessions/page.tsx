@@ -13,7 +13,6 @@ export default async function SessionsPage({
     getFilterOptions(),
     getSessions(sp),
   ]);
-  console.log(sessions);
 
   return (
     <section id="sessions">
@@ -25,10 +24,12 @@ export default async function SessionsPage({
       </div>
       <div className="sessions-content">
         <SessionFilters filters={filters}></SessionFilters>
+        <div className="sessions-movie-list">
+          {sessions.map((session: any) => {
+            return <p key={session.movie.id}>{session.movie.title}</p>;
+          })}
+        </div>
       </div>
-      {sessions.map((session: any) => {
-        return <p key={session.movie.id}>{session.movie.title}</p>;
-      })}
     </section>
   );
 }

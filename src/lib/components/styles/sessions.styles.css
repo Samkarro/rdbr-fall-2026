@@ -13,3 +13,8 @@
 .sessions-sub {
   color: var(--text-secondary);
 }
+
+.sessions-content {
+  display: flex;
+  gap: 51px;
+}
