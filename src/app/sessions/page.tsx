@@ -2,6 +2,9 @@ import { getFilterOptions } from "@/lib/api/catalog.api";
 import "../../lib/components/styles/sessions.styles.css";
 import SessionFilters from "./(components)/session-filters";
 import { getSessions } from "@/lib/api/sessions.api";
+import { Movie } from "@/lib/api/types/movie.types";
+import { Session } from "@/lib/api/types/sessions.types";
+import SessionCard from "./(components)/session-card";
 
 export default async function SessionsPage({
   searchParams,
@@ -9,7 +12,7 @@ export default async function SessionsPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const sp = await searchParams;
-  const [filters, sessions] = await Promise.all([
+  const [filters, sessionData] = await Promise.all([
     getFilterOptions(),
     getSessions(sp),
   ]);
@@ -25,9 +28,17 @@ export default async function SessionsPage({
       <div className="sessions-content">
         <SessionFilters filters={filters}></SessionFilters>
         <div className="sessions-movie-list">
-          {sessions.map((session: any) => {
-            return <p key={session.movie.id}>{session.movie.title}</p>;
-          })}
+          {sessionData.map(
+            (sessionData: { movie: Movie; sessions: Session[] }) => {
+              return (
+                <SessionCard
+                  key={sessionData.movie.id}
+                  movie={sessionData.movie}
+                  sessions={sessionData.sessions}
+                ></SessionCard>
+              );
+            },
+          )}
         </div>
       </div>
     </section>

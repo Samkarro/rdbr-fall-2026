@@ -1,0 +1,18 @@
+.session-card-movie-detail-container {
+  display: flex;
+}
+
+.session-card-movie-detail-container > img {
+  width: 56px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.ticket-amount {
+  color: var(--color-green);
+}
+
+.ticket-amount.red {
+  color: var(--color-red);
+}
