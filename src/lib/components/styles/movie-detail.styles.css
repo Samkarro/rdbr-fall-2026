@@ -1,0 +1,44 @@
+#movie-detail-banner > img {
+  height: 567px;
+  width: 100vw;
+  object-fit: cover;
+  display: block;
+}
+#movie-detail-banner {
+  position: relative;
+}
+
+.detail-banner-content {
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+  page: 34px;
+  left: 60px;
+  bottom: 41px;
+  z-index: 2;
+  gap: 32px;
+}
+
+.detail-banner-content > img {
+  height: 374px;
+  width: 289px;
+  border-radius: 14px;
+  box-shadow: 0px 4px 64px 0px var(--shadow);
+}
+
+.detail-banner-text-content {
+  width: 580px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.movie-detail-image-overlay {
+  position: absolute;
+  top: 0px;
+  width: 100vw;
+  height: 567px;
+  background-color: var(--overlay-scrim);
+  backdrop-filter: blur(10px);
+  z-index: 1;
+}

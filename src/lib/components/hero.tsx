@@ -2,12 +2,15 @@
 import { useEffect, useState } from "react";
 import { Movie, MovieFormat } from "../api/types/movie.types";
 import "./styles/hero.styles.css";
+import { useRouter } from "next/navigation";
 
 const INTERVAL_MS = 5000;
 
 export default function HeroSection({ movies }: { movies: Movie[] }) {
   const [index, setIndex] = useState(0);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
+
+  const router = useRouter();
 
   const handleSeek = (previous: boolean) => {
     clearTimeout(timeoutId);
@@ -88,7 +91,10 @@ export default function HeroSection({ movies }: { movies: Movie[] }) {
               </div>
               <p className="hero-section-synopsis body-m">{movie.synopsis}</p>
               <div className="hero-section-cta-container">
-                <div className="custom-button-large clickable red-button">
+                <div
+                  className="custom-button-large clickable red-button"
+                  onClick={() => router.push(`/movies/${movie.slug}`)}
+                >
                   <img src="/ticket.svg" />
                   Buy tickets
                 </div>
@@ -102,7 +108,7 @@ export default function HeroSection({ movies }: { movies: Movie[] }) {
       })}
       <div className="hero-progress-elements-container">
         <div className="hero-progress-bar-container">
-          {movies.map((movie: Movie, i: number) => {
+          {movies.map((_: Movie, i: number) => {
             return (
               <div
                 key={i}
