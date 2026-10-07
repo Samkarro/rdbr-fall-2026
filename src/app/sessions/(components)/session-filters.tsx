@@ -27,7 +27,7 @@ export default function SessionFilters({
     const params = new URLSearchParams(searchParams.toString());
     mutate(params);
     params.delete("page");
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   const isChecked = (key: FilterKey, value: string) =>

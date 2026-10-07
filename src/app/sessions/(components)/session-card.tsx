@@ -49,7 +49,7 @@ export default function SessionCard({
                     {session.language.name}
                   </p>
                   <p className="session-location label-s">
-                    {session.venue.name} · {session.venue.city}
+                    {session.venue.name} · Hall {session.hall.name}
                   </p>
                 </div>
                 <div className="session-ticket-info">
