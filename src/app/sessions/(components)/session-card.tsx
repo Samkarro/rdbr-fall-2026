@@ -12,7 +12,6 @@ export default function SessionCard({
 }) {
   return (
     // TODO: do pagination
-    // TODO: do sorting
     <div className="session-card">
       <div className="session-card-movie-detail-container">
         <img src={movie.posterUrl ?? undefined} />

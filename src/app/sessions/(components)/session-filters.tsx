@@ -19,6 +19,9 @@ export default function SessionFilters({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  // Needed to gauge which format filters to show
+  const selectedVenues = searchParams.getAll("venues");
+
   const updateParams = (mutate: (params: URLSearchParams) => void) => {
     const params = new URLSearchParams(searchParams.toString());
     mutate(params);
@@ -38,6 +41,16 @@ export default function SessionFilters({
 
       params.delete(key);
       next.forEach((v) => params.append(key, v));
+
+      // Checking to find out which format filters to delete from query post-venue-selection
+      if (key === "venues") {
+        const validFormats = params
+          .getAll("formats")
+          .filter((slug) => isFormatAvailableFor(filters.venues, next, slug));
+
+        params.delete("formats");
+        validFormats.forEach((slug) => params.append("formats", slug));
+      }
     });
 
   const selectedDate = searchParams.get("date") ?? days[0];
@@ -50,6 +63,21 @@ export default function SessionFilters({
     0,
   );
 
+  // Checking to find out which format filters to render
+  function isFormatAvailableFor(
+    venues: Venue[],
+    selectedVenueSlugs: string[],
+    formatSlug: string,
+  ) {
+    return (
+      selectedVenueSlugs.length === 0 ||
+      venues.some(
+        (venue) =>
+          selectedVenueSlugs.includes(venue.slug) &&
+          venue.formats.some((f: MovieFormat) => f.slug === formatSlug),
+      )
+    );
+  }
   return (
     <div className="session-filters-container">
       <h2 className="session-filters-container-heading">Filters</h2>
@@ -93,15 +121,22 @@ export default function SessionFilters({
 
       <div className="filters-container">
         <p className="filter-name overline">FORMAT</p>
-        {filters.formats.map((format: MovieFormat) => (
-          <FilterOption
-            key={format.slug}
-            checked={isChecked("formats", format.slug)}
-            onChange={() => toggle("formats", format.slug)}
-          >
-            {format.name}
-          </FilterOption>
-        ))}
+        {filters.formats.map((format: MovieFormat) => {
+          if (
+            !isFormatAvailableFor(filters.venues, selectedVenues, format.slug)
+          )
+            return null;
+
+          return (
+            <FilterOption
+              key={format.slug}
+              checked={isChecked("formats", format.slug)}
+              onChange={() => toggle("formats", format.slug)}
+            >
+              {format.name}
+            </FilterOption>
+          );
+        })}
       </div>
       <hr />
 
