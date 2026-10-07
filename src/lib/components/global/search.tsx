@@ -5,6 +5,7 @@ import "./styles/search.styles.css";
 import ResultCard from "./result-card";
 import { Movie } from "@/lib/api/types/movie.types";
 import { searchFilms } from "@/lib/api/catalog.api";
+import { useRouter } from "next/navigation";
 
 export default function GlobalSearch() {
   const [results, setResults] = useState<any[]>([]);
@@ -13,6 +14,8 @@ export default function GlobalSearch() {
   const [isOpen, setIsOpen] = useState(false);
   const controllerRef = useRef<AbortController | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const router = useRouter();
 
   const handleSearch = useDebouncedCallback(async (term: string) => {
     controllerRef.current?.abort();
@@ -93,7 +96,10 @@ export default function GlobalSearch() {
                   Search by title, director or cast
                 </p>
               </div>
-              <button className="clickable custom-button-large results-panel-cta">
+              <button
+                className="clickable custom-button-large results-panel-cta"
+                onClick={() => router.push("/sessions")}
+              >
                 Browse all sessions
               </button>
             </div>
@@ -111,7 +117,12 @@ export default function GlobalSearch() {
               <div className="results-panel-list">
                 {results.map((el: Movie) => {
                   return (
-                    <ResultCard key={el.id} movie={el} query={resolvedQuery} />
+                    <ResultCard
+                      key={el.id}
+                      movie={el}
+                      query={resolvedQuery}
+                      setIsOpen={setIsOpen}
+                    />
                   );
                 })}
               </div>
@@ -127,7 +138,10 @@ export default function GlobalSearch() {
                   Check the spelling or try another film or live event
                 </p>
               </div>
-              <button className="clickable custom-button-large results-panel-cta">
+              <button
+                className="clickable custom-button-large results-panel-cta"
+                onClick={() => router.push("/sessions")}
+              >
                 Browse all sessions
               </button>
             </div>

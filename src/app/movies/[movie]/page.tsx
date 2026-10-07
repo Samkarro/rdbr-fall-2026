@@ -1,13 +1,15 @@
 import { getMovieDetail } from "@/lib/api/catalog.api";
-import "../../../lib/components/hero-section/styles/hero.styles.css";
+import "../../../lib/components/homepage/styles/hero.styles.css";
 import "./styles/movie-detail.styles.css";
 import { MovieFormat } from "@/lib/api/types/movie.types";
+import { notFound } from "next/navigation";
 
 export default async function MovieDetailsPage({
   params,
 }: PageProps<"/movies/[movie]">) {
   const { movie: slug } = await params;
   let movie = await getMovieDetail(slug);
+  if (!movie) notFound();
 
   return (
     <div className="movie-details-page-container">

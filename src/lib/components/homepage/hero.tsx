@@ -58,7 +58,6 @@ export default function HeroSection({ movies }: { movies: Movie[] }) {
               alt=""
               loading={i === 0 ? "eager" : "lazy"}
             />
-            {/* FIXME: Z-indexes are very random. standardize */}
             <div className="hero-image-overlay"></div>
             <div className="hero-content">
               <div className="hero-content-red-label premiere-label label-s">
@@ -91,16 +90,19 @@ export default function HeroSection({ movies }: { movies: Movie[] }) {
               </div>
               <p className="hero-section-synopsis body-m">{movie.synopsis}</p>
               <div className="hero-section-cta-container">
-                <div
+                <button
                   className="custom-button-large clickable red-button"
                   onClick={() => router.push(`/movies/${movie.slug}`)}
                 >
                   <img src="/ticket.svg" />
                   Buy tickets
-                </div>
-                <div className="custom-button-large clickable gray-button">
+                </button>
+                <button
+                  className="custom-button-large clickable gray-button"
+                  onClick={() => router.push("/sessions")}
+                >
                   All sessions
-                </div>
+                </button>
               </div>
             </div>
           </div>

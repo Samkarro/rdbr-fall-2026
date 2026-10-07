@@ -4,6 +4,7 @@ import { TimeBand, Venue } from "@/lib/api/types/sessions.types";
 import { MovieFormat, MovieLanguage } from "@/lib/api/types/movie.types";
 import { formatDateParts } from "@/lib/utils/dates";
 import "./styles/session-filters.styles.css";
+import HorizontalScroller from "@/lib/components/global/horizontal-scroller";
 
 const FILTER_KEYS = ["venues", "formats", "languages", "bands"] as const;
 type FilterKey = (typeof FILTER_KEYS)[number];
@@ -99,7 +100,7 @@ export default function SessionFilters({
 
       <div className="filters-container">
         <p className="filter-name overline">DATE</p>
-        <div className="date-filter-list">
+        <HorizontalScroller className="date-filter-list">
           {days.map((day, i) => {
             const { weekday, day: dayNum } = formatDateParts(day);
             const selected = day === selectedDate;
@@ -114,7 +115,7 @@ export default function SessionFilters({
               </div>
             );
           })}
-        </div>
+        </HorizontalScroller>
       </div>
       <hr />
 

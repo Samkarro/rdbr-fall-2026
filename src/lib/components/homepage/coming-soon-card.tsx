@@ -27,7 +27,7 @@ export default function ComingSoonCard({ movie }: { movie: Movie }) {
           </div>
         </div>
         <div className="coming-soon-card-notify-button label-s">
-          <img src="./bell.svg" />
+          <img src="/bell.svg" />
           Notify Me
         </div>
       </div>
