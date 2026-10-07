@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { Movie } from "../../api/types/movie.types";
 import "./styles/result-card.styles.css";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, RefObject, SetStateAction } from "react";
 
 // functions to highlight query
 function escapeRegExp(text: string) {
@@ -33,11 +33,11 @@ function HighlightedTitle({ title, query }: { title: string; query: string }) {
 export default function ResultCard({
   movie,
   query,
-  setIsOpen,
+  inputRef,
 }: {
   movie: Movie;
   query: string;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  inputRef: RefObject<HTMLInputElement | null>;
 }) {
   const router = useRouter();
 
@@ -45,7 +45,7 @@ export default function ResultCard({
     <div
       className="clickable result-card"
       onClick={() => {
-        setIsOpen(false);
+        inputRef.current?.blur();
         router.push(`/movies/${movie.slug}`);
       }}
     >

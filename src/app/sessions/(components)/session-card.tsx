@@ -6,9 +6,11 @@ import Ticket from "@/lib/misc/ticket";
 export default function SessionCard({
   movie,
   sessions,
+  last,
 }: {
   movie: Movie;
   sessions: Session[];
+  last: boolean;
 }) {
   return (
     // TODO: do pagination
@@ -73,7 +75,7 @@ export default function SessionCard({
           );
         })}
       </div>
-      <hr />
+      {!last && <hr />}
     </div>
   );
 }

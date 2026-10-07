@@ -121,7 +121,7 @@ export default function GlobalSearch() {
                       key={el.id}
                       movie={el}
                       query={resolvedQuery}
-                      setIsOpen={setIsOpen}
+                      inputRef={inputRef}
                     />
                   );
                 })}

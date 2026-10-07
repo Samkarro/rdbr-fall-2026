@@ -1,0 +1,39 @@
+.session-data-pagination {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.session-data-pagination-button {
+  appearance: none;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-family: Archivo;
+  font-weight: 500;
+
+  height: 40px;
+  width: 40px;
+  border-radius: 99px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.session-data-pagination-button.arrow {
+  background-color: var(--bg-card);
+}
+
+.session-data-pagination-button:hover {
+  background-color: var(--bg-raised);
+}
+
+.session-data-pagination-button.active {
+  background-color: var(--color-red);
+  color: var(--text-primary);
+}
+
+.arrow.right {
+  transform: rotate(180deg);
+}

@@ -7,6 +7,7 @@ import { Session } from "@/lib/api/types/sessions.types";
 import SessionCard from "./(components)/session-card";
 import { getNextSevenDays } from "@/lib/utils/dates";
 import SessionSorter from "./(components)/session-sorter";
+import SessionPagination from "./(components)/session-pagination";
 
 export default async function SessionsPage({
   searchParams,
@@ -14,6 +15,8 @@ export default async function SessionsPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const sp = await searchParams;
+  const spString = searchParams.toString();
+
   const [filters, sessionData] = await Promise.all([
     getFilterOptions(),
     getSessions(sp),
@@ -33,16 +36,23 @@ export default async function SessionsPage({
         <div className="sessions-movie-list">
           <SessionSorter sorts={filters.sorts} meta={sessionData.meta} />
           {sessionData.data.map(
-            (sessionData: { movie: Movie; sessions: Session[] }) => {
+            (
+              sessionDataItem: { movie: Movie; sessions: Session[] },
+              index: number,
+            ) => {
               return (
                 <SessionCard
-                  key={sessionData.movie.id}
-                  movie={sessionData.movie}
-                  sessions={sessionData.sessions}
+                  key={sessionDataItem.movie.id}
+                  movie={sessionDataItem.movie}
+                  sessions={sessionDataItem.sessions}
+                  last={index === sessionData.data.length - 1}
                 ></SessionCard>
               );
             },
           )}
+          <div className="session-data-pagination">
+            <SessionPagination meta={sessionData.meta} />
+          </div>
         </div>
       </div>
     </section>
