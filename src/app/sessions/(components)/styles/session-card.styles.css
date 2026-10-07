@@ -100,3 +100,11 @@
 .ticket-amount.red {
   color: var(--color-red);
 }
+
+.session-sold-out {
+  opacity: 0.4;
+}
+
+.session-sold-out-text {
+  color: var(--text-secondary);
+}

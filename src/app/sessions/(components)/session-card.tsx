@@ -12,6 +12,7 @@ export default function SessionCard({
 }) {
   return (
     // TODO: Handle sold out cases
+    // TODO: do pagination
     <div className="session-card">
       <div className="session-card-movie-detail-container">
         <img src={movie.posterUrl ?? undefined} />
@@ -31,7 +32,10 @@ export default function SessionCard({
       <div className="session-list">
         {sessions.map((session) => {
           return (
-            <div className="clickable">
+            <div
+              key={session.id}
+              className={`clickable ${session.isSoldOut ? "session-sold-out" : ""}`}
+            >
               <div className="session-time-container ">
                 <h3>{session.time}</h3>
                 <div className="session-category label-s">
@@ -48,14 +52,21 @@ export default function SessionCard({
                   </p>
                 </div>
                 <div className="session-ticket-info">
-                  <p
-                    className={`ticket-amount body-s ${session.seatsLeft <= 50 ? "red" : ""}`}
-                  >
-                    <Ticket
-                      fill={session.seatsLeft <= 50 ? "#EC3013" : "#4ADE80"}
-                    />
-                    {session.seatsLeft} left
-                  </p>
+                  {session.isSoldOut ? (
+                    <p className={`ticket-amount body-s session-sold-out-text`}>
+                      Sold out
+                    </p>
+                  ) : (
+                    <p
+                      className={`ticket-amount body-s ${session.seatsLeft <= 50 ? "red" : ""}`}
+                    >
+                      <Ticket
+                        fill={session.seatsLeft <= 50 ? "#EC3013" : "#4ADE80"}
+                      />
+                      {session.seatsLeft} left
+                    </p>
+                  )}
+
                   <p className="session-price label-s">₾{session.price}</p>
                 </div>
               </div>
