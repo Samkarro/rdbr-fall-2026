@@ -1,4 +1,4 @@
-import { Movie } from "../api/types/movie.types";
+import { Movie } from "../../api/types/movie.types";
 import "./styles/result-card.styles.css";
 
 // functions to highlight query

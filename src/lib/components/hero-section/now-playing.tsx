@@ -1,4 +1,4 @@
-import { Movie } from "../api/types/movie.types";
+import { Movie } from "../../api/types/movie.types";
 import NowPlayingCard from "./now-playing-card";
 import "./styles/now-playing.styles.css";
 

@@ -1,4 +1,4 @@
-import { Movie } from "../api/types/movie.types";
+import { Movie } from "../../api/types/movie.types";
 import ComingSoonCard from "./coming-soon-card";
 import "./styles/coming-soon.styles.css";
 

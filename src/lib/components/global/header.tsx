@@ -2,7 +2,7 @@
 import { useState } from "react";
 import "./styles/header.styles.css";
 import GlobalSearch from "./search";
-import AuthModal from "./auth-modal";
+import AuthModal from "./auth/auth-modal";
 
 const placeholderUser = {
   username: "Jane Doe",

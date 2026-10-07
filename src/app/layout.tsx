@@ -1,8 +1,8 @@
 import { Archivo } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
-import KinoHeader from "@/lib/components/header";
-import KinoFooter from "@/lib/components/footer";
+import KinoHeader from "@/lib/components/global/header";
+import KinoFooter from "@/lib/components/global/footer";
 import { getFilterOptions } from "@/lib/api/catalog.api";
 
 export const metadata: Metadata = {

@@ -1,4 +1,4 @@
-import { Movie } from "../api/types/movie.types";
+import { Movie } from "../../api/types/movie.types";
 import "./styles/coming-soon.styles.css";
 
 export default function ComingSoonCard({ movie }: { movie: Movie }) {

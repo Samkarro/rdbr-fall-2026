@@ -2,9 +2,9 @@
 import { useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import "./styles/search.styles.css";
-import { searchFilms } from "../api/catalog.api";
 import ResultCard from "./result-card";
-import { Movie } from "../api/types/movie.types";
+import { Movie } from "@/lib/api/types/movie.types";
+import { searchFilms } from "@/lib/api/catalog.api";
 
 export default function GlobalSearch() {
   const [results, setResults] = useState<any[]>([]);

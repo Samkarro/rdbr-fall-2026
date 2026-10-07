@@ -1,4 +1,4 @@
-import { Movie } from "../api/types/movie.types";
+import { Movie } from "../../api/types/movie.types";
 
 export default function NowPlayingCard({ movie }: { movie: Movie }) {
   return (

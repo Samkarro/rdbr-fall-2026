@@ -1,5 +1,5 @@
 import { getFilterOptions } from "@/lib/api/catalog.api";
-import "../../lib/components/styles/sessions.styles.css";
+import "./styles/sessions.styles.css";
 import SessionFilters from "./(components)/session-filters";
 import { getSessions } from "@/lib/api/sessions.api";
 import { Movie } from "@/lib/api/types/movie.types";

@@ -1,6 +1,6 @@
 import { getMovieDetail } from "@/lib/api/catalog.api";
-import "../../../lib/components/styles/hero.styles.css";
-import "../../../lib/components/styles/movie-detail.styles.css";
+import "../../../lib/components/hero-section/styles/hero.styles.css";
+import "./styles/movie-detail.styles.css";
 import { MovieFormat } from "@/lib/api/types/movie.types";
 
 export default async function MovieDetailsPage({

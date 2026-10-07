@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { authenticate } from "../api/auth.api";
+import { authenticate } from "../../../api/auth.api";
 
 export type AuthType = "login" | "signup";
 

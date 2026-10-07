@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Movie, MovieFormat } from "../api/types/movie.types";
+import { Movie, MovieFormat } from "../../api/types/movie.types";
 import "./styles/hero.styles.css";
 import { useRouter } from "next/navigation";
 
