@@ -1,5 +1,13 @@
 import { z } from "zod";
 
+export const languageSchema = z.object({
+  id: z.int(),
+  slug: z.string(),
+  name: z.string(),
+  code: z.string().length(3)
+});
+
+
 export const genreSchema = z.object({
   id: z.int(),
   slug: z.string(),
@@ -45,6 +53,7 @@ export const movieDetailSchema = movieSchema.extend({
 
 export type Genre = z.infer<typeof genreSchema>;
 export type MovieFormat = z.infer<typeof formatSchema>;
+export type MovieLanguage = z.infer<typeof languageSchema>;
 export type AgeRating = z.infer<typeof ageRatingSchema>;
 export type Movie = z.infer<typeof movieSchema>;
 export type MovieDetail = z.infer<typeof movieDetailSchema>;

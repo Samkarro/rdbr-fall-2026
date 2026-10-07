@@ -7,7 +7,6 @@ export default async function MovieDetailsPage({
   params,
 }: PageProps<"/movies/[movie]">) {
   const { movie: slug } = await params;
-  // cached
   let movie = await getMovieDetail(slug);
 
   return (

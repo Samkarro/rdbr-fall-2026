@@ -1,0 +1,47 @@
+#sessions {
+  padding: 111px 51px 130px 51px;
+}
+
+.sessions-heading-container {
+  margin-bottom: 36px;
+}
+
+.sessions-heading {
+  margin-bottom: 6px;
+}
+
+.sessions-sub {
+  color: var(--text-secondary);
+}
+
+.sessions-content {
+  display: flex;
+  gap: 51px;
+}
+
+.sessions-movie-list {
+  width: 100%;
+}
+
+.sessions-movie-list hr {
+  margin: 32px 0px;
+}
+
+.session-sorter-heading {
+  margin-bottom: 24px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.session-sorting-selector-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.session-sorting-selector-container img {
+  height: 16px;
+  width: 16px;
+}
