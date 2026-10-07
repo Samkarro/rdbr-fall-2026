@@ -77,7 +77,7 @@
   border: 1px solid var(--bg-raised);
 
   background-color: var(--bg-page);
-  box-shadow: var(--shadow);
+  box-shadow: 0px 20px 48px -8px var(--shadow);
 }
 
 .results-panel-alt {

@@ -69,7 +69,10 @@ export default function GlobalSearch() {
         <button
           className="search-x clickable"
           type="button"
-          onClick={() => setQuery("")}
+          onClick={() => {
+            setQuery("");
+            setResolvedQuery("");
+          }}
         >
           <img src="/x-symbol.svg" alt="" />
         </button>
