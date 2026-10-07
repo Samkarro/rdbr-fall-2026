@@ -15,7 +15,6 @@ export default async function SessionsPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const sp = await searchParams;
-  const spString = searchParams.toString();
 
   const [filters, sessionData] = await Promise.all([
     getFilterOptions(),

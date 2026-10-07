@@ -15,8 +15,10 @@
 }
 
 .sessions-content {
+  position: relative;
   display: flex;
   gap: 51px;
+  height: auto;
 }
 
 .sessions-movie-list {

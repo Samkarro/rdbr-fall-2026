@@ -20,6 +20,10 @@ export default function SessionFilters({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const hasActiveFilters = Array.from(searchParams.keys()).some(
+    (key) => !["page", "date", "sort"].includes(key),
+  );
+
   // Needed to gauge which format filters to show
   const selectedVenues = searchParams.getAll("venues");
 
@@ -79,6 +83,25 @@ export default function SessionFilters({
       )
     );
   }
+
+  function handleClearFilters() {
+    const params = new URLSearchParams();
+
+    const paramsToKeep = ["page", "date", "sort"];
+
+    paramsToKeep.forEach((key) => {
+      searchParams.getAll(key).forEach((value) => {
+        params.append(key, value);
+      });
+    });
+
+    const queryString = params.toString();
+
+    router.push(queryString ? `${pathname}?${queryString}` : pathname, {
+      scroll: false,
+    });
+  }
+
   return (
     <div className="session-filters-container">
       <h2 className="session-filters-container-heading">Filters</h2>
@@ -173,7 +196,22 @@ export default function SessionFilters({
       </div>
       <hr />
 
-      <p className="amt-filters-active body-s">{activeCount} filters active</p>
+      <div className="clear-filters-button-container">
+        {hasActiveFilters ? (
+          <button
+            className="clear-filters-button label-s clickable"
+            onClick={() => handleClearFilters()}
+          >
+            Clear filters
+          </button>
+        ) : (
+          <div className="clear-filters-placeholder"></div>
+        )}
+
+        <p className="amt-filters-active body-s">
+          {activeCount} filter{activeCount == 1 ? "" : "s"} active
+        </p>
+      </div>
     </div>
   );
 }

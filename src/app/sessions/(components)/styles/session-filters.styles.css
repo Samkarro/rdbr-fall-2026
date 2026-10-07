@@ -1,5 +1,6 @@
 .session-filters-container {
   display: flex;
+
   flex-direction: column;
   justify-content: space-between;
   gap: 24px;
@@ -9,13 +10,23 @@
 
   background-color: var(--bg-card);
   border-radius: 16px;
-  height: fit-content;
   flex-shrink: 0;
+
+  position: -webkit-sticky;
+  position: sticky;
+  top: -220px;
+
+  height: fit-content;
+}
+
+.max-height {
+  position: relative;
+  height: auto;
 }
 
 .session-filters-container hr {
   margin: none;
-  color: var(--bg-raised);
+  border-color: var(--bg-raised);
 }
 
 .filters-container {
@@ -46,11 +57,27 @@
   font-weight: 400;
 }
 
+.clear-filters-placeholder {
+  height: 33px;
+  margin-bottom: 8px;
+}
+
+.clear-filters-button {
+  appearance: none;
+  background: none;
+  padding: 9px 12px;
+  font-family: Archivo;
+  color: var(--text-primary);
+  border: 1px solid var(--text-secondary);
+  border-radius: 99px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
 .amt-filters-active {
   width: 100%;
   text-align: center;
   color: var(--text-secondary);
-  margin-top: 37px;
 }
 
 .filter > input {
