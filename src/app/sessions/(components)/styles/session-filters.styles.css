@@ -72,3 +72,39 @@
   width: 9.5px;
   height: 7.1px;
 }
+
+.date-filter-list {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: scroll;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.date-filter-list::-webkit-scrollbar {
+  display: none;
+}
+
+.date-filter-button {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 6px;
+  align-items: center;
+  border-radius: 8px;
+  width: 37px;
+  flex-shrink: 0;
+
+  background-color: var(--bg-raised);
+  box-shadow: 0px 1px 2px 0px var(--shadow);
+}
+
+.date-filter-button:hover {
+  background-color: var(--bg-card);
+}
+
+.date-filter-button.selected {
+  background-color: var(--color-red);
+}

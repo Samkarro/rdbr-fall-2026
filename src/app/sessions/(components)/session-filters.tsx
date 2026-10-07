@@ -1,35 +1,49 @@
-// app/sessions/(components)/session-filters.tsx
 "use client";
-
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { TimeBand, Venue } from "@/lib/api/types/sessions.types";
 import { MovieFormat, MovieLanguage } from "@/lib/api/types/movie.types";
+import { formatDateParts } from "@/lib/utils/dates";
 import "./styles/session-filters.styles.css";
 
 const FILTER_KEYS = ["venues", "formats", "languages", "bands"] as const;
 type FilterKey = (typeof FILTER_KEYS)[number];
 
-export default function SessionFilters({ filters }: { filters: any }) {
+export default function SessionFilters({
+  filters,
+  days,
+}: {
+  filters: any;
+  days: string[];
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const updateParams = (mutate: (params: URLSearchParams) => void) => {
+    const params = new URLSearchParams(searchParams.toString());
+    mutate(params);
+    params.delete("page");
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
   const isChecked = (key: FilterKey, value: string) =>
     searchParams.getAll(key).includes(value);
 
-  const toggle = (key: FilterKey, value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    const current = params.getAll(key);
-    const next = current.includes(value)
-      ? current.filter((v) => v !== value)
-      : [...current, value];
+  const toggle = (key: FilterKey, value: string) =>
+    updateParams((params) => {
+      const current = params.getAll(key);
+      const next = current.includes(value)
+        ? current.filter((v) => v !== value)
+        : [...current, value];
 
-    params.delete(key);
-    next.forEach((v) => params.append(key, v));
-    params.delete("page");
+      params.delete(key);
+      next.forEach((v) => params.append(key, v));
+    });
 
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-  };
+  const selectedDate = searchParams.get("date") ?? days[0];
+
+  const setDate = (date: string) =>
+    updateParams((params) => params.set("date", date));
 
   const activeCount = FILTER_KEYS.reduce(
     (sum, k) => sum + searchParams.getAll(k).length,
@@ -52,6 +66,27 @@ export default function SessionFilters({ filters }: { filters: any }) {
             <span className="filter-sublabel body-s">· {venue.city}</span>
           </FilterOption>
         ))}
+      </div>
+      <hr />
+
+      <div className="filters-container">
+        <p className="filter-name overline">DATE</p>
+        <div className="date-filter-list">
+          {days.map((day, i) => {
+            const { weekday, day: dayNum } = formatDateParts(day);
+            const selected = day === selectedDate;
+            return (
+              <div
+                key={day}
+                className={`date-filter-button clickable ${selected ? "selected" : ""}`}
+                onClick={() => setDate(day)}
+              >
+                <p className="date-weekday label-s">{weekday}</p>
+                <p className="date-num label-s">{dayNum}</p>
+              </div>
+            );
+          })}
+        </div>
       </div>
       <hr />
 

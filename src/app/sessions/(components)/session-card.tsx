@@ -11,8 +11,8 @@ export default function SessionCard({
   sessions: Session[];
 }) {
   return (
-    // TODO: Handle sold out cases
     // TODO: do pagination
+    // TODO: do sorting
     <div className="session-card">
       <div className="session-card-movie-detail-container">
         <img src={movie.posterUrl ?? undefined} />
@@ -34,7 +34,7 @@ export default function SessionCard({
           return (
             <div
               key={session.id}
-              className={`clickable ${session.isSoldOut ? "session-sold-out" : ""}`}
+              className={`clickable ${session.isSoldOut ? "session-sold-out disabled" : ""}`}
             >
               <div className="session-time-container ">
                 <h3>{session.time}</h3>
