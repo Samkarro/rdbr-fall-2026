@@ -38,6 +38,6 @@ export const getMovieDetail = async (slug: string): Promise<MovieDetail> => {
 }
 
 export const getFilterOptions = cache(async () => {
-  const { data } = await api<{ data: any }>("/filter-options", { next: { revalidate: 3600, tags: ["filter-options"] } })
+  const { data } = await api<{ data: any }>("/filter-options", { next: { tags: ["filter-options"] } })
   return data;
 })
