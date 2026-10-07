@@ -3,6 +3,7 @@ import { useState } from "react";
 import "./styles/header.styles.css";
 import GlobalSearch from "./search";
 import AuthModal from "./auth/auth-modal";
+import { useRouter } from "next/navigation";
 
 const placeholderUser = {
   username: "Jane Doe",
@@ -27,6 +28,8 @@ export default function KinoHeader() {
   const [authModalOpen, setAuthModalOpen] = useState<"login" | "signup" | null>(
     null,
   );
+
+  const router = useRouter();
 
   // Buttons sections for authorization states
   function LoggedInButtons() {
@@ -67,7 +70,6 @@ export default function KinoHeader() {
         >
           Sign Up
         </button>
-        {/* TODO: Review hover color change - seems too dark at the moment */}
         <button
           className="custom-button-large clickable white-button"
           onClick={() => setAuthModalOpen("login")}
@@ -81,12 +83,20 @@ export default function KinoHeader() {
   return (
     <header>
       <div className="header-components-container">
-        <div className="header-components-logos-container">
-          <span className="kinoxii-logo">
+        <nav className="header-components-logos-container ">
+          <button
+            className="kinoxii-logo clickable"
+            onClick={() => router.push("/")}
+          >
             KINO <span style={{ color: "var(--color-red)" }}>XII</span>
-          </span>
-          <p className="overline">SESSIONS</p>
-        </div>
+          </button>
+          <button
+            className="nav-button overline clickable"
+            onClick={() => router.push("/sessions")}
+          >
+            SESSIONS
+          </button>
+        </nav>
         <div className="header-components-actions-container">
           <GlobalSearch></GlobalSearch>
           <div className="header-components-auth-buttons">
