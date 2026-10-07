@@ -19,6 +19,6 @@ export function buildSessionsQuery(sp: SP) {
 }
 
 export async function getSessions(sp: SP) {
-  const res = await api<{ data: any }>(`/sessions?${buildSessionsQuery(sp)}`, { cache: "no-store" })
-  return res.data;
+  const res = await api<{ data: any, meta: any }>(`/sessions?${buildSessionsQuery(sp)}`, { cache: "no-store" })
+  return res;
 }

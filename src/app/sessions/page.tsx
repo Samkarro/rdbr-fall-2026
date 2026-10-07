@@ -6,6 +6,7 @@ import { Movie } from "@/lib/api/types/movie.types";
 import { Session } from "@/lib/api/types/sessions.types";
 import SessionCard from "./(components)/session-card";
 import { getNextSevenDays } from "@/lib/utils/dates";
+import SessionSorter from "./(components)/session-sorter";
 
 export default async function SessionsPage({
   searchParams,
@@ -30,7 +31,8 @@ export default async function SessionsPage({
       <div className="sessions-content">
         <SessionFilters filters={filters} days={days}></SessionFilters>
         <div className="sessions-movie-list">
-          {sessionData.map(
+          <SessionSorter sorts={filters.sorts} meta={sessionData.meta} />
+          {sessionData.data.map(
             (sessionData: { movie: Movie; sessions: Session[] }) => {
               return (
                 <SessionCard
