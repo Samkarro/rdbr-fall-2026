@@ -13,14 +13,35 @@
 .header-search-container:hover {
   border: 1px solid var(--tint-white);
 }
+
 .search-icon {
   height: 14px;
   width: 14px;
 }
 
+.search-x {
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 99px;
+  background-color: var(--tint-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 8px;
+}
+
+.search-x img {
+  position: relative;
+  margin-top: 1px;
+  height: 9px;
+  width: 10px;
+}
+
 .header-search {
   height: 18px;
-  width: 100%px;
+  width: 100%;
   background: none;
   border: none;
   outline: none;
@@ -92,6 +113,12 @@
   justify-content: center;
   gap: 6px;
   margin-bottom: 2px;
+}
+
+.results-panel-message p {
+  text-wrap: wrap;
+  overflow-wrap: break-word;
+  text-align: center;
 }
 
 .results-panel-cta {
