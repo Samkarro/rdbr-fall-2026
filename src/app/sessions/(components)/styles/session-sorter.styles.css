@@ -1,0 +1,59 @@
+.session-sorting-selector-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.session-sorting-label {
+  color: var(--text-secondary);
+}
+
+.session-sorting-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--text-primary);
+  font-family: Archivo;
+}
+
+.session-sorting-trigger img {
+  transition: transform 200ms ease;
+}
+
+.session-sorting-trigger img.open {
+  transform: rotate(180deg);
+}
+
+.session-sorting-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  min-width: 100%;
+  z-index: 1;
+  list-style: none;
+  padding: 4px;
+  background-color: var(--bg-page);
+  border: 1px solid var(--bg-raised);
+  border-radius: 12px;
+}
+
+.session-sorting-option {
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.session-sorting-option.selected {
+  color: var(--color-red);
+  background-color: var(--tint-red);
+}
+
+.session-sorting-option:hover {
+  background-color: var(--bg-card);
+}

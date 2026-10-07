@@ -45,7 +45,3 @@
   height: 16px;
   width: 16px;
 }
-
-.session-sorting-selector-container img.open {
-  transform: rotate(180deg);
-}
