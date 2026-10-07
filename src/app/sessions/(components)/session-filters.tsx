@@ -97,7 +97,6 @@ export default function SessionFilters({
       </div>
       <hr />
 
-      {/* TODO: fix scroll behavior on here */}
       <div className="filters-container">
         <p className="filter-name overline">DATE</p>
         <div className="date-filter-list">

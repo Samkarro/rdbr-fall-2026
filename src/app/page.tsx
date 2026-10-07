@@ -3,9 +3,9 @@ import {
   getFeaturedTitles,
   getNowPlaying,
 } from "@/lib/api/catalog.api";
-import ComingSoon from "@/lib/components/hero-section/coming-soon";
-import HeroSection from "@/lib/components/hero-section/hero";
-import NowPlaying from "@/lib/components/hero-section/now-playing";
+import ComingSoon from "@/lib/components/homepage/coming-soon";
+import HeroSection from "@/lib/components/homepage/hero";
+import NowPlaying from "@/lib/components/homepage/now-playing";
 
 export default async function Home() {
   const featuredTitles = await getFeaturedTitles();
