@@ -1,0 +1,43 @@
+#my-profile {
+  margin: 117px 51px 0px 51px;
+}
+
+h1 {
+  margin-bottom: 28px;
+}
+
+.profile-nav {
+  display: flex;
+  align-items: flex-end;
+  gap: 32px;
+  width: 100%;
+  margin-bottom: 1px;
+}
+
+.profile-nav-button {
+  appearance: none;
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 31px;
+  color: var(--text-secondary);
+  font-family: Archivo;
+}
+.profile-nav-highlight {
+  width: 100%;
+  height: 2px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  opacity: 0;
+  background-color: var(--color-red);
+}
+
+.profile-nav-button.active {
+  color: var(--text-primary);
+}
+
+.profile-nav-button.active .profile-nav-highlight {
+  opacity: 1;
+}

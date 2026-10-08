@@ -67,7 +67,7 @@ export default function ProfileDropdown({
         <div className="profile-buttons-container">
           <button
             className="profile-button clickable label-m"
-            onClick={() => handleLink("/profile")}
+            onClick={() => handleLink("/profile?page-personal-information")}
           >
             <img className="my-profile-icon" src="/profile-icon.svg" />
             My Profile
