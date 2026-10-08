@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { authenticate } from "../../../api/auth.api";
 import Field from "../input-field";
 
@@ -20,6 +20,8 @@ export default function AuthForm({
   const [pending, setPending] = useState(false);
   const router = useRouter();
   const [valid, setValid] = useState<string[]>([]);
+
+  const searchParams = useSearchParams();
 
   // Validating obvious mistakes in fields here.
   function validate(name: string, value: string) {
@@ -62,7 +64,14 @@ export default function AuthForm({
       setValid(Object.keys(data));
       await new Promise((resolve) => setTimeout(resolve, 800));
       onSuccess();
-      router.refresh();
+
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("auth");
+
+      router.replace(
+        params.toString() ? `?${params.toString()}` : window.location.pathname,
+        { scroll: false },
+      );
       return;
     }
     setPending(false);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import AuthForm, { type AuthType } from "./auth-form";
 import "./styles/auth-modal.styles.css";

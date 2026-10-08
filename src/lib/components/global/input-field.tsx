@@ -33,3 +33,29 @@ export default function Field({
     </div>
   );
 }
+
+export function SelectField({
+  label,
+  name,
+  error,
+  children,
+  ...props
+}: {
+  label: string;
+  name: string;
+  error?: string;
+} & React.ComponentProps<"select">) {
+  return (
+    <div className={`custom-input ${error ? "error" : ""}`}>
+      <label className="label-s" htmlFor={name}>
+        {label}
+      </label>
+      <div className="custom-input-control">
+        <select id={name} className="label-s" name={name} {...props}>
+          {children}
+        </select>
+      </div>
+      {error && <p className="custom-input-error body-s">{error}</p>}
+    </div>
+  );
+}
