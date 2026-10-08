@@ -8,22 +8,26 @@ import TrackView from "./(components)/view-tracker";
 import { getMe } from "@/lib/api/user.api";
 import { getNextSevenDays, getToday } from "@/lib/utils/dates";
 import DetailSessions from "./(components)/movie-detail-sessions";
+import { getMovieSessionData } from "@/lib/api/sessions.api";
 
 export default async function MovieDetailsPage({
+  searchParams,
   params,
 }: PageProps<"/movies/[movie]">) {
   const { movie: slug } = await params;
+  const sp = await searchParams;
   const user = await getMe();
   let movie: MovieDetail = await getMovieDetail(slug);
   if (!movie) notFound();
 
   const accountInvalid = Boolean(
-    user === null ||
-    user.dateOfBirth === null ||
-    (user.dateOfBirth && getToday({ years: -16 }) <= user.dateOfBirth),
+    user !== null &&
+    (user.dateOfBirth === null ||
+      (user.dateOfBirth && getToday({ years: -16 })) <= user.dateOfBirth),
   );
 
   const days = getNextSevenDays();
+  const sessionData = await getMovieSessionData(sp, slug);
 
   return (
     <div className="movie-details-page-container">
@@ -81,7 +85,7 @@ export default async function MovieDetailsPage({
         </div>
       </section>
       <section id="movie-detail-booking">
-        <DetailSessions days={days} />
+        <DetailSessions days={days} sessionData={sessionData} />
         <div className="movie-extensive-detail-container">
           <div className="movie-extensive-detail-text-container">
             <h2>Details</h2>

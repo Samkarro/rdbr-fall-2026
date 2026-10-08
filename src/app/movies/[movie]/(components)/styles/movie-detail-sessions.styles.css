@@ -18,6 +18,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   flex-shrink: 0;
   gap: 6px;
 
@@ -31,4 +32,9 @@
 .movie-detail-session-date-button.active {
   width: 110px;
   background-color: var(--color-red);
+}
+
+.date-num {
+  font-weight: 800;
+  font-size: 18px;
 }

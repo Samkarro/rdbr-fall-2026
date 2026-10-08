@@ -22,3 +22,8 @@ export async function getSessions(sp: SP) {
   const res = await api<{ data: any, meta: any }>(`/sessions?${buildSessionsQuery(sp)}`, { cache: "no-store" })
   return res;
 }
+
+export async function getMovieSessionData(sp: SP, slug: string) {
+  const res = await api<{ data: any }>(`/movies/${slug}/sessions?${buildSessionsQuery(sp)}`, { cache: "no-store" })
+  return res.data;
+}
