@@ -3,40 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authenticate } from "../../../api/auth.api";
+import Field from "../input-field";
 
 export type AuthType = "login" | "signup";
-
-function Field({
-  label,
-  name,
-  error,
-  invalid,
-  valid,
-  ...props
-}: {
-  label: string;
-  name: string;
-  error?: string;
-  invalid?: boolean;
-  valid?: boolean;
-} & React.ComponentProps<"input">) {
-  const hasError = Boolean(error || error === "" || invalid);
-
-  return (
-    <div className={`auth-input ${hasError ? "error" : ""}`}>
-      <label className="label-s" htmlFor={name}>
-        {label}
-      </label>
-      <div className="auth-input-control">
-        <input id={name} className="label-s" name={name} {...props} />
-        {valid && !hasError && (
-          <img className="green-check" src="./green-check.svg" alt="" />
-        )}
-      </div>
-      {error && <p className="auth-input-error body-s">{error}</p>}
-    </div>
-  );
-}
 
 export default function AuthForm({
   authType,
