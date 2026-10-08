@@ -4,6 +4,7 @@ import { TimeBand, Venue } from "@/lib/api/types/sessions.types";
 import { MovieFormat, MovieLanguage } from "@/lib/api/types/movie.types";
 import { formatDateParts } from "@/lib/utils/dates";
 import "./styles/session-filters.styles.css";
+import HorizontalScroller from "@/lib/components/global/horizontal-scroller";
 
 const FILTER_KEYS = ["venues", "formats", "languages", "bands"] as const;
 type FilterKey = (typeof FILTER_KEYS)[number];
@@ -19,6 +20,10 @@ export default function SessionFilters({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const hasActiveFilters = Array.from(searchParams.keys()).some(
+    (key) => !["page", "date", "sort"].includes(key),
+  );
+
   // Needed to gauge which format filters to show
   const selectedVenues = searchParams.getAll("venues");
 
@@ -26,7 +31,7 @@ export default function SessionFilters({
     const params = new URLSearchParams(searchParams.toString());
     mutate(params);
     params.delete("page");
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   const isChecked = (key: FilterKey, value: string) =>
@@ -78,6 +83,25 @@ export default function SessionFilters({
       )
     );
   }
+
+  function handleClearFilters() {
+    const params = new URLSearchParams();
+
+    const paramsToKeep = ["page", "date", "sort"];
+
+    paramsToKeep.forEach((key) => {
+      searchParams.getAll(key).forEach((value) => {
+        params.append(key, value);
+      });
+    });
+
+    const queryString = params.toString();
+
+    router.push(queryString ? `${pathname}?${queryString}` : pathname, {
+      scroll: false,
+    });
+  }
+
   return (
     <div className="session-filters-container">
       <h2 className="session-filters-container-heading">Filters</h2>
@@ -97,10 +121,9 @@ export default function SessionFilters({
       </div>
       <hr />
 
-      {/* TODO: fix scroll behavior on here */}
       <div className="filters-container">
         <p className="filter-name overline">DATE</p>
-        <div className="date-filter-list">
+        <HorizontalScroller className="date-filter-list">
           {days.map((day, i) => {
             const { weekday, day: dayNum } = formatDateParts(day);
             const selected = day === selectedDate;
@@ -115,7 +138,7 @@ export default function SessionFilters({
               </div>
             );
           })}
-        </div>
+        </HorizontalScroller>
       </div>
       <hr />
 
@@ -173,7 +196,22 @@ export default function SessionFilters({
       </div>
       <hr />
 
-      <p className="amt-filters-active body-s">{activeCount} filters active</p>
+      <div className="clear-filters-button-container">
+        {hasActiveFilters ? (
+          <button
+            className="clear-filters-button label-s clickable"
+            onClick={() => handleClearFilters()}
+          >
+            Clear filters
+          </button>
+        ) : (
+          <div className="clear-filters-placeholder"></div>
+        )}
+
+        <p className="amt-filters-active body-s">
+          {activeCount} filter{activeCount == 1 ? "" : "s"} active
+        </p>
+      </div>
     </div>
   );
 }

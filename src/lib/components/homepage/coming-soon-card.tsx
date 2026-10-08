@@ -1,4 +1,4 @@
-import { Movie } from "../api/types/movie.types";
+import { Movie } from "../../api/types/movie.types";
 import "./styles/coming-soon.styles.css";
 
 export default function ComingSoonCard({ movie }: { movie: Movie }) {
@@ -27,7 +27,7 @@ export default function ComingSoonCard({ movie }: { movie: Movie }) {
           </div>
         </div>
         <div className="coming-soon-card-notify-button label-s">
-          <img src="./bell.svg" />
+          <img src="/bell.svg" />
           Notify Me
         </div>
       </div>

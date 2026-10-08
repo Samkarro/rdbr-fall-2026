@@ -3,9 +3,11 @@ import {
   getFeaturedTitles,
   getNowPlaying,
 } from "@/lib/api/catalog.api";
-import ComingSoon from "@/lib/components/coming-soon";
-import HeroSection from "@/lib/components/hero";
-import NowPlaying from "@/lib/components/now-playing";
+import ComingSoon from "@/lib/components/homepage/coming-soon";
+import HeroSection from "@/lib/components/homepage/hero";
+import NowPlaying from "@/lib/components/homepage/now-playing";
+import RecentlyViewed from "@/lib/components/homepage/recently-viewed";
+import { getRecent, RecentMovie } from "@/lib/recently-viewed";
 
 export default async function Home() {
   const featuredTitles = await getFeaturedTitles();
@@ -16,6 +18,7 @@ export default async function Home() {
     <div>
       <main>
         <HeroSection movies={featuredTitles} />
+        <RecentlyViewed />
         <NowPlaying movies={nowPlayingFilms} />
         <hr />
         <ComingSoon movies={comingSoonFilms} />

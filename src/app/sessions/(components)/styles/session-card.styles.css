@@ -4,7 +4,7 @@
   margin-bottom: 14px;
   align-items: center;
 }
-.session-card-movie-detail svg {
+svg {
   height: 12px;
   width: 12px;
 }
@@ -41,6 +41,8 @@
 .session-list {
   display: flex;
   overflow: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   gap: 12px;
 }
 

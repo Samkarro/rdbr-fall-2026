@@ -2,23 +2,28 @@
 import { useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import "./styles/search.styles.css";
-import { searchFilms } from "../api/catalog.api";
 import ResultCard from "./result-card";
-import { Movie } from "../api/types/movie.types";
+import { Movie } from "@/lib/api/types/movie.types";
+import { searchFilms } from "@/lib/api/catalog.api";
+import { useRouter } from "next/navigation";
 
 export default function GlobalSearch() {
   const [results, setResults] = useState<any[]>([]);
+  const [resolvedQuery, setResolvedQuery] = useState("");
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const controllerRef = useRef<AbortController | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const router = useRouter();
+
   const handleSearch = useDebouncedCallback(async (term: string) => {
     controllerRef.current?.abort();
 
-    const searchQquery = term.trim();
-    if (!searchQquery) {
+    const searchQuery = term.trim();
+    if (!searchQuery) {
       setResults([]);
+      setResolvedQuery("");
       return;
     }
 
@@ -26,8 +31,9 @@ export default function GlobalSearch() {
     controllerRef.current = controller;
 
     try {
-      const res: Movie[] = await searchFilms(searchQquery, controller.signal);
+      const res: Movie[] = await searchFilms(searchQuery, controller.signal);
       setResults(res);
+      setResolvedQuery(searchQuery);
     } catch (err) {
       if ((err as Error).name !== "AbortError") console.error(err);
     }
@@ -60,16 +66,29 @@ export default function GlobalSearch() {
           setQuery(e.target.value);
           handleSearch(e.target.value);
         }}
+        maxLength={200}
       />
+      {isOpen && query !== "" && (
+        <button
+          className="search-x clickable"
+          type="button"
+          onClick={() => {
+            setQuery("");
+            setResolvedQuery("");
+          }}
+        >
+          <img src="/x-symbol.svg" alt="" />
+        </button>
+      )}
 
       {/* Search results box */}
       {/* TODO: Debounce the switching logic too */}
       {isOpen && (
         <div className="results-panel">
-          {!query.trim() ? (
+          {!resolvedQuery ? (
             <div className="results-panel-alt">
               <div className="circle-container">
-                <img src="/popcorn.svg" />
+                <img className="results-magnifier-svg" src="/popcorn.svg" />
               </div>
               <div className="results-panel-message">
                 <p className="label-m">What do you want to watch?</p>
@@ -77,7 +96,10 @@ export default function GlobalSearch() {
                   Search by title, director or cast
                 </p>
               </div>
-              <button className="clickable custom-button-large results-panel-cta">
+              <button
+                className="clickable custom-button-large results-panel-cta"
+                onClick={() => router.push("/sessions")}
+              >
                 Browse all sessions
               </button>
             </div>
@@ -94,7 +116,14 @@ export default function GlobalSearch() {
               </div>
               <div className="results-panel-list">
                 {results.map((el: Movie) => {
-                  return <ResultCard key={el.id} movie={el} query={query} />;
+                  return (
+                    <ResultCard
+                      key={el.id}
+                      movie={el}
+                      query={resolvedQuery}
+                      inputRef={inputRef}
+                    />
+                  );
                 })}
               </div>
             </div>
@@ -104,12 +133,15 @@ export default function GlobalSearch() {
                 <img className="results-magnifier-svg" src="/search.svg" />
               </div>
               <div className="results-panel-message">
-                <p className="label-m">No results for "{query}"</p>
+                <p className="label-m">No results for "{resolvedQuery}"</p>
                 <p className="results-panel-message-sub body-m">
                   Check the spelling or try another film or live event
                 </p>
               </div>
-              <button className="clickable custom-button-large results-panel-cta">
+              <button
+                className="clickable custom-button-large results-panel-cta"
+                onClick={() => router.push("/sessions")}
+              >
                 Browse all sessions
               </button>
             </div>

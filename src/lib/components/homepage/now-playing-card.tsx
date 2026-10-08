@@ -1,8 +1,15 @@
-import { Movie } from "../api/types/movie.types";
+"use client";
+import { useRouter } from "next/navigation";
+import { Movie } from "../../api/types/movie.types";
 
 export default function NowPlayingCard({ movie }: { movie: Movie }) {
+  const router = useRouter();
+
   return (
-    <div className="now-playing-card clickable">
+    <div
+      className="now-playing-card clickable"
+      onClick={() => router.push(`/movies/${movie.slug}`)}
+    >
       <div className="now-playing-card-info-container">
         <img src={movie.posterUrl ?? undefined} alt={`${movie.title} poster`} />
 

@@ -1,5 +1,8 @@
-import { Movie } from "../api/types/movie.types";
+"use client";
+import { useRouter } from "next/navigation";
+import { Movie } from "../../api/types/movie.types";
 import "./styles/result-card.styles.css";
+import { Dispatch, RefObject, SetStateAction } from "react";
 
 // functions to highlight query
 function escapeRegExp(text: string) {
@@ -30,12 +33,22 @@ function HighlightedTitle({ title, query }: { title: string; query: string }) {
 export default function ResultCard({
   movie,
   query,
+  inputRef,
 }: {
   movie: Movie;
   query: string;
+  inputRef: RefObject<HTMLInputElement | null>;
 }) {
+  const router = useRouter();
+
   return (
-    <div className="clickable result-card">
+    <div
+      className="clickable result-card"
+      onClick={() => {
+        inputRef.current?.blur();
+        router.push(`/movies/${movie.slug}`);
+      }}
+    >
       <div className="result-card-movie-info-container">
         {/* ternary to handle missing posters */}
         {movie.posterUrl ? (

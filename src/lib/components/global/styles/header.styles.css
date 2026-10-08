@@ -1,6 +1,19 @@
 .kinoxii-logo {
+  appearance: none;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-family: Archivo;
   font-weight: 800;
   font-size: 20px;
+}
+
+.nav-button {
+  appearance: none;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-family: Archivo;
 }
 
 .header-components-container {

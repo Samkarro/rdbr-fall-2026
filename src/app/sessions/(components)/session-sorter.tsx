@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import "@/lib/components/styles/sessions.styles.css";
+import "../styles/sessions.styles.css";
 import "./styles/session-sorter.styles.css";
 
 export default function SessionSorter({

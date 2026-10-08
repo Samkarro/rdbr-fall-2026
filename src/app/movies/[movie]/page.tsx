@@ -1,16 +1,33 @@
 import { getMovieDetail } from "@/lib/api/catalog.api";
-import "../../../lib/components/styles/hero.styles.css";
-import "../../../lib/components/styles/movie-detail.styles.css";
-import { MovieFormat } from "@/lib/api/types/movie.types";
+import "../../../lib/components/homepage/styles/hero.styles.css";
+import "./styles/movie-detail.styles.css";
+import { MovieDetail, MovieFormat } from "@/lib/api/types/movie.types";
+import { notFound } from "next/navigation";
+import { RecentMovie } from "@/lib/recently-viewed";
+import TrackView from "./(components)/view-tracker";
 
 export default async function MovieDetailsPage({
   params,
 }: PageProps<"/movies/[movie]">) {
   const { movie: slug } = await params;
-  let movie = await getMovieDetail(slug);
+  let movie: MovieDetail = await getMovieDetail(slug);
+  if (!movie) notFound();
 
   return (
     <div className="movie-details-page-container">
+      {/* Tracking view so that it appears on the home page */}
+      <TrackView
+        movie={
+          {
+            slug: movie.slug,
+            title: movie.title,
+            posterUrl: movie.posterUrl ?? "",
+            genre: movie.genres[0]?.name,
+            runtimeMins: movie.runtimeMinutes,
+            ageRating: movie.ageRating.code,
+          } as RecentMovie
+        }
+      />
       <section id="movie-detail-banner">
         <img src={movie.backdropUrl ?? undefined} alt="" />
         <div className="movie-detail-image-overlay"></div>
