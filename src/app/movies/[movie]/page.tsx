@@ -29,6 +29,12 @@ export default async function MovieDetailsPage({
   const days = getNextSevenDays();
   const sessionData = await getMovieSessionData(sp, slug);
 
+  const releaseDate = new Date(movie.releaseDate).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
   return (
     <div className="movie-details-page-container">
       {/* Tracking view so that it appears on the home page */}
@@ -51,12 +57,7 @@ export default async function MovieDetailsPage({
           <img src={movie.posterUrl ?? undefined} alt="" />
           <div className="detail-banner-text-content">
             <div className="hero-content-red-label premiere-label label-s">
-              {/* TODO: Change this to the correct relevant label */}
-              PREMIERE · WEEK OF{" "}
-              {new Intl.DateTimeFormat("en-US", {
-                day: "numeric",
-                month: "short",
-              }).format(new Date(movie.releaseDate))}
+              NOW PLAYING
             </div>
             <p className="hero-content-title display">{movie.title}</p>
             <p className="hero-section-synopsis body-m">{movie.synopsis}</p>
@@ -103,7 +104,7 @@ export default async function MovieDetailsPage({
             </label>
             <label className=" movie-extensive-detail-text-label label-s">
               release date
-              <p className="label-m">{movie.releaseDate}</p>
+              <p className="label-m">{releaseDate}</p>
             </label>
             <label className=" movie-extensive-detail-text-label label-s">
               formats

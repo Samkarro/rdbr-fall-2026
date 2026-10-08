@@ -75,8 +75,10 @@ export default function DetailSessions({
                     <p className="hall-heading label-s">Hall {hall.name}</p>
                     <div className="session-list">
                       {hallSessions.map((session) => (
-                        // placeholder for now
-                        <div className="session-ticket-container">
+                        <div
+                          key={session.id}
+                          className="session-ticket-container"
+                        >
                           <div className="session-ticket-left">
                             <div className="session-ticket-clip top"></div>
                             <div className="session-ticket-clip bottom"></div>
