@@ -34,11 +34,6 @@
   align-items: center;
   gap: 32px;
 }
-
-.header-components-logged-in {
-  position: relative;
-}
-
 .header-components-logged-out {
   display: flex;
   gap: 12px;
@@ -48,6 +43,17 @@
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.header-components-user img {
+  margin-left: 10px;
+  height: 18px;
+  width: 18px;
+  transition: transform 200ms ease;
+}
+
+.header-components-user img.active {
+  transform: rotate(180deg);
 }
 
 .header-components-avatar {

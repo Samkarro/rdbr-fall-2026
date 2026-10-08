@@ -17,7 +17,7 @@ export default function ProfileDropdown({
     <div className="profile-dropdown-container">
       <div className="top-section">
         <div className="profile-dropdown-account-info-container">
-          <div className="header-components-avatar">
+          <div className="header-components-avatar dropdown-version">
             {avatar ? (
               <img className="header-components-avatar-image" src={avatar} />
             ) : (
@@ -37,24 +37,39 @@ export default function ProfileDropdown({
             <p className="profile-dropdown-email body-s">{email}</p>
           </div>
         </div>
-        <div className={`profile-completion-notice`}>
+        <div
+          className={`profile-completion-notice ${profileComplete ? "complete" : "incomplete"}`}
+        >
           <p className="label-m">
             Profile {profileComplete ? "complete" : "incomplete"}
             {profileComplete && <img src="/green-check.svg" />}
           </p>
           {!profileComplete && (
-            <p className="body-s">
+            <p className="profile-completion-notice-body body-s">
               Please complete your profile to enable booking
             </p>
           )}
         </div>
         <div className="profile-buttons-container">
-          <button className="profile-button">My Profile</button>
-          <button className="profile-button">My Tickets</button>
+          <button className="profile-button clickable label-m">
+            <img className="my-profile-icon" src="/profile-icon.svg" />
+            My Profile
+          </button>
+          <button className="profile-button clickable label-m">
+            <img src="/ticket.svg" />
+            My Tickets
+          </button>
         </div>
       </div>
+      <div className="hr-bg">
+        <hr />
+      </div>
+
       <div className="logout-button-container">
-        <button className="profile-button logout-button">Log out</button>
+        <button className="profile-button clickable logout-button label-m">
+          <img src="/logout-icon.svg" />
+          Log out
+        </button>
       </div>
     </div>
   );

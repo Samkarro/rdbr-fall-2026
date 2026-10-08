@@ -46,10 +46,10 @@ function LoggedInButtons({ user }: { user: User }) {
 
   return (
     <div
-      className="header-components-logged-in clickable"
+      className="header-components-logged-in"
       onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
     >
-      <div className="header-components-user">
+      <div className="header-components-user clickable">
         <div className="header-components-avatar">
           {avatar ? (
             <img className="header-components-avatar-image" src={avatar} />
@@ -63,13 +63,24 @@ function LoggedInButtons({ user }: { user: User }) {
             title={profileComplete ? "Profile complete" : "Profile incomplete"}
           />
         </div>
-        <p className="header-components-username">{username}</p>
-      </div>
-      {profileDropdownOpen && (
-        <ProfileDropdown
-          user={user}
-          setProfileDropdownOpen={setProfileDropdownOpen}
+        <p className="header-components-username clickable">{username}</p>
+        <img
+          className={`${profileDropdownOpen ? "active" : ""} clickable`}
+          src="/dropdown-arrow.svg"
+          alt=""
         />
+      </div>
+
+      {profileDropdownOpen && (
+        <div
+          className="profile-dropdown-overlay"
+          onClick={() => setProfileDropdownOpen(false)}
+        >
+          <ProfileDropdown
+            user={user}
+            setProfileDropdownOpen={setProfileDropdownOpen}
+          />
+        </div>
       )}
     </div>
   );

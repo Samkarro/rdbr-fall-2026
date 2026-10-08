@@ -1,15 +1,25 @@
+.profile-dropdown-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--overlay-scrim);
+  z-index: 4;
+}
+
 .profile-dropdown-container {
   position: absolute;
   width: 302px;
-  right: 0;
-  top: 45px;
+  right: 60px;
+  top: 75px;
+  z-index: 5;
 }
 
 .top-section,
 .logout-button-container {
   background-color: var(--bg-page);
   width: 100%;
-  padding: 20px;
 }
 
 .top-section {
@@ -20,4 +30,99 @@
 .logout-button-container {
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
+}
+
+.profile-dropdown-account-info-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 20px 16px 20px;
+}
+
+.header-components-avatar.dropdown-version {
+  height: 42px;
+  width: 42px;
+}
+
+.profile-dropdown-username,
+.profile-dropdown-email {
+  text-wrap: wrap;
+  text-overflow: break-word;
+}
+
+.profile-dropdown-username {
+  margin-bottom: 2px;
+}
+.profile-dropdown-email {
+  color: var(--text-secondary);
+}
+
+.profile-completion-notice {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin: 0px 20px;
+}
+
+.profile-completion-notice.incomplete {
+  color: var(--color-orange);
+  background-color: var(--tint-warning);
+}
+
+.profile-completion-notice.complete {
+  color: var(--color-green);
+  background-color: var(--tint-green);
+}
+
+.profile-completion-notice-body {
+  color: var(--text-secondary);
+}
+.profile-buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+}
+.profile-button {
+  padding: 10px 20px;
+  appearance: none;
+  background: none;
+  color: var(--text-primary);
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  font-family: Archivo;
+  height: 40px;
+}
+
+.profile-button:hover {
+  background-color: var(--bg-card);
+}
+
+.logout-button {
+  color: var(--color-red);
+}
+
+.logout-button-container {
+  padding-bottom: 10px;
+}
+
+.hr-bg {
+  padding: 4px 0px;
+  background-color: var(--bg-page);
+}
+
+hr {
+  margin: 0px;
+
+  border-color: var(--bg-card);
+}
+
+.profile-button img {
+  height: 16px;
+  width: 16px;
 }
