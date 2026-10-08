@@ -5,8 +5,9 @@ import GlobalSearch from "./search";
 import AuthModal from "./auth/auth-modal";
 import { useRouter } from "next/navigation";
 import { User } from "@/lib/api/types/user.types";
+import ProfileDropdown from "./profile-dropdown";
 
-function getInitials(name: string) {
+export function getInitials(name: string) {
   return name
     .trim()
     .split(/\s+/)
@@ -41,9 +42,13 @@ function LoggedOutButtons({
 
 function LoggedInButtons({ user }: { user: User }) {
   const { username, avatar, profileComplete } = user;
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   return (
-    <div className="header-components-logged-in">
+    <div
+      className="header-components-logged-in clickable"
+      onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+    >
       <div className="header-components-user">
         <div className="header-components-avatar">
           {avatar ? (
@@ -60,6 +65,12 @@ function LoggedInButtons({ user }: { user: User }) {
         </div>
         <p className="header-components-username">{username}</p>
       </div>
+      {profileDropdownOpen && (
+        <ProfileDropdown
+          user={user}
+          setProfileDropdownOpen={setProfileDropdownOpen}
+        />
+      )}
     </div>
   );
 }

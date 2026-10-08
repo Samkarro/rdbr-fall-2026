@@ -35,6 +35,10 @@
   gap: 32px;
 }
 
+.header-components-logged-in {
+  position: relative;
+}
+
 .header-components-logged-out {
   display: flex;
   gap: 12px;
