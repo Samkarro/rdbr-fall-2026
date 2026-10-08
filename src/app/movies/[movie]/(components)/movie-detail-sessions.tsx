@@ -5,6 +5,7 @@ import "./styles/movie-detail-sessions.styles.css";
 import { formatDateParts } from "@/lib/utils/dates";
 import { Session, Venue } from "@/lib/api/types/sessions.types";
 import { Movie } from "@/lib/api/types/movie.types";
+import Ticket from "@/lib/misc/ticket";
 
 export default function DetailSessions({
   days,
@@ -72,16 +73,33 @@ export default function DetailSessions({
                 return (
                   <div key={hall.id} className="hall-card">
                     <p className="hall-heading label-s">Hall {hall.name}</p>
-
                     <div className="session-list">
                       {hallSessions.map((session) => (
                         // placeholder for now
-                        <button
-                          key={session.id}
-                          className="session-card clickable"
-                        >
-                          <p>₾ {session.price}</p>
-                        </button>
+                        <div className="session-ticket-container">
+                          <div className="session-ticket-left">
+                            <div className="session-ticket-clip top"></div>
+                            <div className="session-ticket-clip bottom"></div>
+                            <p className="session-ticket-time h2">
+                              {session.time}
+                            </p>
+                            <p className="session-ticket-language body-s">
+                              {session.language.code}
+                              <span className="session-ticket-format label-s">
+                                {session.format.name}
+                              </span>
+                            </p>
+                          </div>
+                          <div className="session-ticket-right">
+                            <p className="session-ticket-price h3">
+                              ₾ {session.price}
+                            </p>
+                            <p className="remaining-tickets body-s">
+                              <Ticket fill="#A9A9A9" />
+                              {session.seatsLeft} left
+                            </p>
+                          </div>
+                        </div>
                       ))}
                     </div>
                   </div>

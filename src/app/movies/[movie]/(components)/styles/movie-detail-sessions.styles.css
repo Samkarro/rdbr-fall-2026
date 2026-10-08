@@ -62,3 +62,97 @@
 .hall-heading {
   margin-bottom: 9px;
 }
+
+.session-list {
+  display: flex;
+  gap: 9px;
+}
+
+.session-ticket-container {
+  display: flex;
+}
+
+.session-ticket-right,
+.session-ticket-left {
+  height: 81px;
+  background-color: var(--bg-page);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.session-ticket-left {
+  position: relative;
+  min-width: 160px;
+  border-top-right-radius: 12px;
+  border-right: 2px dashed var(--text-primary);
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.session-ticket-right {
+  width: 83px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.session-ticket-clip {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 99px;
+  background-color: var(--bg-card);
+  right: -8px;
+}
+
+.session-ticket-clip.top {
+  top: -7px;
+}
+
+.session-ticket-clip.bottom {
+  bottom: -8px;
+}
+
+.h2 {
+  font-weight: 800;
+  font-size: 20px;
+}
+
+.h3 {
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.session-ticket-price {
+  color: var(--color-red);
+}
+
+.remaining-tickets {
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.remaining-tickets svg {
+  width: 12px;
+  height: 12px;
+}
+
+.session-ticket-language {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+}
+
+.session-ticket-format {
+  padding: 4px 12px;
+  width: min-content;
+  border-radius: 99px;
+
+  background-color: var(--bg-card);
+  color: #e3e3e3b2;
+}
