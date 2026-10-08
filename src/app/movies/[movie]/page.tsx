@@ -3,7 +3,7 @@ import "../../../lib/components/homepage/styles/hero.styles.css";
 import "./styles/movie-detail.styles.css";
 import { MovieDetail, MovieFormat } from "@/lib/api/types/movie.types";
 import { notFound } from "next/navigation";
-import { addRecent, RecentMovie } from "@/lib/recently-viewed";
+import { RecentMovie } from "@/lib/recently-viewed";
 import TrackView from "./(components)/view-tracker";
 
 export default async function MovieDetailsPage({

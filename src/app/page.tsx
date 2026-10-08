@@ -18,9 +18,7 @@ export default async function Home() {
     <div>
       <main>
         <HeroSection movies={featuredTitles} />
-
         <RecentlyViewed />
-
         <NowPlaying movies={nowPlayingFilms} />
         <hr />
         <ComingSoon movies={comingSoonFilms} />
