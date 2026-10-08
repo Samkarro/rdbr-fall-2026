@@ -4,6 +4,8 @@ import "./globals.css";
 import KinoHeader from "@/lib/components/global/header";
 import KinoFooter from "@/lib/components/global/footer";
 import { getFilterOptions } from "@/lib/api/catalog.api";
+import { getMe } from "@/lib/api/user.api";
+import { logout } from "@/lib/api/auth.api";
 
 export const metadata: Metadata = {
   title: "Kino XII",
@@ -17,11 +19,12 @@ const archivo = Archivo({
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const options = await getFilterOptions();
+  const user = await getMe();
 
   return (
     <html lang="en" className={archivo.className}>
       <body>
-        <KinoHeader></KinoHeader>
+        <KinoHeader user={user}></KinoHeader>
         {children}
         <KinoFooter></KinoFooter>
       </body>

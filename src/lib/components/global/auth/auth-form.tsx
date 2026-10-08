@@ -10,24 +10,29 @@ function Field({
   label,
   name,
   error,
+  invalid,
+  valid,
   ...props
 }: {
   label: string;
   name: string;
   error?: string;
+  invalid?: boolean;
+  valid?: boolean;
 } & React.ComponentProps<"input">) {
+  const hasError = Boolean(error || error === "" || invalid);
+
   return (
-    <div className="auth-input">
+    <div className={`auth-input ${hasError ? "error" : ""}`}>
       <label className="label-s" htmlFor={name}>
         {label}
       </label>
-      <input
-        id={name}
-        className="label-s"
-        name={name}
-        aria-invalid={!!error}
-        {...props}
-      />
+      <div className="auth-input-control">
+        <input id={name} className="label-s" name={name} {...props} />
+        {valid && !hasError && (
+          <img className="green-check" src="./green-check.svg" alt="" />
+        )}
+      </div>
       {error && <p className="auth-input-error body-s">{error}</p>}
     </div>
   );
@@ -45,6 +50,19 @@ export default function AuthForm({
   const [filled, setFilled] = useState(false);
   const [pending, setPending] = useState(false);
   const router = useRouter();
+  const [valid, setValid] = useState<string[]>([]);
+
+  // Validating obvious mistakes in fields here.
+  function validate(name: string, value: string) {
+    if (name === "email" && !/^\S+@\S+\.\S+$/.test(value)) {
+      return "Enter a valid email address";
+    }
+
+    if (name === "password" && value.length < 3) {
+      return "Password must be at least 3 characters";
+    }
+    return "";
+  }
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -53,19 +71,41 @@ export default function AuthForm({
       string
     >;
 
+    const clientErrors: Record<string, string> = {};
+    for (const [name, value] of Object.entries(data)) {
+      const message = validate(name, value);
+      if (message) clientErrors[name] = message;
+    }
     if (isSignup && data.password !== data.password_confirmation) {
-      setErrors({ password_confirmation: "Passwords do not match" });
+      clientErrors.password_confirmation = "Passwords do not match";
+    }
+    if (Object.keys(clientErrors).length) {
+      setErrors(clientErrors);
+      setValid([]);
       return;
     }
 
     setErrors({});
+    setValid([]);
     setPending(true);
     const result = await authenticate(authType, data);
+    if (result.ok) {
+      setValid(Object.keys(data));
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      onSuccess();
+      router.refresh();
+      return;
+    }
     setPending(false);
 
     if (result.ok) {
       onSuccess();
       router.refresh();
+      return;
+    }
+
+    if (!isSignup && result.status === 401) {
+      setErrors({ email: "", password: "invalid credentials" });
       return;
     }
 
@@ -76,11 +116,17 @@ export default function AuthForm({
         (v as string[])[0],
       ]),
     );
+    const hasFieldErrors = Object.keys(fieldErrors).length > 0;
+
     setErrors(
-      Object.keys(fieldErrors).length
+      hasFieldErrors
         ? fieldErrors
         : { form: body?.message ?? "Something went wrong" },
     );
+
+    if (hasFieldErrors) {
+      setValid(Object.keys(data).filter((name) => !(name in fieldErrors)));
+    }
   }
 
   return (
@@ -89,9 +135,19 @@ export default function AuthForm({
       onSubmit={handleSubmit}
       onChange={(e) => {
         const { name } = e.target;
-        if (errors[name]) setErrors(({ [name]: _, ...rest }) => rest);
+        if (name in errors) setErrors(({ [name]: _, ...rest }) => rest);
+        setValid((prev) =>
+          prev.includes(name) ? prev.filter((n) => n !== name) : prev,
+        );
+
         const values = [...new FormData(e.currentTarget).values()];
         setFilled(values.every((v) => String(v).trim() !== ""));
+      }}
+      onBlur={(e) => {
+        const { name, value } = e.target;
+        if (!value) return;
+        const message = validate(name, value);
+        if (message) setErrors((prev) => ({ ...prev, [name]: message }));
       }}
     >
       <div className="auth-modal-form-text-fields-container">
@@ -102,15 +158,16 @@ export default function AuthForm({
             autoComplete="username"
             error={errors.username}
             placeholder="User"
+            valid={valid.includes("username")}
           />
         )}
         <Field
           name="email"
           label="Email"
-          type="email"
           autoComplete="email"
           error={errors.email}
           placeholder="example@gmail.com"
+          valid={valid.includes("email")}
         />
         <div className="auth-modal-password-fields-container">
           <Field
@@ -120,6 +177,7 @@ export default function AuthForm({
             autoComplete={isSignup ? "new-password" : "current-password"}
             placeholder="••••••••"
             error={errors.password}
+            valid={valid.includes("password")}
           />
           {isSignup && (
             <Field
@@ -129,20 +187,19 @@ export default function AuthForm({
               autoComplete="new-password"
               placeholder="••••••••"
               error={errors.password_confirmation}
+              valid={valid.includes("password_confirmation")}
             />
           )}
-
-          {errors.form && (
-            <p className="auth-input-error body-s" role="alert">
-              {errors.form}
-            </p>
-          )}
         </div>
-
+        {errors.form && !isSignup && (
+          <p className="auth-input-error body-s" role="alert">
+            {errors.form}
+          </p>
+        )}
         <button
           type="submit"
-          className={`clickable custom-button-large red-button ${pending || !filled ? "disabled" : ""}`}
-          disabled={pending || !filled}
+          className={`clickable custom-button-large red-button ${pending || !filled || Object.keys(errors).length > 0 ? "disabled" : ""}`}
+          disabled={pending || !filled || Object.keys(errors).length > 0}
         >
           {isSignup ? "Sign up" : "Log in"}
         </button>
