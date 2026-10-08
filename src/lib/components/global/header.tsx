@@ -1,9 +1,9 @@
 "use client";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "./styles/header.styles.css";
 import GlobalSearch from "./search";
 import AuthModal from "./auth/auth-modal";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { User } from "@/lib/api/types/user.types";
 import ProfileDropdown from "./profile-dropdown";
 
@@ -92,6 +92,15 @@ export default function KinoHeader({ user }: { user: User | null }) {
     null,
   );
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const auth = searchParams.get("auth");
+
+    if (auth === "true") {
+      setAuthModalOpen("login");
+    }
+  }, [searchParams]);
 
   return (
     <header>

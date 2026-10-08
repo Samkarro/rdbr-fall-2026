@@ -7,7 +7,6 @@ import ComingSoon from "@/lib/components/homepage/coming-soon";
 import HeroSection from "@/lib/components/homepage/hero";
 import NowPlaying from "@/lib/components/homepage/now-playing";
 import RecentlyViewed from "@/lib/components/homepage/recently-viewed";
-import { getRecent, RecentMovie } from "@/lib/recently-viewed";
 
 export default async function Home() {
   const featuredTitles = await getFeaturedTitles();

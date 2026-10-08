@@ -22,6 +22,11 @@ export default function ProfileDropdown({
     router.refresh();
   }
 
+  const handleLink = (path: string) => {
+    setProfileDropdownOpen;
+    router.push(path);
+  };
+
   return (
     <div className="profile-dropdown-container">
       <div className="top-section">
@@ -60,11 +65,17 @@ export default function ProfileDropdown({
           )}
         </div>
         <div className="profile-buttons-container">
-          <button className="profile-button clickable label-m">
+          <button
+            className="profile-button clickable label-m"
+            onClick={() => handleLink("/profile")}
+          >
             <img className="my-profile-icon" src="/profile-icon.svg" />
             My Profile
           </button>
-          <button className="profile-button clickable label-m">
+          <button
+            className="profile-button clickable label-m"
+            onClick={() => handleLink("/profile?page=my-tickets")}
+          >
             <img src="/ticket.svg" />
             My Tickets
           </button>
