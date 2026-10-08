@@ -66,6 +66,12 @@
   margin: 0px 20px;
 }
 
+.profile-completion-notice.complete {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
 .profile-completion-notice.incomplete {
   color: var(--color-orange);
   background-color: var(--tint-warning);

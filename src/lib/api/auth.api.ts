@@ -22,7 +22,9 @@ export async function authenticate(
 
     return { ok: true };
   } catch (err) {
-    if (err instanceof ApiError) return { ok: false, body: err.body };
+    if (err instanceof ApiError) {
+      return { ok: false as const, status: err.status, body: err.body };
+    }
     throw err;
   }
 }

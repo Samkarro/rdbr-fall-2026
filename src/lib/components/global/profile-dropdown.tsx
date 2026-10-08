@@ -1,8 +1,11 @@
+"use client";
 import { User } from "@/lib/api/types/user.types";
 import { getInitials } from "./header";
 import { Dispatch, SetStateAction } from "react";
 import "./styles/header.styles.css";
 import "./styles/profile-dropdown.styles.css";
+import { useRouter } from "next/navigation";
+import { logout } from "@/lib/api/auth.api";
 
 export default function ProfileDropdown({
   user,
@@ -12,6 +15,12 @@ export default function ProfileDropdown({
   setProfileDropdownOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const { avatar, username, profileComplete, email } = user;
+  const router = useRouter();
+
+  function handleLogout() {
+    logout();
+    router.refresh();
+  }
 
   return (
     <div className="profile-dropdown-container">
@@ -41,9 +50,9 @@ export default function ProfileDropdown({
           className={`profile-completion-notice ${profileComplete ? "complete" : "incomplete"}`}
         >
           <p className="label-m">
-            Profile {profileComplete ? "complete" : "incomplete"}
-            {profileComplete && <img src="/green-check.svg" />}
+            Profile {profileComplete ? "Complete" : "incomplete"}
           </p>
+          {profileComplete && <img src="/green-check.svg" />}
           {!profileComplete && (
             <p className="profile-completion-notice-body body-s">
               Please complete your profile to enable booking
@@ -66,7 +75,10 @@ export default function ProfileDropdown({
       </div>
 
       <div className="logout-button-container">
-        <button className="profile-button clickable logout-button label-m">
+        <button
+          className="profile-button clickable logout-button label-m"
+          onClick={() => handleLogout()}
+        >
           <img src="/logout-icon.svg" />
           Log out
         </button>

@@ -70,6 +70,8 @@ body:has(.auth-modal-overlay) {
 
 .auth-input {
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .auth-input input {
@@ -105,4 +107,35 @@ body:has(.auth-modal-overlay) {
 .auth-modal-password-fields-container {
   display: flex;
   gap: 12;
+}
+
+.auth-input-error {
+  display: flex;
+  flex-direction: column;
+  color: var(--color-red);
+}
+
+.auth-input.error input {
+  border: 1px solid var(--color-red);
+  color: var(--color-red);
+}
+
+.auth-input.error label {
+  color: var(--color-red);
+}
+
+.auth-input.error .auth-input-error {
+  margin-top: 8px;
+}
+
+.auth-input-control {
+  position: relative;
+}
+
+.auth-input-control .green-check {
+  height: 16px;
+  width: 16px;
+  position: absolute;
+  top: 12px;
+  right: 12px;
 }
