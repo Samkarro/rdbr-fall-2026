@@ -1,15 +1,10 @@
 "use client";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import "./styles/header.styles.css";
 import GlobalSearch from "./search";
 import AuthModal from "./auth/auth-modal";
 import { useRouter } from "next/navigation";
-
-const placeholderUser = {
-  username: "Jane Doe",
-  avatar: null,
-  profileComplete: false,
-};
+import { User } from "@/lib/api/types/user.types";
 
 function getInitials(name: string) {
   return name
@@ -21,64 +16,60 @@ function getInitials(name: string) {
     .join("");
 }
 
+function LoggedOutButtons({
+  setAuthModalOpen,
+}: {
+  setAuthModalOpen: Dispatch<SetStateAction<"login" | "signup" | null>>;
+}) {
+  return (
+    <div className="header-components-logged-out">
+      <button
+        className="custom-button-large clickable red-button"
+        onClick={() => setAuthModalOpen("signup")}
+      >
+        Sign Up
+      </button>
+      <button
+        className="custom-button-large clickable white-button"
+        onClick={() => setAuthModalOpen("login")}
+      >
+        Log In
+      </button>
+    </div>
+  );
+}
+
+function LoggedInButtons({ user }: { user: User }) {
+  const { username, avatar, profileComplete } = user;
+
+  return (
+    <div className="header-components-logged-in">
+      <div className="header-components-user">
+        <div className="header-components-avatar">
+          {avatar ? (
+            <img className="header-components-avatar-image" src={avatar} />
+          ) : (
+            <div className="header-components-avatar-initials">
+              {getInitials(username)}
+            </div>
+          )}
+          <span
+            className={`header-components-status ${profileComplete ? "complete" : "incomplete"}`}
+            title={profileComplete ? "Profile complete" : "Profile incomplete"}
+          />
+        </div>
+        <p className="header-components-username">{username}</p>
+      </div>
+    </div>
+  );
+}
+
 // Main component
-export default function KinoHeader() {
-  // TODO: Handle authorization detection
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(false);
+export default function KinoHeader({ user }: { user: User | null }) {
   const [authModalOpen, setAuthModalOpen] = useState<"login" | "signup" | null>(
     null,
   );
-
   const router = useRouter();
-
-  // Buttons sections for authorization states
-  function LoggedInButtons() {
-    const { username, avatar, profileComplete } = placeholderUser;
-
-    return (
-      <div className="header-components-logged-in">
-        <div className="header-components-user">
-          <div className="header-components-avatar">
-            {avatar ? (
-              <img className="header-components-avatar-image" src={avatar} />
-            ) : (
-              <div className="header-components-avatar-initials">
-                {getInitials(username)}
-              </div>
-            )}
-            <span
-              className={`header-components-status ${profileComplete ? "complete" : "incomplete"}`}
-              title={
-                profileComplete ? "Profile complete" : "Profile incomplete"
-              }
-            />
-          </div>
-          <p className="header-components-username">
-            {placeholderUser.username}
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  function LoggedOutButtons() {
-    return (
-      <div className="header-components-logged-out">
-        <button
-          className="custom-button-large clickable red-button"
-          onClick={() => setAuthModalOpen("signup")}
-        >
-          Sign Up
-        </button>
-        <button
-          className="custom-button-large clickable white-button"
-          onClick={() => setAuthModalOpen("login")}
-        >
-          Log In
-        </button>
-      </div>
-    );
-  }
 
   return (
     <header>
@@ -100,8 +91,11 @@ export default function KinoHeader() {
         <div className="header-components-actions-container">
           <GlobalSearch></GlobalSearch>
           <div className="header-components-auth-buttons">
-            {/* TODO: properly handle null value - to avoid flashing before promise resolves */}
-            {!isLoggedIn ? LoggedOutButtons() : LoggedInButtons()}
+            {user === null ? (
+              <LoggedOutButtons setAuthModalOpen={setAuthModalOpen} />
+            ) : (
+              <LoggedInButtons user={user} />
+            )}
           </div>
         </div>
       </div>
