@@ -32,7 +32,7 @@ export default async function ProfilePage({
           key={`${user.mobileNumber}-${user.dateOfBirth}-${user.preferredVenue?.id}-${user.fullName}`}
           defaultValues={{
             email: user.email,
-            username: user.username,
+            fullName: user.username,
             mobileNumber: user.mobileNumber ?? "",
             dateOfBirth: user.dateOfBirth ?? "",
             preferredVenueId: user.preferredVenue

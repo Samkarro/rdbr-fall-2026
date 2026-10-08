@@ -41,3 +41,16 @@ h1 {
 .profile-nav-button.active .profile-nav-highlight {
   opacity: 1;
 }
+
+.profile-form {
+  width: 880px;
+}
+
+.profile-fields-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  margin-top: 42px;
+  margin-bottom: 36px;
+}

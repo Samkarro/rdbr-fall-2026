@@ -69,3 +69,26 @@
   top: 12px;
   right: 12px;
 }
+
+.custom-input-disabled-message {
+  margin-top: 8px;
+  color: var(--text-secondary);
+}
+
+input.disabled {
+  color: var(--text-secondary);
+}
+
+input[type="date"] + .green-check {
+  right: 40px;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  height: 16px;
+  width: 16px;
+  content: url("/calendar.svg");
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  cursor: pointer;
+}

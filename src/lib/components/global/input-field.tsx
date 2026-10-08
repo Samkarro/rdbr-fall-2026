@@ -6,6 +6,7 @@ export type FieldProps = {
   error?: string;
   invalid?: boolean;
   valid?: boolean;
+  disabledMessage?: string;
 } & React.ComponentProps<"input">;
 
 export default function Field({
@@ -14,6 +15,7 @@ export default function Field({
   error,
   invalid,
   valid,
+  disabledMessage,
   ...props
 }: FieldProps) {
   const hasError = Boolean(error || error === "" || invalid);
@@ -24,37 +26,27 @@ export default function Field({
         {label}
       </label>
       <div className="custom-input-control">
-        <input id={name} className="label-s" name={name} {...props} />
+        <input
+          id={name}
+          className={`label-s ${props.disabled ? "disabled" : ""} ${props.type === "date" ? "clickable" : ""}`}
+          name={name}
+          {...props}
+          defaultValue={props.defaultValue ?? ""}
+          onFocus={
+            props.type === "date"
+              ? (e) => e.currentTarget.showPicker()
+              : undefined
+          }
+        />
         {valid && !hasError && (
           <img className="green-check" src="/green-check.svg" alt="" />
         )}
       </div>
-      {error && <p className="custom-input-error body-s">{error}</p>}
-    </div>
-  );
-}
-
-export function SelectField({
-  label,
-  name,
-  error,
-  children,
-  ...props
-}: {
-  label: string;
-  name: string;
-  error?: string;
-} & React.ComponentProps<"select">) {
-  return (
-    <div className={`custom-input ${error ? "error" : ""}`}>
-      <label className="label-s" htmlFor={name}>
-        {label}
-      </label>
-      <div className="custom-input-control">
-        <select id={name} className="label-s" name={name} {...props}>
-          {children}
-        </select>
-      </div>
+      {disabledMessage && (
+        <p className="custom-input-disabled-message label-s">
+          {disabledMessage}
+        </p>
+      )}
       {error && <p className="custom-input-error body-s">{error}</p>}
     </div>
   );
