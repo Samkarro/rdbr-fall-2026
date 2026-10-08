@@ -44,6 +44,8 @@
 }
 
 #movie-detail-booking {
+  display: flex;
+  justify-content: space-between;
   padding: 34px 51px 140px 51px;
 }
 

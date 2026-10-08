@@ -5,7 +5,6 @@ import KinoHeader from "@/lib/components/global/header";
 import KinoFooter from "@/lib/components/global/footer";
 import { getFilterOptions } from "@/lib/api/catalog.api";
 import { getMe } from "@/lib/api/user.api";
-import { logout } from "@/lib/api/auth.api";
 
 export const metadata: Metadata = {
   title: "Kino XII",

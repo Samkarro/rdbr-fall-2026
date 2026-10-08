@@ -5,13 +5,25 @@ import { MovieDetail, MovieFormat } from "@/lib/api/types/movie.types";
 import { notFound } from "next/navigation";
 import { RecentMovie } from "@/lib/recently-viewed";
 import TrackView from "./(components)/view-tracker";
+import { getMe } from "@/lib/api/user.api";
+import { getNextSevenDays, getToday } from "@/lib/utils/dates";
+import DetailSessions from "./(components)/movie-detail-sessions";
 
 export default async function MovieDetailsPage({
   params,
 }: PageProps<"/movies/[movie]">) {
   const { movie: slug } = await params;
+  const user = await getMe();
   let movie: MovieDetail = await getMovieDetail(slug);
   if (!movie) notFound();
+
+  const accountInvalid = Boolean(
+    user === null ||
+    user.dateOfBirth === null ||
+    (user.dateOfBirth && getToday({ years: -16 }) <= user.dateOfBirth),
+  );
+
+  const days = getNextSevenDays();
 
   return (
     <div className="movie-details-page-container">
@@ -69,6 +81,7 @@ export default async function MovieDetailsPage({
         </div>
       </section>
       <section id="movie-detail-booking">
+        <DetailSessions days={days} />
         <div className="movie-extensive-detail-container">
           <div className="movie-extensive-detail-text-container">
             <h2>Details</h2>
@@ -98,17 +111,21 @@ export default async function MovieDetailsPage({
               from
               <p className="label-m">₾{movie.fromPrice}</p>
             </label>
-            {/* FIXME: placeholder. Make dynamic based on account age & completion*/}
-            <div className="rating-note-container">
-              <p className="rating-note-heading label-s">RATING NOTE</p>
-              <div className="rating-note-sub-container">
-                <p className="label-s">16+</p>
-                <p className="body-s">
-                  Not recommended for under-16s. Tickets require an account aged
-                  16 or over.
-                </p>
+            {accountInvalid && (
+              <div className="rating-note-container">
+                <p className="rating-note-heading label-s">RATING NOTE</p>
+                <div className="rating-note-sub-container">
+                  <p className="label-s">{movie.ageRating.code}</p>
+                  <p className="body-s">
+                    {/* FIXME: dynamic message isn't accurate enough,
+                    take into account the account age vs no account distinction */}
+                    {movie.ageRating.code == "16+"
+                      ? "Not recommended for under-16s. Tickets require an account aged 16 or over."
+                      : "This film is rated 18+. You cannot buy tickets for it with this account."}
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </section>

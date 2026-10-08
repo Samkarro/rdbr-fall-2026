@@ -1,0 +1,34 @@
+#movie-detail-session-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.movie-detail-session-date-list {
+  display: flex;
+  gap: 6px;
+}
+
+.movie-detail-session-date-button {
+  appearance: none;
+  width: 80px;
+  height: 80px;
+  border: none;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: 6px;
+
+  color: var(--text-primary);
+  background-color: var(--bg-card);
+  font-family: Archivo;
+
+  transition: 300ms ease;
+}
+
+.movie-detail-session-date-button.active {
+  width: 110px;
+  background-color: var(--color-red);
+}
