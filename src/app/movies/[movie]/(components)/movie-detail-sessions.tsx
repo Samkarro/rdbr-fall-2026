@@ -71,7 +71,7 @@ export default function DetailSessions({
 
                 return (
                   <div key={hall.id} className="hall-card">
-                    <p className="hall-heading">{hall.name}</p>
+                    <p className="hall-heading label-s">Hall {hall.name}</p>
 
                     <div className="session-list">
                       {hallSessions.map((session) => (

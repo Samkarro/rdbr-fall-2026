@@ -38,3 +38,27 @@
   font-weight: 800;
   font-size: 18px;
 }
+
+.venue-list-heading {
+  font-weight: 800;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.hall-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hall-card {
+  padding: 15px;
+
+  background-color: var(--bg-card);
+  border-radius: 18px;
+  width: fit-content;
+}
+
+.hall-heading {
+  margin-bottom: 9px;
+}
