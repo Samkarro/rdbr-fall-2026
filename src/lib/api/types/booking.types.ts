@@ -66,6 +66,30 @@ export const seatMapSchema = z.object({
   sections: z.array(seatSectionSchema),
 });
 
+export const seatHoldSchema = z.object({
+  holdId: z.uuid(),
+  sessionId: z.number().int(),
+  expiresAt: z.iso.datetime({ offset: true }),
+  secondsRemaining: z.number().int(),
+  isLive: z.boolean(),
+  subtotal: z.number(),
+  seats: z.array(
+    z.object({
+      seatId: z.number().int(),
+      code: z.string(),
+      ticketType: z.object({ slug: z.string(), name: z.string() }),
+      price: z.number(),
+    }),
+  ),
+});
+
+export type SeatHold = z.infer<typeof seatHoldSchema>;
+export type HoldResult =
+  | { ok: true; hold: SeatHold }
+  | { ok: false; status: 409; message: string; contested: string[] }
+  | { ok: false; status: number; message: string };
+
+
 export type Order = z.infer<typeof orderSchema>;
 export type OrderTicket = z.infer<typeof orderTicketSchema>;
 

@@ -1,13 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Seat, SeatMap, TicketType } from "@/lib/api/types/booking.types";
+import { useCallback, useEffect, useState } from "react";
+import {
+  HoldResult,
+  Seat,
+  SeatHold,
+  SeatMap,
+  TicketType,
+} from "@/lib/api/types/booking.types";
 import { Session } from "@/lib/api/types/sessions.types";
 import { User } from "@/lib/api/types/user.types";
 import SeatPicker, { MAX_SEATS } from "./seat-picker";
 import SelectedSeatCard from "./selected-seat-card";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { clearDraft, restoreDraft, saveDraft } from "@/lib/misc/booking-draft";
+import { useTimedMessage } from "@/lib/hooks/use-timed-message";
+import { useHoldCountdown } from "@/lib/hooks/use-hold-countdown";
+import { holdSeats } from "@/lib/api/booking.api";
 
 type BookingPhase = "seats" | "checkout" | "confirmation";
 
@@ -27,6 +36,10 @@ export default function BookingModalContent({
   user: User | null;
   ageRating: string;
 }) {
+  const [hold, setHold] = useState<SeatHold | null>(null);
+  const [isHolding, setIsHolding] = useState(false);
+  const [errorMessage, showError] = useTimedMessage(5000);
+
   const [phase, setPhase] = useState<BookingPhase>("seats");
   const [selectedTickets, setSelectedTickets] = useState<SelectedTicket[]>([]);
 
@@ -34,6 +47,34 @@ export default function BookingModalContent({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isAuthed = user !== null;
+
+  const handleExpire = useCallback(() => {
+    setHold(null);
+    setSelectedTickets([]);
+    setPhase("seats");
+    showError("Your hold time expired. Please re-select your seats.");
+    router.refresh();
+  }, [router, showError]);
+
+  const secondsLeft = useHoldCountdown(hold?.expiresAt ?? null, handleExpire);
+
+  const handleHoldError = (result: Extract<HoldResult, { ok: false }>) => {
+    if (result.status === 409 && "contested" in result) {
+      const lost = new Set(result.contested);
+      // drop only the lost seats, keep the rest
+      setSelectedTickets((prev) =>
+        prev.filter(({ seat }) => !lost.has(seat.code)),
+      );
+      showError(
+        result.contested.length
+          ? `${result.contested.join(", ")} just got taken. Please pick other seats.`
+          : result.message,
+      );
+      router.refresh();
+      return;
+    }
+    showError(result.message);
+  };
 
   useEffect(() => {
     if (!isAuthed) return;
@@ -44,8 +85,8 @@ export default function BookingModalContent({
     clearDraft(session.id);
   }, [isAuthed, session.id]);
 
-  const handleNext = () => {
-    if (selectedTickets.length === 0) return;
+  const handleNext = async () => {
+    if (selectedTickets.length === 0 || isHolding) return;
 
     if (!isAuthed) {
       saveDraft(session.id, selectedTickets);
@@ -55,8 +96,22 @@ export default function BookingModalContent({
       return;
     }
 
-    // FIXME: Post /hold first and then do thesss
-    setPhase("checkout");
+    setIsHolding(true);
+    const result = await holdSeats(
+      session.id,
+      selectedTickets.map(({ seat, type }) => ({
+        seatId: seat.id,
+        ticketType: type,
+      })),
+    );
+    setIsHolding(false);
+
+    if (result.ok) {
+      setHold(result.hold);
+      setPhase("checkout");
+      return;
+    }
+    handleHoldError(result);
   };
 
   const handleTicketTypeChange = (seatId: Seat["id"], type: TicketType) => {
@@ -150,15 +205,29 @@ export default function BookingModalContent({
           </div>
           <button
             className={`custom-button-large red-button clickable ${
-              selectedTickets.length === 0 ? "disabled" : ""
+              selectedTickets.length === 0 || isHolding ? "disabled" : ""
             }`}
-            disabled={selectedTickets.length === 0}
+            disabled={selectedTickets.length === 0 || isHolding}
             onClick={handleNext}
           >
             Next: Checkout
           </button>
         </div>
       </div>
+      {errorMessage && (
+        <div key={errorMessage} className="booking-error-label">
+          {errorMessage}
+        </div>
+      )}
+      {secondsLeft !== null && secondsLeft > 0 && (
+        <div className="clock-container">
+          <p className="seats-held-label label-s">SEATS HELD</p>
+          <p className="countdown label-s">
+            {Math.floor(secondsLeft / 60)}:
+            {String(secondsLeft % 60).padStart(2, "0")}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

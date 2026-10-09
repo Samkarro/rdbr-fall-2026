@@ -130,3 +130,59 @@
   font-size: 24px;
   font-weight: 800px;
 }
+
+/* Error popup */
+
+.booking-error-label {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 1000;
+
+  padding: 12px 20px;
+  border-radius: 12px;
+  background-color: var(--tint-red);
+  color: var(--color-red);
+  box-shadow: 0px 0px 8px 0px var(--shadow);
+  font-family: Archivo;
+  font-weight: 600;
+
+  animation: booking-error-in 0.2s ease-out;
+}
+
+@keyframes booking-error-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* Clock~ */
+
+.clock-container {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  background-color: var(--bg-card);
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 2px;
+  border-radius: 12px;
+}
+
+.seats-held-label {
+  color: var(--text-secondary);
+}
+
+.countdown {
+  font-size: 14px;
+  font-weight: 800;
+}

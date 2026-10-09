@@ -46,7 +46,12 @@ function SeatBlock({
     return <div className="unavailable-seat" />;
   }
   const className = `seat ${status} ${legend ? "legend-seat" : ""}`;
-  if (legend) return <div className={className} />;
+  if (legend)
+    return (
+      <div className={className}>
+        {status === "held" && <img src={"/hold-dash.svg"} />}
+      </div>
+    );
 
   return (
     <button
@@ -55,6 +60,7 @@ function SeatBlock({
       disabled={status === "sold" || status === "held"}
     >
       {number}
+      {status === "held" && <img src={"/hold-dash.svg"} />}
     </button>
   );
 }

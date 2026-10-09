@@ -82,8 +82,19 @@
 }
 
 .seat.held {
+  position: relative;
   background-color: var(--bg-card);
   color: var(--text-secondary);
+}
+
+.seat.held:hover {
+  cursor: not-allowed;
+}
+
+.seat.held img {
+  position: absolute;
+  height: 100%;
+  width: 100%;
 }
 
 .legend {
@@ -186,6 +197,7 @@
   display: flex;
   gap: 8px;
 }
+
 .aisle {
   width: 16px;
 }
