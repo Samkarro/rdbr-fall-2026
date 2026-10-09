@@ -2,6 +2,9 @@ import { z } from "zod";
 import { sessionSchema, venueSchema } from "./sessions.types";
 
 // Order ticket types
+const ticketTypeSchema = z.enum(["child", "student", "adult"]);
+export type TicketType = z.infer<typeof ticketTypeSchema>;
+
 export const orderTicketSchema = z.object({
   id: z.int(),
   seatCode: z.string(),

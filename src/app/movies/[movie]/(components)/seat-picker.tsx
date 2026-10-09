@@ -21,7 +21,6 @@ import {
   SeatSection,
 } from "@/lib/api/types/booking.types";
 import "./styles/seat-picker.styles.css";
-import { SeatSelection } from "./booking-content";
 
 export const MAX_SEATS = 3;
 const DRAG_THRESHOLD_PX = 5;
@@ -97,12 +96,12 @@ function ZoomControls() {
 
 export default function SeatPicker({
   seatMap,
-  selectedIds,
-  setSelectedIds,
+  selectedSeats,
+  setSelectedSeats,
 }: {
   seatMap: SeatMap;
-  selectedIds: SeatSelection[];
-  setSelectedIds: Dispatch<SetStateAction<SeatSelection[]>>;
+  selectedSeats: Seat[];
+  setSelectedSeats: Dispatch<SetStateAction<Seat[]>>;
 }) {
   const pointerDown = useRef<{ x: number; y: number } | null>(null);
 
@@ -115,13 +114,14 @@ export default function SeatPicker({
   }, [seatMap]);
 
   useEffect(() => {
-    setSelectedIds((prev) => {
+    setSelectedSeats((prev) => {
       const next = prev.filter(
-        ({ id }) => seatsById.get(id)?.state === "available",
+        (seat) => seatsById.get(seat.id)?.state === "available",
       );
+
       return next.length === prev.length ? prev : next;
     });
-  }, [seatsById, setSelectedIds]);
+  }, [seatsById, setSelectedSeats]);
 
   const handleSeatClick = (e: React.MouseEvent, seat: Seat) => {
     const start = pointerDown.current;
@@ -132,11 +132,11 @@ export default function SeatPicker({
       return;
     }
 
-    setSelectedIds((prev) => {
+    setSelectedSeats((prev: Seat[]) => {
       if (prev.some((s) => s.id === seat.id))
         return prev.filter((s) => s.id !== seat.id);
       if (prev.length >= MAX_SEATS) return prev;
-      return [...prev, { id: seat.id, code: seat.code }];
+      return [...prev, seat];
     });
   };
 
@@ -144,9 +144,9 @@ export default function SeatPicker({
     <div className="seat-picker-left-container">
       <div className="seat-map-view">
         <TransformWrapper
-          minScale={0.5}
-          maxScale={0.75}
-          initialScale={0.5}
+          minScale={0.6}
+          maxScale={0.8}
+          initialScale={0.8}
           centerOnInit
           doubleClick={{ disabled: true }}
           panning={{ velocityDisabled: true }}
@@ -182,8 +182,8 @@ export default function SeatPicker({
                               <Fragment key={seat.id}>
                                 <SeatBlock
                                   status={
-                                    selectedIds.some(
-                                      (el: SeatSelection) => el.id === seat.id,
+                                    selectedSeats.some(
+                                      (el: Seat) => el.id === seat.id,
                                     )
                                       ? "selected"
                                       : seat.state

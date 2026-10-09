@@ -2,12 +2,11 @@
 
 import { Seat, SeatMap } from "@/lib/api/types/booking.types";
 import { Session } from "@/lib/api/types/sessions.types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SeatPicker, { MAX_SEATS } from "./seat-picker";
 import SelectedSeatCard from "./selected-seat-card";
 
 type BookingPhase = "seats" | "checkout" | "confirmation";
-export type SeatSelection = Pick<Seat, "id" | "code">;
 
 export default function BookingModalContent({
   session,
@@ -17,7 +16,9 @@ export default function BookingModalContent({
   seatMap: SeatMap;
 }) {
   const [phase, setPhase] = useState<BookingPhase>("seats");
-  const [selectedIds, setSelectedIds] = useState<SeatSelection[]>([]);
+  const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
+
+  useEffect(() => {}, [selectedSeats]);
 
   return (
     <div className="booking-modal-content">
@@ -38,8 +39,8 @@ export default function BookingModalContent({
         {phase === "seats" && (
           <SeatPicker
             seatMap={seatMap}
-            selectedIds={selectedIds}
-            setSelectedIds={setSelectedIds}
+            selectedSeats={selectedSeats}
+            setSelectedSeats={setSelectedSeats}
           />
         )}
         {phase === "checkout" && <div className="payment-left-container"></div>}
@@ -48,8 +49,8 @@ export default function BookingModalContent({
       <div className="booking-modal-right-content">
         <div className="selected-seats-container">
           <p className="selected-seats-heading">Your seats · Max {MAX_SEATS}</p>
-          {selectedIds.length > 0 ? (
-            selectedIds.map((seat: SeatSelection) => {
+          {selectedSeats.length > 0 ? (
+            selectedSeats.map((seat: Seat) => {
               return (
                 <SelectedSeatCard
                   key={seat.id}
@@ -71,7 +72,7 @@ export default function BookingModalContent({
             <p className="subtotal-amt h1">₾ {32}</p>
           </div>
           <button
-            className={`custom-button-large red-button ${selectedIds.length === 0 ? "disabled" : ""}`}
+            className={`custom-button-large red-button ${selectedSeats.length === 0 ? "disabled" : ""}`}
           >
             Next: Checkout
           </button>

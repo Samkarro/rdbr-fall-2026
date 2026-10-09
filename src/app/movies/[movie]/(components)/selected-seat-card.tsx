@@ -1,13 +1,13 @@
 "use client";
 
-import { SeatSelection } from "./booking-content";
+import { Seat } from "@/lib/api/types/booking.types";
 import "./styles/selected-seat-card.styles.css";
 
 export default function SelectedSeatCard({
   seat,
   price,
 }: {
-  seat: SeatSelection;
+  seat: Seat;
   price: number;
 }) {
   return (
