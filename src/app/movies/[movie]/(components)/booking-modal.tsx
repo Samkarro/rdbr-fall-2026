@@ -24,8 +24,8 @@ export default async function BookingModal({
       <div className="booking-modal-header">
         <div className="booking-modal-info">
           <h2 className="booking-modal-session-title">{title}</h2>
-          <p className="booking-modal-session-details">
-            {session.venue.name} · {session.hall.name} · {session.date} ·{" "}
+          <p className="booking-modal-session-details body-s">
+            {session.venue.name} · Hall {session.hall.name} · {session.date} ·{" "}
             {session.time} · {session.format.name} · {session.language.name}
           </p>
         </div>
