@@ -1,0 +1,62 @@
+.selected-seat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  background-color: var(--bg-card);
+  border-radius: 16px;
+  padding: 15px;
+}
+
+.seat-info-container,
+.seat-info,
+.seat-price-x {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.seat-label {
+  color: var(--text-secondary);
+}
+
+.seat-price-x img {
+  width: 16px;
+  height: 16px;
+}
+
+.ticket-type-selection-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ticket-type {
+  appearance: none;
+  background: none;
+  border: none;
+
+  border-radius: 99px;
+
+  font-family: Archivo;
+  color: var(--text-primary);
+  background-color: var(--bg-raised);
+
+  padding: 8px 0px;
+  width: 92px;
+}
+
+.ticket-type.active {
+  background-color: var(--color-red);
+}
+
+hr {
+  margin: 0px;
+  border-color: var(--bg-raised);
+}
+
+.h1 {
+  font-weight: 800;
+  font-size: 24px;
+}

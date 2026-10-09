@@ -3,10 +3,11 @@
 import { Seat, SeatMap } from "@/lib/api/types/booking.types";
 import { Session } from "@/lib/api/types/sessions.types";
 import { useState } from "react";
-import SeatPicker from "./seat-picker";
+import SeatPicker, { MAX_SEATS } from "./seat-picker";
+import SelectedSeatCard from "./selected-seat-card";
 
 type BookingPhase = "seats" | "checkout" | "confirmation";
-export type SeatId = Seat["id"];
+export type SeatSelection = Pick<Seat, "id" | "code">;
 
 export default function BookingModalContent({
   session,
@@ -16,7 +17,7 @@ export default function BookingModalContent({
   seatMap: SeatMap;
 }) {
   const [phase, setPhase] = useState<BookingPhase>("seats");
-  const [selectedIds, setSelectedIds] = useState<SeatId[]>([]);
+  const [selectedIds, setSelectedIds] = useState<SeatSelection[]>([]);
 
   return (
     <div className="booking-modal-content">
@@ -46,21 +47,34 @@ export default function BookingModalContent({
       <div className="booking-modal-separator"></div>
       <div className="booking-modal-right-content">
         <div className="selected-seats-container">
-          <p className="selected-seats-heading">Your seats · Max 3</p>
+          <p className="selected-seats-heading">Your seats · Max {MAX_SEATS}</p>
           {selectedIds.length > 0 ? (
-            selectedIds.map((el: SeatId) => {
+            selectedIds.map((seat: SeatSelection) => {
               return (
-                <div key={el} className="selected-seat-card">
-                  {el}
-                </div>
+                <SelectedSeatCard
+                  key={seat.id}
+                  seat={seat}
+                  price={session.price}
+                />
               );
             })
           ) : (
             <p className="seat-guide-message body-s">
-              Pick up to 3 seats from the map. Each seat can carry its own
-              ticket type.
+              Pick up to {MAX_SEATS} seats from the map. Each seat can carry its
+              own ticket type.
             </p>
           )}
+        </div>
+        <div className="subtotal-container">
+          <div className="subtotal-text-container">
+            <p className="subtotal-text label-s">SUBTOTAL</p>
+            <p className="subtotal-amt h1">₾ {32}</p>
+          </div>
+          <button
+            className={`custom-button-large red-button ${selectedIds.length === 0 ? "disabled" : ""}`}
+          >
+            Next: Checkout
+          </button>
         </div>
       </div>
     </div>

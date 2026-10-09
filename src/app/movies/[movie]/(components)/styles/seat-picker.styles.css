@@ -6,6 +6,12 @@
   width: 720px;
 }
 
+.seat-map-view {
+  position: relative;
+  height: calc(62px + 238px);
+  overflow: clip;
+}
+
 .hall-container {
   display: flex;
   flex-direction: column;
@@ -86,6 +92,7 @@
   justify-content: center;
   gap: 24px;
   width: 100%;
+  margin-bottom: 36px;
 }
 
 .legend-item {
@@ -105,8 +112,8 @@
   align-items: center;
   gap: 4px;
   position: absolute;
-  left: 42px;
-  top: 172px;
+  left: 10px;
+  top: 10px;
   z-index: 11;
 
   padding: 5px 10px;

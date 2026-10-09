@@ -21,9 +21,9 @@ import {
   SeatSection,
 } from "@/lib/api/types/booking.types";
 import "./styles/seat-picker.styles.css";
-import { SeatId } from "./booking-content";
+import { SeatSelection } from "./booking-content";
 
-const MAX_SEATS = 3;
+export const MAX_SEATS = 3;
 const DRAG_THRESHOLD_PX = 5;
 
 type SeatStatus = "available" | "unavailable" | "sold" | "held";
@@ -101,28 +101,27 @@ export default function SeatPicker({
   setSelectedIds,
 }: {
   seatMap: SeatMap;
-  selectedIds: SeatId[];
-  setSelectedIds: Dispatch<SetStateAction<number[]>>;
+  selectedIds: SeatSelection[];
+  setSelectedIds: Dispatch<SetStateAction<SeatSelection[]>>;
 }) {
   const pointerDown = useRef<{ x: number; y: number } | null>(null);
 
   const seatsById = useMemo(() => {
-    const map = new Map<SeatId, Seat>();
+    const map = new Map<Seat["id"], Seat>();
     seatMap.sections.forEach((s) =>
       s.rows.forEach((r) => r.seats.forEach((seat) => map.set(seat.id, seat))),
     );
     return map;
   }, [seatMap]);
 
-  // after a refetch, drop selected seats that are no longer available
   useEffect(() => {
     setSelectedIds((prev) => {
       const next = prev.filter(
-        (id) => seatsById.get(id)?.state === "available",
+        ({ id }) => seatsById.get(id)?.state === "available",
       );
       return next.length === prev.length ? prev : next;
     });
-  }, [seatsById]);
+  }, [seatsById, setSelectedIds]);
 
   const handleSeatClick = (e: React.MouseEvent, seat: Seat) => {
     const start = pointerDown.current;
@@ -134,9 +133,10 @@ export default function SeatPicker({
     }
 
     setSelectedIds((prev) => {
-      if (prev.includes(seat.id)) return prev.filter((id) => id !== seat.id);
+      if (prev.some((s) => s.id === seat.id))
+        return prev.filter((s) => s.id !== seat.id);
       if (prev.length >= MAX_SEATS) return prev;
-      return [...prev, seat.id];
+      return [...prev, { id: seat.id, code: seat.code }];
     });
   };
 
@@ -144,9 +144,9 @@ export default function SeatPicker({
     <div className="seat-picker-left-container">
       <div className="seat-map-view">
         <TransformWrapper
-          minScale={0.7}
-          maxScale={1}
-          initialScale={0.7}
+          minScale={0.5}
+          maxScale={0.75}
+          initialScale={0.5}
           centerOnInit
           doubleClick={{ disabled: true }}
           panning={{ velocityDisabled: true }}
@@ -154,7 +154,7 @@ export default function SeatPicker({
         >
           <ZoomControls />
           <TransformComponent
-            wrapperStyle={{ width: "100%", maxHeight: 560 }}
+            wrapperStyle={{ width: "100%", height: "100%" }}
             contentStyle={{ width: "max-content" }}
           >
             <div
@@ -182,7 +182,9 @@ export default function SeatPicker({
                               <Fragment key={seat.id}>
                                 <SeatBlock
                                   status={
-                                    selectedIds.includes(seat.id)
+                                    selectedIds.some(
+                                      (el: SeatSelection) => el.id === seat.id,
+                                    )
                                       ? "selected"
                                       : seat.state
                                   }
