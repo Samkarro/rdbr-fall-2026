@@ -3,6 +3,7 @@ import { SeatMap } from "@/lib/api/types/booking.types";
 import { Session, Venue } from "@/lib/api/types/sessions.types";
 import BookingModalContent from "./booking-content";
 import ModalShell from "./modal-shell";
+import { getMe } from "@/lib/api/user.api";
 
 export default async function BookingModal({
   session,
@@ -13,6 +14,7 @@ export default async function BookingModal({
 }) {
   let seatMap: SeatMap | null = null;
   console.log(session);
+  const user = await getMe();
   try {
     seatMap = await getSeatMap(session.id);
   } catch (err) {
@@ -31,7 +33,7 @@ export default async function BookingModal({
         </div>
       </div>
       {seatMap ? (
-        <BookingModalContent session={session} seatMap={seatMap} />
+        <BookingModalContent session={session} seatMap={seatMap} user={user} />
       ) : (
         <p>Couldn't load seats. Close this and try again.</p>
       )}

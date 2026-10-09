@@ -1,14 +1,18 @@
 "use client";
 
-import { Seat } from "@/lib/api/types/booking.types";
+import { Seat, TicketType } from "@/lib/api/types/booking.types";
 import "./styles/selected-seat-card.styles.css";
 
 export default function SelectedSeatCard({
   seat,
+  type,
   price,
+  onTypeChange,
 }: {
   seat: Seat;
+  type: TicketType;
   price: number;
+  onTypeChange: (type: TicketType) => void;
 }) {
   return (
     <div className="selected-seat-card">
@@ -24,9 +28,34 @@ export default function SelectedSeatCard({
       </div>
       <hr />
       <div className="ticket-type-selection-container">
-        <button className="ticket-type body-s clickable">Child 60%</button>
-        <button className="ticket-type body-s clickable">Student 75%</button>
-        <button className="ticket-type body-s clickable active">
+        <button
+          className={`ticket-type body-s clickable ${type === "child" ? "active" : ""}`}
+          onClick={() => {
+            if (type !== "child") {
+              onTypeChange("child");
+            }
+          }}
+        >
+          Child 60%
+        </button>
+        <button
+          className={`ticket-type body-s clickable ${type === "student" ? "active" : ""}`}
+          onClick={() => {
+            if (type !== "student") {
+              onTypeChange("student");
+            }
+          }}
+        >
+          Student 75%
+        </button>
+        <button
+          className={`ticket-type body-s clickable ${type === "adult" ? "active" : ""}`}
+          onClick={() => {
+            if (type !== "adult") {
+              onTypeChange("adult");
+            }
+          }}
+        >
           Adult 100%
         </button>
       </div>

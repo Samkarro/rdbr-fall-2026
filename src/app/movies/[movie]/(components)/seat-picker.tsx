@@ -7,20 +7,22 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState,
 } from "react";
-import {
-  TransformWrapper,
-  TransformComponent,
-  useControls,
-} from "react-zoom-pan-pinch";
+
 import {
   Seat,
   SeatMap,
   SeatRow,
   SeatSection,
+  TicketType,
 } from "@/lib/api/types/booking.types";
+import { SelectedTicket } from "./booking-content";
 import "./styles/seat-picker.styles.css";
+import {
+  TransformComponent,
+  TransformWrapper,
+  useControls,
+} from "react-zoom-pan-pinch";
 
 export const MAX_SEATS = 3;
 const DRAG_THRESHOLD_PX = 5;
@@ -96,12 +98,12 @@ function ZoomControls() {
 
 export default function SeatPicker({
   seatMap,
-  selectedSeats,
-  setSelectedSeats,
+  selectedTickets,
+  setSelectedTickets,
 }: {
   seatMap: SeatMap;
-  selectedSeats: Seat[];
-  setSelectedSeats: Dispatch<SetStateAction<Seat[]>>;
+  selectedTickets: SelectedTicket[];
+  setSelectedTickets: Dispatch<SetStateAction<SelectedTicket[]>>;
 }) {
   const pointerDown = useRef<{ x: number; y: number } | null>(null);
 
@@ -114,17 +116,18 @@ export default function SeatPicker({
   }, [seatMap]);
 
   useEffect(() => {
-    setSelectedSeats((prev) => {
+    setSelectedTickets((prev) => {
       const next = prev.filter(
-        (seat) => seatsById.get(seat.id)?.state === "available",
+        ({ seat }) => seatsById.get(seat.id)?.state === "available",
       );
 
       return next.length === prev.length ? prev : next;
     });
-  }, [seatsById, setSelectedSeats]);
+  }, [seatsById, setSelectedTickets]);
 
   const handleSeatClick = (e: React.MouseEvent, seat: Seat) => {
     const start = pointerDown.current;
+
     if (
       start &&
       Math.hypot(e.clientX - start.x, e.clientY - start.y) > DRAG_THRESHOLD_PX
@@ -132,11 +135,14 @@ export default function SeatPicker({
       return;
     }
 
-    setSelectedSeats((prev: Seat[]) => {
-      if (prev.some((s) => s.id === seat.id))
-        return prev.filter((s) => s.id !== seat.id);
+    setSelectedTickets((prev) => {
+      if (prev.some((ticket) => ticket.seat.id === seat.id)) {
+        return prev.filter((ticket) => ticket.seat.id !== seat.id);
+      }
+
       if (prev.length >= MAX_SEATS) return prev;
-      return [...prev, seat];
+
+      return [...prev, { seat, type: "adult" as TicketType }];
     });
   };
 
@@ -182,8 +188,8 @@ export default function SeatPicker({
                               <Fragment key={seat.id}>
                                 <SeatBlock
                                   status={
-                                    selectedSeats.some(
-                                      (el: Seat) => el.id === seat.id,
+                                    selectedTickets.some(
+                                      (el) => el.seat.id === seat.id,
                                     )
                                       ? "selected"
                                       : seat.state
