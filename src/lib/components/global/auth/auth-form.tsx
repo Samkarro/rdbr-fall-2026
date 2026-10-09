@@ -1,42 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { authenticate } from "../../../api/auth.api";
+import Field from "../input-field";
 
 export type AuthType = "login" | "signup";
-
-function Field({
-  label,
-  name,
-  error,
-  invalid,
-  valid,
-  ...props
-}: {
-  label: string;
-  name: string;
-  error?: string;
-  invalid?: boolean;
-  valid?: boolean;
-} & React.ComponentProps<"input">) {
-  const hasError = Boolean(error || error === "" || invalid);
-
-  return (
-    <div className={`auth-input ${hasError ? "error" : ""}`}>
-      <label className="label-s" htmlFor={name}>
-        {label}
-      </label>
-      <div className="auth-input-control">
-        <input id={name} className="label-s" name={name} {...props} />
-        {valid && !hasError && (
-          <img className="green-check" src="./green-check.svg" alt="" />
-        )}
-      </div>
-      {error && <p className="auth-input-error body-s">{error}</p>}
-    </div>
-  );
-}
 
 export default function AuthForm({
   authType,
@@ -51,6 +20,8 @@ export default function AuthForm({
   const [pending, setPending] = useState(false);
   const router = useRouter();
   const [valid, setValid] = useState<string[]>([]);
+
+  const searchParams = useSearchParams();
 
   // Validating obvious mistakes in fields here.
   function validate(name: string, value: string) {
@@ -93,7 +64,14 @@ export default function AuthForm({
       setValid(Object.keys(data));
       await new Promise((resolve) => setTimeout(resolve, 800));
       onSuccess();
-      router.refresh();
+
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("auth");
+
+      router.replace(
+        params.toString() ? `?${params.toString()}` : window.location.pathname,
+        { scroll: false },
+      );
       return;
     }
     setPending(false);

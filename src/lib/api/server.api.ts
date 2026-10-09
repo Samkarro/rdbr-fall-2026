@@ -1,6 +1,9 @@
 const BASE_URL = "https://api.kinoxii.redberryinternship.ge/api";
 
-type Options = RequestInit & { token?: string };
+type Options = Omit<RequestInit, "body"> & {
+  token?: string;
+  body?: BodyInit | null;
+};
 
 export class ApiError extends Error {
   constructor(public status: number, public body: any) {
@@ -10,17 +13,24 @@ export class ApiError extends Error {
 
 
 // Base API function handles the fetching in one place
-export async function api<T>(path: string, { token, headers, ...rest }: Options) {
+export async function api<T>(
+  path: string,
+  { token, headers, body, ...rest }: Options,
+) {
+  const isFormData = body instanceof FormData;
+
   const res = await fetch(`${BASE_URL}${path}`, {
     ...rest,
+    body,
     headers: {
-      "Content-Type": "application/json",
+      Accept: "application/json",
+      // For FormData, fetch must set Content-Type itself so it can add the multipart boundary
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
     },
   });
 
-  // Temporary basic error handling TODO: implement custom handling
   if (!res.ok && res.status !== 404) {
     throw new ApiError(res.status, await res.json().catch(() => null));
   }

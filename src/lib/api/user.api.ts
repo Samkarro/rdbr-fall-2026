@@ -1,4 +1,4 @@
-// lib/api/user.ts  (no "use server")
+"use server"
 import "server-only";
 import { cache } from "react";
 import { cookies } from "next/headers";
@@ -17,3 +17,33 @@ export const getMe = cache(async () => {
     throw err;
   }
 });
+
+export async function updateProfile(payload: Record<string, string>) {
+  const token = (await cookies()).get("token")?.value;
+  if (!token) {
+    return {
+      ok: false as const,
+      status: 401,
+      body: { message: "Unauthenticated." },
+    };
+  }
+
+  const formData = new FormData();
+  for (const key of ["fullName", "mobileNumber", "dateOfBirth", "preferredVenueId"]) {
+    formData.append(key, payload[key] ?? "");
+  }
+
+  try {
+    const res = await api<{ data: unknown }>("/profile", {
+      method: "PUT",
+      body: formData,
+      token,
+    });
+    return { ok: true as const, data: res.data };
+  } catch (err) {
+    if (err instanceof ApiError) {
+      return { ok: false as const, status: err.status, body: err.body };
+    }
+    throw err;
+  }
+}

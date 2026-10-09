@@ -1,0 +1,94 @@
+.custom-input {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-input input {
+  width: 100%;
+  background-color: var(--bg-card);
+  border-radius: 12px;
+  color: var(--text-primary);
+  padding: 0px 16px;
+  border: none;
+  height: 40px;
+  outline: none;
+  font-family: Archivo;
+}
+
+.custom-input label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.custom-modal-form-text-fields-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.custom-modal-form-text-fields-container button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.custom-modal-password-fields-container {
+  display: flex;
+  gap: 12;
+}
+
+.custom-input-error {
+  display: flex;
+  flex-direction: column;
+  color: var(--color-red);
+}
+
+.custom-input.error input {
+  border: 1px solid var(--color-red);
+  color: var(--color-red);
+}
+
+.custom-input.error label {
+  color: var(--color-red);
+}
+
+.custom-input.error .custom-input-error {
+  margin-top: 8px;
+}
+
+.custom-input-control {
+  position: relative;
+}
+
+.custom-input-control .green-check {
+  height: 16px;
+  width: 16px;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.custom-input-disabled-message {
+  margin-top: 8px;
+  color: var(--text-secondary);
+}
+
+input.disabled {
+  color: var(--text-secondary);
+}
+
+input[type="date"] + .green-check {
+  right: 40px;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  height: 16px;
+  width: 16px;
+  content: url("/calendar.svg");
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  cursor: pointer;
+}
