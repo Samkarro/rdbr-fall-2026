@@ -13,7 +13,6 @@ export default async function BookingModal({
   title: string;
 }) {
   let seatMap: SeatMap | null = null;
-  console.log(session);
   const user = await getMe();
   try {
     seatMap = await getSeatMap(session.id);

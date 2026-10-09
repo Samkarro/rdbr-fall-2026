@@ -41,11 +41,13 @@ export default async function MovieDetailsPage({
 
   const sessionId = typeof sp.session === "string" ? sp.session : undefined;
 
-  const selected = sessionId
-    ? sessionData
-        .flatMap(({ sessions }: { sessions: Session }) => sessions)
-        .find((session: Session) => String(session.id) === sessionId)
-    : undefined;
+  const selected =
+    !accountInvalid &&
+    (sessionId
+      ? sessionData
+          .flatMap(({ sessions }: { sessions: Session }) => sessions)
+          .find((session: Session) => String(session.id) === sessionId)
+      : undefined);
 
   return (
     <div className="movie-details-page-container">

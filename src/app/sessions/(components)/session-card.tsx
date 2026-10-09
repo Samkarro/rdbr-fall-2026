@@ -1,7 +1,9 @@
+"use client";
 import { Movie } from "@/lib/api/types/movie.types";
 import { Session } from "@/lib/api/types/sessions.types";
 import "./styles/session-card.styles.css";
 import Ticket from "@/lib/misc/ticket";
+import { useRouter } from "next/navigation";
 
 export default function SessionCard({
   movie,
@@ -12,6 +14,8 @@ export default function SessionCard({
   sessions: Session[];
   last: boolean;
 }) {
+  const router = useRouter();
+
   return (
     // TODO: do pagination
     <div className="session-card">
@@ -36,6 +40,11 @@ export default function SessionCard({
             <div
               key={session.id}
               className={`clickable ${session.isSoldOut ? "session-sold-out disabled" : ""}`}
+              onClick={() => {
+                if (!session.isSoldOut) {
+                  router.push(`/movies/${movie.slug}?session=${session.id}`);
+                }
+              }}
             >
               <div className="session-time-container ">
                 <h3>{session.time}</h3>
