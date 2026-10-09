@@ -1,0 +1,32 @@
+.my-tickets-section-container {
+  margin-top: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.my-tickets-timeframe-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 200px;
+  height: 39px;
+  padding: 5px;
+  border-radius: 12px;
+  background-color: var(--bg-card);
+}
+
+.my-tickets-timeframe-button {
+  appearance: none;
+  background: none;
+  padding: 7px 14px;
+  border: none;
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-family: Archivo;
+}
+
+.my-tickets-timeframe-button.active {
+  color: var(--text-primary);
+  background-color: var(--bg-raised);
+}

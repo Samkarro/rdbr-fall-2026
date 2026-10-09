@@ -4,6 +4,7 @@ import "./styles/profile.styles.css";
 import ProfileNav from "./(components)/profile-nav";
 import PersonalInformationForm from "./(components)/profile-form";
 import { getFilterOptions } from "@/lib/api/catalog.api";
+import MyTickets from "./(components)/my-tickets";
 
 export default async function ProfilePage({
   searchParams,
@@ -24,15 +25,14 @@ export default async function ProfilePage({
       <ProfileNav />
       <hr />
       {page === "my-tickets" ? (
-        // Placeholder for MyTickets TODO: implement
-        <div></div>
+        <MyTickets />
       ) : (
         <PersonalInformationForm
           // Adding this to remount with correct values after refresh
           key={`${user.mobileNumber}-${user.dateOfBirth}-${user.preferredVenue?.id}-${user.fullName}`}
           defaultValues={{
             email: user.email,
-            fullName: user.username,
+            fullName: user.fullName ?? "",
             mobileNumber: user.mobileNumber ?? "",
             dateOfBirth: user.dateOfBirth ?? "",
             preferredVenueId: user.preferredVenue
