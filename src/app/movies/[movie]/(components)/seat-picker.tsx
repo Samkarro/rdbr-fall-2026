@@ -1,6 +1,14 @@
 "use client";
 
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Dispatch,
+  Fragment,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   TransformWrapper,
   TransformComponent,
@@ -13,12 +21,12 @@ import {
   SeatSection,
 } from "@/lib/api/types/booking.types";
 import "./styles/seat-picker.styles.css";
+import { SeatId } from "./booking-content";
 
 const MAX_SEATS = 3;
 const DRAG_THRESHOLD_PX = 5;
 
 type SeatStatus = "available" | "unavailable" | "sold" | "held";
-type SeatId = Seat["id"];
 
 function SeatBlock({
   status,
@@ -87,8 +95,15 @@ function ZoomControls() {
   );
 }
 
-export default function SeatPicker({ seatMap }: { seatMap: SeatMap }) {
-  const [selectedIds, setSelectedIds] = useState<SeatId[]>([]);
+export default function SeatPicker({
+  seatMap,
+  selectedIds,
+  setSelectedIds,
+}: {
+  seatMap: SeatMap;
+  selectedIds: SeatId[];
+  setSelectedIds: Dispatch<SetStateAction<number[]>>;
+}) {
   const pointerDown = useRef<{ x: number; y: number } | null>(null);
 
   const seatsById = useMemo(() => {
