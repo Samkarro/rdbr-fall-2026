@@ -59,7 +59,7 @@ export default function SeatPicker({ seatMap }: { seatMap: SeatMap }) {
           {seatMap.sections.map((section: SeatSection) => {
             return (
               <div className="seat-section-container">
-                <p className="section-label label-s">
+                <p className="stalls-label label-s">
                   {section.name.toUpperCase()} · ROWS {section.rows[0].label}-
                   {section.rows.at(-1)!.label}
                 </p>
