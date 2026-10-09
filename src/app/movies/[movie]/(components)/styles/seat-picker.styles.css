@@ -99,6 +99,45 @@
 }
 
 /* Grid */
+
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: absolute;
+  left: 42px;
+  top: 172px;
+  z-index: 11;
+
+  padding: 5px 10px;
+  border-radius: 99px;
+  background-color: var(--bg-card);
+  opacity: 0.5;
+}
+
+.zoom-controls:hover {
+  opacity: 1;
+  box-shadow: 0px 4px 8px 2px var(--shadow);
+}
+
+.zoom-controls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--text-primary);
+  font-family: Archivo;
+  appearance: none;
+  background-color: var(--bg-raised);
+  border-radius: 99px;
+  border: none;
+  padding: 2px 4px;
+}
+
+.zoom-controls button:hover {
+  background-color: var(--text-disabled);
+}
+
 .stalls-label {
   margin-bottom: 16px;
   color: var(--text-secondary);

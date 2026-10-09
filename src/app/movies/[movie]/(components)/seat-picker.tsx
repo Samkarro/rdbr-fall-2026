@@ -1,5 +1,11 @@
 "use client";
 
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import {
+  TransformWrapper,
+  TransformComponent,
+  useControls,
+} from "react-zoom-pan-pinch";
 import {
   Seat,
   SeatMap,
@@ -7,110 +13,182 @@ import {
   SeatSection,
 } from "@/lib/api/types/booking.types";
 import "./styles/seat-picker.styles.css";
-import { Fragment } from "react/jsx-runtime";
-import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
+
+const MAX_SEATS = 3;
+const DRAG_THRESHOLD_PX = 5;
 
 type SeatStatus = "available" | "unavailable" | "sold" | "held";
+type SeatId = Seat["id"];
 
 function SeatBlock({
   status,
   number,
+  label,
+  onClick,
   legend = false,
 }: {
   status: SeatStatus | "selected";
   number?: string;
+  label?: string;
+  onClick?: (e: React.MouseEvent) => void;
   legend?: boolean;
 }) {
   if (status === "unavailable") {
-    return <div className="unavailable-seat"></div>;
+    return <div className="unavailable-seat" />;
   }
+  const className = `seat ${status} ${legend ? "legend-seat" : ""}`;
+  if (legend) return <div className={className} />;
 
   return (
-    <div className={`seat clickable ${status} ${legend ? "legend-seat" : ""}`}>
+    <button
+      className={`${className} clickable`}
+      onClick={onClick}
+      disabled={status === "sold" || status === "held"}
+    >
       {number}
+    </button>
+  );
+}
+
+const LEGEND: { status: SeatStatus | "selected"; text: string }[] = [
+  { status: "available", text: "Available" },
+  { status: "selected", text: "Selected" },
+  { status: "sold", text: "Sold" },
+  { status: "held", text: "Held by another user" },
+];
+
+function Legend() {
+  return (
+    <div className="legend">
+      {LEGEND.map(({ status, text }) => (
+        <div key={status} className="legend-item">
+          <SeatBlock status={status} legend />
+          <p className="legend-description body-s">{text}</p>
+        </div>
+      ))}
     </div>
   );
 }
 
-function Legend() {
-  const stati = ["available", "selected", "sold", "held"];
-  const message = ["Available", "Selected", "Sold", "Held by another user"];
+function ZoomControls() {
+  const { zoomIn, zoomOut, resetTransform } = useControls();
   return (
-    <div className="legend">
-      {stati.map((status: string, index: number) => {
-        return (
-          <div key={index} className="legend-item">
-            <SeatBlock status={status as SeatStatus} legend={true} />
-            <p className="legend-description body-s">{message[index]}</p>
-          </div>
-        );
-      })}
+    <div className="zoom-controls">
+      <button className="zoom-btn" onClick={() => zoomIn()}>
+        +
+      </button>
+      <button className="zoom-btn" onClick={() => zoomOut()}>
+        −
+      </button>
+      <button className="zoom-btn" onClick={() => resetTransform()}>
+        ⟲
+      </button>
     </div>
   );
 }
 
 export default function SeatPicker({ seatMap }: { seatMap: SeatMap }) {
-  const sectionAmt = seatMap.sections.length;
+  const [selectedIds, setSelectedIds] = useState<SeatId[]>([]);
+  const pointerDown = useRef<{ x: number; y: number } | null>(null);
+
+  const seatsById = useMemo(() => {
+    const map = new Map<SeatId, Seat>();
+    seatMap.sections.forEach((s) =>
+      s.rows.forEach((r) => r.seats.forEach((seat) => map.set(seat.id, seat))),
+    );
+    return map;
+  }, [seatMap]);
+
+  // after a refetch, drop selected seats that are no longer available
+  useEffect(() => {
+    setSelectedIds((prev) => {
+      const next = prev.filter(
+        (id) => seatsById.get(id)?.state === "available",
+      );
+      return next.length === prev.length ? prev : next;
+    });
+  }, [seatsById]);
+
+  const handleSeatClick = (e: React.MouseEvent, seat: Seat) => {
+    const start = pointerDown.current;
+    if (
+      start &&
+      Math.hypot(e.clientX - start.x, e.clientY - start.y) > DRAG_THRESHOLD_PX
+    ) {
+      return;
+    }
+
+    setSelectedIds((prev) => {
+      if (prev.includes(seat.id)) return prev.filter((id) => id !== seat.id);
+      if (prev.length >= MAX_SEATS) return prev;
+      return [...prev, seat.id];
+    });
+  };
 
   return (
     <div className="seat-picker-left-container">
-      <TransformWrapper
-        minScale={0.7}
-        maxScale={1}
-        initialScale={1}
-        centerOnInit
-        doubleClick={{ disabled: true }}
-        panning={{ velocityDisabled: true }}
-        wheel={{ step: 0.01 }}
-      >
-        <TransformComponent
-          wrapperStyle={{ width: "100%", maxHeight: 560 }}
-          contentStyle={{ width: "max-content" }}
+      <div className="seat-map-view">
+        <TransformWrapper
+          minScale={0.7}
+          maxScale={1}
+          initialScale={0.7}
+          centerOnInit
+          doubleClick={{ disabled: true }}
+          panning={{ velocityDisabled: true }}
+          wheel={{ step: 0.01 }}
         >
-          <div className="hall-container">
-            <div className="screen label-s">SCREEN</div>
-            <div className="seats-container">
+          <ZoomControls />
+          <TransformComponent
+            wrapperStyle={{ width: "100%", maxHeight: 560 }}
+            contentStyle={{ width: "max-content" }}
+          >
+            <div
+              className="seat-map-content"
+              onPointerDownCapture={(e) => {
+                pointerDown.current = { x: e.clientX, y: e.clientY };
+              }}
+            >
+              <div className="screen label-s">SCREEN</div>
               <div className="grid-rows-container">
-                {seatMap.sections.map((section: SeatSection, index: number) => {
+                {seatMap.sections.map((section: SeatSection) => {
+                  if (!section.rows.length) return null;
                   return (
-                    <div
-                      key={`${section.name}-${index}`}
-                      className="seat-section-container"
-                    >
-                      <p className="stalls-label label-s">
+                    <div key={section.name} className="seat-section-container">
+                      <p className="section-label label-s">
                         {section.name.toUpperCase()} · ROWS{" "}
-                        {section.rows[0].label}-{section.rows.at(-1)!.label}
+                        {section.rows[0].label}-
+                        {section.rows[section.rows.length - 1].label}
                       </p>
-                      {section.rows.map((row: SeatRow) => {
-                        return (
-                          <div className="seat-row-container">
-                            <div className="row-seats-container">
-                              <p className="row-label">{row.label}</p>
-
-                              {row.seats.map((seat) => (
-                                <Fragment key={seat.id}>
-                                  <SeatBlock
-                                    status={seat.state}
-                                    number={seat.label}
-                                  />
-                                  {seat.aisleAfter && (
-                                    <span className="aisle" />
-                                  )}
-                                </Fragment>
-                              ))}
-                            </div>
+                      {section.rows.map((row: SeatRow) => (
+                        <div key={row.label} className="seat-row-container">
+                          <div className="row-seats-container">
+                            <p className="row-label">{row.label}</p>
+                            {row.seats.map((seat: Seat) => (
+                              <Fragment key={seat.id}>
+                                <SeatBlock
+                                  status={
+                                    selectedIds.includes(seat.id)
+                                      ? "selected"
+                                      : seat.state
+                                  }
+                                  number={seat.label}
+                                  label={`Seat ${seat.code}`}
+                                  onClick={(e) => handleSeatClick(e, seat)}
+                                />
+                                {seat.aisleAfter && <span className="aisle" />}
+                              </Fragment>
+                            ))}
                           </div>
-                        );
-                      })}
+                        </div>
+                      ))}
                     </div>
                   );
                 })}
               </div>
             </div>
-          </div>
-        </TransformComponent>
-      </TransformWrapper>
-
+          </TransformComponent>
+        </TransformWrapper>
+      </div>
       <Legend />
     </div>
   );
