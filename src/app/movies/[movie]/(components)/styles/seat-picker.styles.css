@@ -6,6 +6,12 @@
   width: 720px;
 }
 
+.hall-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .screen {
   background-color: var(--bg-card);
   width: 100%;
@@ -18,6 +24,8 @@
 
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
+
+  margin-bottom: 32px;
 }
 
 .seat {
@@ -109,7 +117,6 @@
 }
 
 .seat-row-container {
-  padding-left: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -118,7 +125,13 @@
 
 .row-label {
   top: 17px;
-  left: -17px;
+  left: -24px;
+  position: absolute;
+}
+
+.row-seats-container:has(.unavailable-seat) .row-label {
+  top: 17px;
+  left: 0px;
   position: absolute;
 }
 
