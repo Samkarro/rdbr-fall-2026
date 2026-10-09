@@ -8,9 +8,11 @@ import { getMe } from "@/lib/api/user.api";
 export default async function BookingModal({
   session,
   title,
+  ageRating,
 }: {
   session: Session;
   title: string;
+  ageRating: string;
 }) {
   let seatMap: SeatMap | null = null;
   const user = await getMe();
@@ -32,7 +34,12 @@ export default async function BookingModal({
         </div>
       </div>
       {seatMap ? (
-        <BookingModalContent session={session} seatMap={seatMap} user={user} />
+        <BookingModalContent
+          session={session}
+          seatMap={seatMap}
+          user={user}
+          ageRating={ageRating}
+        />
       ) : (
         <p>Couldn't load seats. Close this and try again.</p>
       )}

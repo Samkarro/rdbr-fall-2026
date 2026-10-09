@@ -60,3 +60,7 @@ hr {
   font-weight: 800;
   font-size: 24px;
 }
+
+.ticket-type.disabled {
+  opacity: 0.5;
+}

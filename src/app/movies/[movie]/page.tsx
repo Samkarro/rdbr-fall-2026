@@ -157,7 +157,11 @@ export default async function MovieDetailsPage({
             </ModalShell>
           }
         >
-          <BookingModal session={selected} title={movie.title} />
+          <BookingModal
+            session={selected}
+            title={movie.title}
+            ageRating={movie.ageRating.code}
+          />
         </Suspense>
       )}
     </div>

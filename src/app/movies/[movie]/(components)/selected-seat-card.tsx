@@ -7,13 +7,16 @@ export default function SelectedSeatCard({
   seat,
   type,
   price,
+  ageRating,
   onTypeChange,
 }: {
   seat: Seat;
   type: TicketType;
   price: number;
+  ageRating: string;
   onTypeChange: (type: TicketType) => void;
 }) {
+  const ageRatingCheck = `${ageRating === "16+" || ageRating === "18+" ? "disabled" : ""}`;
   return (
     <div className="selected-seat-card">
       <div className="seat-info-container">
@@ -29,7 +32,8 @@ export default function SelectedSeatCard({
       <hr />
       <div className="ticket-type-selection-container">
         <button
-          className={`ticket-type body-s clickable ${type === "child" ? "active" : ""}`}
+          className={`ticket-type body-s clickable ${type === "child" ? "active" : ""} ${ageRatingCheck}`}
+          disabled={ageRating === "16+" || ageRating === "18+"}
           onClick={() => {
             if (type !== "child") {
               onTypeChange("child");

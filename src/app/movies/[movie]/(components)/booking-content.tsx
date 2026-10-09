@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Seat, SeatMap, TicketType } from "@/lib/api/types/booking.types";
 import { Session } from "@/lib/api/types/sessions.types";
 import { User } from "@/lib/api/types/user.types";
 import SeatPicker, { MAX_SEATS } from "./seat-picker";
 import SelectedSeatCard from "./selected-seat-card";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { clearDraft, restoreDraft, saveDraft } from "@/lib/misc/booking-draft";
 
 type BookingPhase = "seats" | "checkout" | "confirmation";
 
@@ -18,14 +20,44 @@ export default function BookingModalContent({
   session,
   seatMap,
   user,
+  ageRating,
 }: {
   session: Session;
   seatMap: SeatMap;
   user: User | null;
+  ageRating: string;
 }) {
   const [phase, setPhase] = useState<BookingPhase>("seats");
-
   const [selectedTickets, setSelectedTickets] = useState<SelectedTicket[]>([]);
+
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const isAuthed = user !== null;
+
+  useEffect(() => {
+    if (!isAuthed) return;
+    const restored = restoreDraft(session.id, seatMap);
+    if (restored.length) {
+      setSelectedTickets((prev) => (prev.length ? prev : restored));
+    }
+    clearDraft(session.id);
+  }, [isAuthed, session.id]);
+
+  const handleNext = () => {
+    if (selectedTickets.length === 0) return;
+
+    if (!isAuthed) {
+      saveDraft(session.id, selectedTickets);
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("auth", "true");
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      return;
+    }
+
+    // FIXME: Post /hold first and then do thesss
+    setPhase("checkout");
+  };
 
   const handleTicketTypeChange = (seatId: Seat["id"], type: TicketType) => {
     setSelectedTickets((prev) =>
@@ -68,6 +100,7 @@ export default function BookingModalContent({
             className={`booking-phase-switcher label-s ${
               phase === "checkout" ? "active" : ""
             }`}
+            onClick={handleNext}
           >
             CHECKOUT
           </button>
@@ -95,6 +128,7 @@ export default function BookingModalContent({
               <SelectedSeatCard
                 key={seat.id}
                 seat={seat}
+                ageRating={ageRating}
                 type={type}
                 price={session.price}
                 onTypeChange={(newType) =>
@@ -119,7 +153,7 @@ export default function BookingModalContent({
               selectedTickets.length === 0 ? "disabled" : ""
             }`}
             disabled={selectedTickets.length === 0}
-            onClick={() => setPhase("checkout")}
+            onClick={handleNext}
           >
             Next: Checkout
           </button>
