@@ -3,7 +3,7 @@
   flex-direction: column;
   gap: 32px;
   margin-top: 20px;
-  width: 720px;
+  min-width: 720px;
 }
 
 .screen {
@@ -39,6 +39,11 @@
 
   height: 52px;
   width: 52px;
+}
+
+.unavailable-seat {
+  height: 32px;
+  width: 16px;
 }
 
 .seat.legend-seat {
@@ -83,4 +88,38 @@
 
 .legend-description {
   color: var(--text-secondary);
+}
+
+/* Grid */
+.stalls-label {
+  color: var(--text-secondary);
+}
+
+.seat-section-container {
+  padding-left: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.seat-row-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.row-label {
+  top: 17px;
+  left: -17px;
+  position: absolute;
+}
+
+.row-seats-container {
+  position: relative;
+  display: flex;
+  gap: 8px;
+}
+.aisle {
+  width: 16px;
 }
