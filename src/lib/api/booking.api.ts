@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { api } from "./server.api"
-import { Order } from "./types/booking.types"
+import { Order, SeatMap } from "./types/booking.types"
 
 
 export const getMyTickets = async (type: "upcoming" | "past") => {
@@ -10,5 +10,11 @@ export const getMyTickets = async (type: "upcoming" | "past") => {
   if (!token) return null;
 
   const res = await api<{ data: Order[] }>(`/tickets?${type}`, { token })
+  return res.data;
+}
+
+export const getSeatMap = async (sessionId: number) => {
+  const res = await api<{ data: SeatMap }>(`/sessions/${sessionId}/seats`, {});
+
   return res.data;
 }
