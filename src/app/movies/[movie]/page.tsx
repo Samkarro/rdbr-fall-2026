@@ -9,6 +9,10 @@ import { getMe } from "@/lib/api/user.api";
 import { getNextSevenDays, getToday } from "@/lib/utils/dates";
 import DetailSessions from "./(components)/movie-detail-sessions";
 import { getMovieSessionData } from "@/lib/api/sessions.api";
+import { Session, Venue } from "@/lib/api/types/sessions.types";
+import { Suspense } from "react";
+import BookingModal from "./(components)/booking-modal";
+import ModalShell from "./(components)/modal-shell";
 
 export default async function MovieDetailsPage({
   searchParams,
@@ -34,6 +38,14 @@ export default async function MovieDetailsPage({
     month: "long",
     year: "numeric",
   });
+
+  const sessionId = typeof sp.session === "string" ? sp.session : undefined;
+
+  const selected = sessionId
+    ? sessionData
+        .flatMap(({ sessions }: { sessions: Session }) => sessions)
+        .find((session: Session) => String(session.id) === sessionId)
+    : undefined;
 
   return (
     <div className="movie-details-page-container">
@@ -134,6 +146,18 @@ export default async function MovieDetailsPage({
           </div>
         </div>
       </section>
+      {selected && (
+        <Suspense
+          key={selected.od}
+          fallback={
+            <ModalShell>
+              <p>Loading seats…</p>
+            </ModalShell>
+          }
+        >
+          <BookingModal session={selected} title={movie.title} />
+        </Suspense>
+      )}
     </div>
   );
 }

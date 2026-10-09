@@ -15,5 +15,27 @@ export default function BookingModalContent({
 }) {
   const [phase, setPhase] = useState<BookingPhase>("seats");
 
-  return <div className="booking-modal-content"></div>;
+  return (
+    <div className="booking-modal-content">
+      <div className="booking-modal-left-content">
+        <div className="booking-phase-switcher-container">
+          <button
+            className={`booking-phase-switcher label-s ${phase === "seats" ? "active" : ""}`}
+          >
+            SEATS
+          </button>
+          <button
+            className={`booking-phase-switcher label-s ${phase === "seats" ? "active" : ""}`}
+          >
+            CHECKOUT
+          </button>
+        </div>
+        {/* TODO: implement onNext logic for each one of these */}
+        {phase === "seats" && (
+          <div className="seat-picker-left-container"></div>
+        )}
+        {phase === "payment" && <div className="payment-left-container"></div>}
+      </div>
+    </div>
+  );
 }
