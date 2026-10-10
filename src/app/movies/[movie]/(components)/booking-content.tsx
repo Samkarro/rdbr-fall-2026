@@ -23,6 +23,7 @@ import {
   saveHoldId,
   ticketsFromHold,
 } from "@/lib/api/drafts.api";
+import "./styles/checkout.styles.css";
 
 type BookingPhase = "seats" | "checkout" | "confirmation";
 
@@ -35,12 +36,16 @@ export default function BookingModalContent({
   session,
   seatMap,
   user,
-  ageRating,
+  movieAgeRating,
+  movieTitle,
+  sessionDetails,
 }: {
   session: Session;
   seatMap: SeatMap;
   user: User | null;
-  ageRating: string;
+  movieAgeRating: string;
+  movieTitle: string;
+  sessionDetails: string;
 }) {
   const [hold, setHold] = useState<SeatHold | null>(null);
   const [isHolding, setIsHolding] = useState(false);
@@ -185,6 +190,24 @@ export default function BookingModalContent({
     return sum / 100;
   };
 
+  const calculateTicketTypeAmt = () => {
+    return Object.entries(
+      selectedTickets.reduce(
+        (counts, { type }) => {
+          counts[type]++;
+          return counts;
+        },
+        { child: 0, student: 0, adult: 0 },
+      ),
+    )
+      .filter(([, count]) => count > 0)
+      .map(
+        ([type, count]) =>
+          `${count} x ${type.charAt(0).toUpperCase() + type.slice(1)}`,
+      )
+      .join(", ");
+  };
+
   return (
     <div className="booking-modal-content">
       <div className="booking-modal-left-content">
@@ -216,46 +239,94 @@ export default function BookingModalContent({
       </div>
 
       <div className="booking-modal-separator" />
-
       <div className="booking-modal-right-content">
-        <div className="selected-seats-container">
-          <p className="selected-seats-heading">Your seats · Max {MAX_SEATS}</p>
+        {phase === "seats" && (
+          <div className="seats-right-container">
+            <div className="selected-seats-container">
+              <p className="selected-seats-heading">
+                Your seats · Max {MAX_SEATS}
+              </p>
 
-          {selectedTickets.length > 0 ? (
-            selectedTickets.map(({ seat, type }) => (
-              <SelectedSeatCard
-                key={seat.id}
-                seat={seat}
-                ageRating={ageRating}
-                type={type}
-                price={session.price}
-                onTypeChange={(newType) =>
-                  handleTicketTypeChange(seat.id, newType)
-                }
-              />
-            ))
-          ) : (
-            <p className="seat-guide-message body-s">
-              Pick up to {MAX_SEATS} seats from the map. Each seat can carry its
-              own ticket type.
-            </p>
-          )}
-        </div>
-        <div className="subtotal-container">
-          <div className="subtotal-text-container">
-            <p className="subtotal-text label-s">SUBTOTAL</p>
-            <p className="subtotal-amt h1">₾ {calculateSubtotal()}</p>
+              {selectedTickets.length > 0 ? (
+                selectedTickets.map(({ seat, type }) => (
+                  <SelectedSeatCard
+                    key={seat.id}
+                    seat={seat}
+                    ageRating={movieAgeRating}
+                    type={type}
+                    price={session.price}
+                    onTypeChange={(newType) =>
+                      handleTicketTypeChange(seat.id, newType)
+                    }
+                  />
+                ))
+              ) : (
+                <p className="seat-guide-message body-s">
+                  Pick up to {MAX_SEATS} seats from the map. Each seat can carry
+                  its own ticket type.
+                </p>
+              )}
+            </div>
+            <div className="subtotal-container">
+              <div className="subtotal-text-container">
+                <p className="subtotal-text label-s">SUBTOTAL</p>
+                <p className="subtotal-amt h1">₾ {calculateSubtotal()}</p>
+              </div>
+              <button
+                className={`custom-button-large red-button clickable ${
+                  selectedTickets.length === 0 || isHolding ? "disabled" : ""
+                }`}
+                disabled={selectedTickets.length === 0 || isHolding}
+                onClick={handleNext}
+              >
+                Next: Checkout
+              </button>
+            </div>
           </div>
-          <button
-            className={`custom-button-large red-button clickable ${
-              selectedTickets.length === 0 || isHolding ? "disabled" : ""
-            }`}
-            disabled={selectedTickets.length === 0 || isHolding}
-            onClick={handleNext}
-          >
-            Next: Checkout
-          </button>
-        </div>
+        )}
+        {phase === "checkout" && (
+          <div className="payment-left-container">
+            <div className="summary-container">
+              <div>
+                <p className="summary-heading">Summary</p>
+                <div className="summary-card">
+                  <div className="summary-card-header">
+                    <p className="summary-card-header-heading">{movieTitle}</p>
+                    <p className="summary-card-header-sub body-s">
+                      {sessionDetails}
+                    </p>
+                  </div>
+                  <hr />
+
+                  <div className="summary-card-info-container">
+                    <p className="summary-card-info-label body-s">Seats</p>
+                    <p className="summary-card-info body-s">
+                      {selectedTickets.map(({ seat }) => seat.code).join(", ")}
+                    </p>
+                  </div>
+                  <div className="summary-card-info-container">
+                    <p className="summary-card-info-label body-s">Tickets</p>
+                    <p className="summary-card-info ticket-type-info body-s">
+                      {calculateTicketTypeAmt()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="subtotal-container">
+              <div className="subtotal-text-container">
+                <p className="subtotal-text label-s">SUBTOTAL</p>
+                <p className="subtotal-amt h1">₾ {calculateSubtotal()}</p>
+              </div>
+              <button
+                className={`custom-button-large red-button clickable disabled`}
+                disabled
+              >
+                Pay: Complete order
+              </button>
+            </div>
+          </div>
+        )}
       </div>
       {errorMessage && (
         <div key={errorMessage} className="booking-error-label">

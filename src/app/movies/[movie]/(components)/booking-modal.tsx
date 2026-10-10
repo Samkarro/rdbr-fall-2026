@@ -8,12 +8,12 @@ import { cookies } from "next/headers";
 
 export default async function BookingModal({
   session,
-  title,
-  ageRating,
+  movieTitle,
+  movieAgeRating,
 }: {
   session: Session;
-  title: string;
-  ageRating: string;
+  movieTitle: string;
+  movieAgeRating: string;
 }) {
   const token = (await cookies()).get("token")?.value;
   let seatMap: SeatMap | null = null;
@@ -24,11 +24,13 @@ export default async function BookingModal({
     console.error("getSeatMap failed", err);
   }
 
+  const sessionDetails = `${session.venue.name} · Hall ${session.hall.name} · ${session.date} · ${session.time} · ${session.format.name} · ${session.language.name}`;
+
   return (
     <ModalShell>
       <div className="booking-modal-header">
         <div className="booking-modal-info">
-          <h2 className="booking-modal-session-title">{title}</h2>
+          <h2 className="booking-modal-session-title">{movieTitle}</h2>
           <p className="booking-modal-session-details body-s">
             {session.venue.name} · Hall {session.hall.name} · {session.date} ·{" "}
             {session.time} · {session.format.name} · {session.language.name}
@@ -40,7 +42,9 @@ export default async function BookingModal({
           session={session}
           seatMap={seatMap}
           user={user}
-          ageRating={ageRating}
+          movieAgeRating={movieAgeRating}
+          movieTitle={movieTitle}
+          sessionDetails={sessionDetails}
         />
       ) : (
         <p>Couldn't load seats. Close this and try again.</p>

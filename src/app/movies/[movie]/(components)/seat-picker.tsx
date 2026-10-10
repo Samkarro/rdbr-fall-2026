@@ -23,6 +23,7 @@ import {
   TransformWrapper,
   useControls,
 } from "react-zoom-pan-pinch";
+import { useTimedMessage } from "@/lib/hooks/use-timed-message";
 
 export const MAX_SEATS = 3;
 const DRAG_THRESHOLD_PX = 5;
@@ -115,6 +116,8 @@ export default function SeatPicker({
   selectedTickets: SelectedTicket[];
   setSelectedTickets: Dispatch<SetStateAction<SelectedTicket[]>>;
 }) {
+  const [errorMessage, showError] = useTimedMessage(5000);
+
   // I am defining a reference for this to prevent accidental licking when
   // dragging the seat map. Counting pixels travelled to decide
   // whether to register a click or not
@@ -158,6 +161,10 @@ export default function SeatPicker({
 
       return [...prev, { seat, type: "adult" as TicketType }];
     });
+
+    // setting a separate if check here to keep setSelectedTickets pure
+    if (selectedTickets.length >= MAX_SEATS)
+      showError("You can only pick 3 seats per order.");
   };
 
   const selectedIds = useMemo(
@@ -230,6 +237,11 @@ export default function SeatPicker({
         </TransformWrapper>
       </div>
       <Legend />
+      {errorMessage && (
+        <div key={errorMessage} className="booking-error-label">
+          {errorMessage}
+        </div>
+      )}
     </div>
   );
 }

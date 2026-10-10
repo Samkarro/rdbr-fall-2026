@@ -159,8 +159,8 @@ export default async function MovieDetailsPage({
         >
           <BookingModal
             session={selected}
-            title={movie.title}
-            ageRating={movie.ageRating.code}
+            movieTitle={movie.title}
+            movieAgeRating={movie.ageRating.code}
           />
         </Suspense>
       )}
