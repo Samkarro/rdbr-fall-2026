@@ -63,13 +63,14 @@
   margin-bottom: 9px;
 }
 
-.session-list {
+.movie-detail-session-list {
   display: flex;
   gap: 9px;
 }
 
 .session-ticket-container {
   display: flex;
+  flex-wrap: nowrap;
 }
 
 .session-ticket-right,

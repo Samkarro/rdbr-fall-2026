@@ -4,8 +4,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import "./styles/movie-detail-sessions.styles.css";
 import { formatDateParts } from "@/lib/utils/dates";
 import { Session, Venue } from "@/lib/api/types/sessions.types";
-import { Movie } from "@/lib/api/types/movie.types";
 import Ticket from "@/lib/misc/ticket";
+import { useHoldReleaseOnClose } from "@/lib/hooks/use-hold-release-on-close";
 
 export default function DetailSessions({
   days,
@@ -17,17 +17,30 @@ export default function DetailSessions({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
+  useHoldReleaseOnClose();
 
-  const updateParams = (mutate: (params: URLSearchParams) => void) => {
+  const updateParams = (
+    mutate: (params: URLSearchParams) => void,
+    { push = false }: { push?: boolean } = {},
+  ) => {
     const params = new URLSearchParams(searchParams.toString());
     mutate(params);
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    const url = `${pathname}?${params.toString()}`;
+    push
+      ? router.push(url, { scroll: false })
+      : router.replace(url, { scroll: false });
   };
 
   const selectedDate = searchParams.get("date") ?? days[0];
 
   const setDate = (date: string) =>
-    updateParams((params) => params.set("date", date));
+    updateParams((params) => {
+      params.set("date", date);
+      params.delete("session");
+    });
+
+  const openSession = (id: string) =>
+    updateParams((params) => params.set("session", id), { push: true });
 
   return (
     <div id="movie-detail-session-section">
@@ -73,11 +86,12 @@ export default function DetailSessions({
                 return (
                   <div key={hall.id} className="hall-card">
                     <p className="hall-heading label-s">Hall {hall.name}</p>
-                    <div className="session-list">
+                    <div className="movie-detail-session-list">
                       {hallSessions.map((session) => (
                         <div
                           key={session.id}
-                          className="session-ticket-container"
+                          className="session-ticket-container clickable"
+                          onClick={() => openSession(String(session.id))}
                         >
                           <div className="session-ticket-left">
                             <div className="session-ticket-clip top"></div>
