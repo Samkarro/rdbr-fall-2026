@@ -46,6 +46,13 @@
   height: 452px;
 }
 
+.booking-modal-content-wrapper {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
 .booking-phase-switcher-container {
   display: flex;
   align-items: center;

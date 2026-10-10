@@ -1,6 +1,13 @@
 import { z } from "zod";
 import { sessionSchema, venueSchema } from "./sessions.types";
 
+export type FieldErrors = Record<string, string>;
+
+export type OrderResult =
+  | { ok: true; order: Order }
+  | { ok: false; status: 409; message: string; contested: string[] }
+  | { ok: false; status: number; message: string; fieldErrors?: FieldErrors };
+
 // Order ticket types
 const ticketTypeSchema = z.enum(["child", "student", "adult"]);
 export type TicketType = z.infer<typeof ticketTypeSchema>;
