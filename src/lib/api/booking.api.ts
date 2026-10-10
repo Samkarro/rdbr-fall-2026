@@ -2,8 +2,12 @@
 
 import { cookies } from "next/headers";
 import { api, ApiError } from "./server.api"
-import { HoldResult, Order, seatHoldSchema, SeatMap, TicketType } from "./types/booking.types"
+import { HoldResult, Order, SeatHold, seatHoldSchema, SeatMap, TicketType } from "./types/booking.types"
 
+export type HoldLookup =
+  | { status: "live"; hold: SeatHold }
+  | { status: "expired" }
+  | { status: "gone" };
 
 export const getMyTickets = async (type: "upcoming" | "past") => {
   const token = (await cookies()).get("token")?.value;
@@ -13,9 +17,8 @@ export const getMyTickets = async (type: "upcoming" | "past") => {
   return res.data;
 }
 
-export const getSeatMap = async (sessionId: number) => {
-  const res = await api<{ data: SeatMap }>(`/sessions/${sessionId}/seats`, {});
-
+export const getSeatMap = async (sessionId: number, token?: string) => {
+  const res = await api<{ data: SeatMap }>(`/sessions/${sessionId}/seats`, { token, cache: "no-store" });
   return res.data;
 }
 
@@ -76,5 +79,35 @@ export async function holdSeats(
       status: err.status,
       message: body?.message ?? "Something went wrong. Please try again.",
     };
+  }
+}
+
+export async function getHold(holdId: string): Promise<HoldLookup> {
+  const token = (await cookies()).get("token")?.value;
+  if (!token) return { status: "gone" };
+
+  try {
+    const data = await api<{ data: SeatHold }>(`/holds/${holdId}`, { token });
+    const parsed = seatHoldSchema.safeParse(data?.data ?? data);
+
+    // 404 is unhandled so any uncaught fail means the hold is not found
+    if (!parsed.success) return { status: "gone" };
+
+    const hold = parsed.data;
+    const live = hold.isLive && new Date(hold.expiresAt).getTime() > Date.now();
+    return live ? { status: "live", hold } : { status: "expired" };
+  } catch {
+    return { status: "gone" };
+  }
+}
+
+export async function releaseHold(holdId: string): Promise<void> {
+  const token = (await cookies()).get("token")?.value;
+  if (!token) return;
+
+  try {
+    await api(`/holds/${holdId}`, { token, method: "DELETE" });
+  } catch (error) {
+
   }
 }

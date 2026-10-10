@@ -5,6 +5,7 @@ import "./styles/movie-detail-sessions.styles.css";
 import { formatDateParts } from "@/lib/utils/dates";
 import { Session, Venue } from "@/lib/api/types/sessions.types";
 import Ticket from "@/lib/misc/ticket";
+import { useHoldReleaseOnClose } from "@/lib/hooks/use-hold-release-on-close";
 
 export default function DetailSessions({
   days,
@@ -16,6 +17,7 @@ export default function DetailSessions({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
+  useHoldReleaseOnClose();
 
   const updateParams = (
     mutate: (params: URLSearchParams) => void,

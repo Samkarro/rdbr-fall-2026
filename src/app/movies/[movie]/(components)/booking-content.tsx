@@ -16,7 +16,13 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { clearDraft, restoreDraft, saveDraft } from "@/lib/misc/booking-draft";
 import { useTimedMessage } from "@/lib/hooks/use-timed-message";
 import { useHoldCountdown } from "@/lib/hooks/use-hold-countdown";
-import { holdSeats } from "@/lib/api/booking.api";
+import { getHold, holdSeats } from "@/lib/api/booking.api";
+import {
+  clearHoldId,
+  loadHoldId,
+  saveHoldId,
+  ticketsFromHold,
+} from "@/lib/api/drafts.api";
 
 type BookingPhase = "seats" | "checkout" | "confirmation";
 
@@ -43,12 +49,15 @@ export default function BookingModalContent({
   const [phase, setPhase] = useState<BookingPhase>("seats");
   const [selectedTickets, setSelectedTickets] = useState<SelectedTicket[]>([]);
 
+  const [isResuming, setIsResuming] = useState(true);
+
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isAuthed = user !== null;
 
   const handleExpire = useCallback(() => {
+    clearHoldId(session.id);
     setHold(null);
     setSelectedTickets([]);
     setPhase("seats");
@@ -76,13 +85,45 @@ export default function BookingModalContent({
     showError(result.message);
   };
 
+  // Restoring previous inputs
   useEffect(() => {
-    if (!isAuthed) return;
-    const restored = restoreDraft(session.id, seatMap);
-    if (restored.length) {
-      setSelectedTickets((prev) => (prev.length ? prev : restored));
+    if (!isAuthed) {
+      setIsResuming(false);
+      return;
     }
-    clearDraft(session.id);
+
+    const holdId = loadHoldId(session.id);
+
+    if (!holdId) {
+      const restored = restoreDraft(session.id, seatMap);
+      if (restored.length)
+        setSelectedTickets((prev) => (prev.length ? prev : restored));
+      clearDraft(session.id);
+      setIsResuming(false);
+      return;
+    }
+
+    let cancelled = false;
+    getHold(holdId).then((result) => {
+      if (cancelled) return;
+
+      if (
+        result.status === "live" &&
+        result.hold.sessionId === Number(session.id)
+      ) {
+        setSelectedTickets(ticketsFromHold(result.hold, seatMap));
+        setHold(result.hold);
+        setPhase("checkout");
+      } else {
+        clearHoldId(session.id);
+        if (result.status === "expired") handleExpire();
+      }
+      setIsResuming(false);
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, [isAuthed, session.id]);
 
   const handleNext = async () => {
@@ -104,9 +145,11 @@ export default function BookingModalContent({
         ticketType: type,
       })),
     );
+
     setIsHolding(false);
 
     if (result.ok) {
+      saveHoldId(session.id, result.hold.holdId);
       setHold(result.hold);
       setPhase("checkout");
       return;
@@ -161,7 +204,7 @@ export default function BookingModalContent({
           </button>
         </div>
 
-        {phase === "seats" && (
+        {phase === "seats" && !isResuming && (
           <SeatPicker
             seatMap={seatMap}
             selectedTickets={selectedTickets}

@@ -29,6 +29,10 @@ const DRAG_THRESHOLD_PX = 5;
 
 type SeatStatus = "available" | "unavailable" | "sold" | "held";
 
+// for Evaluating seat ownership after hold
+const effectiveState = (seat: Seat): SeatStatus =>
+  seat.isMine ? "available" : seat.state;
+
 function SeatBlock({
   status,
   number,
@@ -111,6 +115,9 @@ export default function SeatPicker({
   selectedTickets: SelectedTicket[];
   setSelectedTickets: Dispatch<SetStateAction<SelectedTicket[]>>;
 }) {
+  // I am defining a reference for this to prevent accidental licking when
+  // dragging the seat map. Counting pixels travelled to decide
+  // whether to register a click or not
   const pointerDown = useRef<{ x: number; y: number } | null>(null);
 
   const seatsById = useMemo(() => {
@@ -123,9 +130,10 @@ export default function SeatPicker({
 
   useEffect(() => {
     setSelectedTickets((prev) => {
-      const next = prev.filter(
-        ({ seat }) => seatsById.get(seat.id)?.state === "available",
-      );
+      const next = prev.filter(({ seat }) => {
+        const fresh = seatsById.get(seat.id);
+        return fresh && effectiveState(fresh) === "available";
+      });
 
       return next.length === prev.length ? prev : next;
     });
@@ -151,6 +159,11 @@ export default function SeatPicker({
       return [...prev, { seat, type: "adult" as TicketType }];
     });
   };
+
+  const selectedIds = useMemo(
+    () => new Set(selectedTickets.map(({ seat }) => seat.id)),
+    [selectedTickets],
+  );
 
   return (
     <div className="seat-picker-left-container">
@@ -194,11 +207,9 @@ export default function SeatPicker({
                               <Fragment key={seat.id}>
                                 <SeatBlock
                                   status={
-                                    selectedTickets.some(
-                                      (el) => el.seat.id === seat.id,
-                                    )
+                                    selectedIds.has(seat.id)
                                       ? "selected"
-                                      : seat.state
+                                      : effectiveState(seat)
                                   }
                                   number={seat.label}
                                   label={`Seat ${seat.code}`}
