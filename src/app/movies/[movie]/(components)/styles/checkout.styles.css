@@ -13,7 +13,7 @@
 }
 
 .summary-container {
-  height: 100%;
+  height: 452px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -48,4 +48,28 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.checkout-form-container {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.checkout-form-divider {
+  margin: 2px 0px;
+}
+
+.checkout-double-input-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.checkout-info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }

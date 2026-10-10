@@ -24,6 +24,7 @@ import {
   ticketsFromHold,
 } from "@/lib/api/drafts.api";
 import "./styles/checkout.styles.css";
+import CheckoutForm from "./checkout-form";
 
 type BookingPhase = "seats" | "checkout" | "confirmation";
 
@@ -235,7 +236,7 @@ export default function BookingModalContent({
           />
         )}
 
-        {phase === "checkout" && <div className="payment-left-container" />}
+        {phase === "checkout" && <CheckoutForm user={user!} />}
       </div>
 
       <div className="booking-modal-separator" />
@@ -312,18 +313,18 @@ export default function BookingModalContent({
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="subtotal-container">
-              <div className="subtotal-text-container">
-                <p className="subtotal-text label-s">SUBTOTAL</p>
-                <p className="subtotal-amt h1">₾ {calculateSubtotal()}</p>
+              <div className="subtotal-container">
+                <div className="subtotal-text-container">
+                  <p className="subtotal-text label-s">SUBTOTAL</p>
+                  <p className="subtotal-amt h1">₾ {calculateSubtotal()}</p>
+                </div>
+                <button
+                  className={`custom-button-large red-button clickable disabled`}
+                  disabled
+                >
+                  Pay: Complete order
+                </button>
               </div>
-              <button
-                className={`custom-button-large red-button clickable disabled`}
-                disabled
-              >
-                Pay: Complete order
-              </button>
             </div>
           </div>
         )}
