@@ -149,7 +149,7 @@ export async function submitOrder(
     const parsed = orderSchema.safeParse(data?.data ?? data);
     return parsed.success
       ? { ok: true, order: parsed.data }
-      : { ok: false, status: 500, message: "Unexpected response from the server." };
+      : { ok: false, status: 500, message: parsed.error.message };
   } catch (err) {
     if (!(err instanceof ApiError)) {
       return { ok: false, status: 0, message: "Couldn't reach the server. Please try again." };

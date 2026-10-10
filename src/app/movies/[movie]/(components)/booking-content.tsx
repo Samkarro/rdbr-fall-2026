@@ -438,6 +438,76 @@ export default function BookingModalContent({
             </div>
           )}
         </div>
+        {phase === "confirmation" && order && (
+          <div className="confirmation-container">
+            <div className="confirmation-info-box">
+              <div className="confirmation-checkmark-container">
+                <img src="/check.svg" alt="" />
+              </div>
+              <div className="confirmation-message-container">
+                <h1 className="confirmation-message-heading">
+                  Booking confirmed!
+                </h1>
+                <p className="confirmation-message body-s">
+                  Your tickets are ready. We've sent the confirmation to your
+                  email.
+                </p>
+                <div className="confirmation-order-label">{order.id}</div>
+              </div>
+            </div>
+            <div className="confirmation-card">
+              <div className="confirmation-card-session-info">
+                <img src="/x.svg" alt="" />
+                <div className="confirmation-card-session-info-text">
+                  <p className="confirmation-card-movie-title">
+                    {order.session.movie.title}
+                  </p>
+                  <p className="confirmation-card-session-details">
+                    {order.session.venue.name} · Hall {order.session.hall.name}{" "}
+                    · {order.session.date} · {order.session.time}
+                  </p>
+                </div>
+              </div>
+              <hr />
+              <div className="confirmation-card-ticket-detail-container">
+                <div className="summary-card-info-container">
+                  <p className="confirmation-card-info-label">Seats</p>
+                  <p className="confirmation-card-info-content">
+                    {order.tickets.map((t) => t.seatCode).join(", ")}
+                  </p>
+                </div>
+                <div className="summary-card-info-container">
+                  <p className="confirmation-card-info-label">Tickets</p>1
+                  {/* TODO: extract this better later */}
+                  <p className="confirmation-card-info-content">
+                    {Object.entries(
+                      selectedTickets.reduce(
+                        (counts, { type }) => {
+                          counts[type]++;
+                          return counts;
+                        },
+                        { child: 0, student: 0, adult: 0 },
+                      ),
+                    )
+                      .filter(([, count]) => count > 0)
+                      .map(
+                        ([type, count]) =>
+                          `${count} x ${type.charAt(0).toUpperCase() + type.slice(1)}`,
+                      )
+                      .join(", ")}
+                  </p>
+                </div>
+              </div>
+              <hr />
+              <div className="summary-card-info-container">
+                <p className="confirmation-card-info-label larger">TOTAL</p>
+                <p className="confirmation-card-info-content larger">
+                  ₾ {order.totalPrice}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
         {errorMessage && (
           <div key={errorMessage} className="booking-error-label">
             {errorMessage}

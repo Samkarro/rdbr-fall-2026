@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { sessionSchema, venueSchema } from "./sessions.types";
+import { orderSessionSchema, sessionSchema, venueSchema } from "./sessions.types";
 
 export type FieldErrors = Record<string, string>;
 
@@ -37,7 +37,7 @@ export const orderSchema = z.object({
     email: z.email(),
     mobileNumber: z.string(),
   }),
-  session: sessionSchema,
+  session: orderSessionSchema,
   tickets: z.array(orderTicketSchema),
 });
 
