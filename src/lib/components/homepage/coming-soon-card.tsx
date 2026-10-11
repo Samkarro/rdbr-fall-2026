@@ -2,7 +2,14 @@ import { Movie } from "../../api/types/movie.types";
 import NotifyButton from "./notify-button";
 import "./styles/coming-soon.styles.css";
 
-export default function ComingSoonCard({ movie }: { movie: Movie }) {
+export default function ComingSoonCard({
+  movie,
+  isAuthed,
+}: {
+  movie: Movie;
+  isAuthed: boolean;
+}) {
+  console.log("isNotified", movie);
   return (
     <div className="coming-soon-card clickable">
       {" "}
@@ -27,7 +34,11 @@ export default function ComingSoonCard({ movie }: { movie: Movie }) {
             {movie.ageRating.code}
           </div>
         </div>
-        <NotifyButton movieSlug={movie.slug} />
+        <NotifyButton
+          movieSlug={movie.slug}
+          isNotified={movie.isNotified ?? false}
+          isAuthed={isAuthed}
+        />{" "}
       </div>
     </div>
   );

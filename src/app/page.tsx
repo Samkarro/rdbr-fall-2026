@@ -3,15 +3,21 @@ import {
   getFeaturedTitles,
   getNowPlaying,
 } from "@/lib/api/catalog.api";
+import { getMe } from "@/lib/api/user.api";
 import ComingSoon from "@/lib/components/homepage/coming-soon";
 import HeroSection from "@/lib/components/homepage/hero";
 import NowPlaying from "@/lib/components/homepage/now-playing";
 import RecentlyViewed from "@/lib/components/homepage/recently-viewed";
+import { cookies } from "next/headers";
 
 export default async function Home() {
-  const featuredTitles = await getFeaturedTitles();
-  const nowPlayingFilms = await getNowPlaying(6);
-  const comingSoonFilms = await getComingSoon(4);
+  const token = (await cookies()).get("token")?.value;
+  const user = await getMe();
+  const [featuredTitles, nowPlayingFilms, comingSoonFilms] = await Promise.all([
+    getFeaturedTitles(),
+    getNowPlaying(6),
+    getComingSoon(4, token),
+  ]);
 
   return (
     <div>
@@ -20,7 +26,7 @@ export default async function Home() {
         <RecentlyViewed />
         <NowPlaying movies={nowPlayingFilms} />
         <hr />
-        <ComingSoon movies={comingSoonFilms} />
+        <ComingSoon movies={comingSoonFilms} isAuthed={user !== null} />
       </main>
     </div>
   );

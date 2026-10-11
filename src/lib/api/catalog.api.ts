@@ -23,10 +23,10 @@ export async function getNowPlaying(limit?: number): Promise<Movie[]> {
   return nowPlaying;
 }
 
-export async function getComingSoon(limit?: number): Promise<Movie[]> {
+export async function getComingSoon(limit?: number, token?: string): Promise<Movie[]> {
   const { data: comingSoon } = await api<{ data: Movie[] }>(
     `/movies/coming-soon${limit && limit > 0 ? `?limit=${limit}` : ""}`,
-    {}
+    { token }
   );
   return comingSoon;
 }

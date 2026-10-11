@@ -3,7 +3,13 @@ import HorizontalScroller from "../global/horizontal-scroller";
 import ComingSoonCard from "./coming-soon-card";
 import "./styles/coming-soon.styles.css";
 
-export default function ComingSoon({ movies }: { movies: Movie[] }) {
+export default function ComingSoon({
+  movies,
+  isAuthed,
+}: {
+  movies: Movie[];
+  isAuthed: boolean;
+}) {
   return (
     <section id="coming-soon">
       <div className="coming-soon-list-container">
@@ -16,7 +22,13 @@ export default function ComingSoon({ movies }: { movies: Movie[] }) {
         <div className="coming-soon-list-overlay"></div>
         <HorizontalScroller className="coming-soon-list">
           {movies.map((movie: Movie) => {
-            return <ComingSoonCard key={movie.id} movie={movie} />;
+            return (
+              <ComingSoonCard
+                key={movie.id}
+                movie={movie}
+                isAuthed={isAuthed}
+              />
+            );
           })}
         </HorizontalScroller>
       </div>

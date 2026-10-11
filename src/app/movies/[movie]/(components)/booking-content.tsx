@@ -99,6 +99,25 @@ export default function BookingModalContent({
     showError(result.message);
   };
 
+  const requestHold = async (tickets: SelectedTicket[]) => {
+    if (tickets.length === 0) return;
+
+    setIsHolding(true);
+    const result = await holdSeats(
+      session.id,
+      tickets.map(({ seat, type }) => ({ seatId: seat.id, ticketType: type })),
+    );
+    setIsHolding(false);
+
+    if (result.ok) {
+      saveHoldId(session.id, result.hold.holdId);
+      setHold(result.hold);
+      setPhase("checkout");
+      return;
+    }
+    handleHoldError(result);
+  };
+
   // Restoring previous inputs
   useEffect(() => {
     if (!isAuthed) {
@@ -110,10 +129,15 @@ export default function BookingModalContent({
 
     if (!holdId) {
       const restored = restoreDraft(session.id, seatMap);
-      if (restored.length)
-        setSelectedTickets((prev) => (prev.length ? prev : restored));
       clearDraft(session.id);
-      setIsResuming(false);
+
+      if (restored.length === 0) {
+        setIsResuming(false);
+        return;
+      }
+
+      setSelectedTickets(restored);
+      requestHold(restored).finally(() => setIsResuming(false));
       return;
     }
 
@@ -151,24 +175,7 @@ export default function BookingModalContent({
       return;
     }
 
-    setIsHolding(true);
-    const result = await holdSeats(
-      session.id,
-      selectedTickets.map(({ seat, type }) => ({
-        seatId: seat.id,
-        ticketType: type,
-      })),
-    );
-
-    setIsHolding(false);
-
-    if (result.ok) {
-      saveHoldId(session.id, result.hold.holdId);
-      setHold(result.hold);
-      setPhase("checkout");
-      return;
-    }
-    handleHoldError(result);
+    await requestHold(selectedTickets);
   };
 
   const handleTicketTypeChange = (seatId: Seat["id"], type: TicketType) => {

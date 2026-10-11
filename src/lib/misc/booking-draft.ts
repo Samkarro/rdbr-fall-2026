@@ -3,7 +3,7 @@ import { MAX_SEATS } from "@/app/movies/[movie]/(components)/seat-picker";
 import type { Seat, SeatMap, TicketType } from "@/lib/api/types/booking.types";
 
 
-const TTL_MS = 30 * 60 * 1000;
+const TTL_MS = 2 * 60 * 1000;
 const TICKET_TYPES: TicketType[] = ["adult", "student", "child"];
 const key = (sessionId: string | number) => `kino:booking-draft:${sessionId}`;
 

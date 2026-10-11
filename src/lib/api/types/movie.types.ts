@@ -39,6 +39,7 @@ export const movieSchema = z.object({
   releaseDate: z.iso.date(),
   isComingSoon: z.boolean(),
   isFeatured: z.boolean(),
+  isNotified: z.boolean().optional(),
   fromPrice: z.number(),
   ageRating: ageRatingSchema,
   genres: z.array(genreSchema),
