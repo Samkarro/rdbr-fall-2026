@@ -1,4 +1,5 @@
 import { Movie } from "../../api/types/movie.types";
+import NotifyButton from "./notify-button";
 import "./styles/coming-soon.styles.css";
 
 export default function ComingSoonCard({ movie }: { movie: Movie }) {
@@ -20,16 +21,13 @@ export default function ComingSoonCard({ movie }: { movie: Movie }) {
           </p>
           <p className="coming-soon-card-title label-s">{movie.title}</p>
           <p className="coming-soon-card-sub body-s">
-            {movie.genres[0].name} · {movie.runtimeMinutes}
+            {movie.genres[0].name} · {movie.runtimeMinutes} min
           </p>
           <div className="coming-soon-card-age-rating label-s">
             {movie.ageRating.code}
           </div>
         </div>
-        <div className="coming-soon-card-notify-button label-s">
-          <img src="/bell.svg" />
-          Notify Me
-        </div>
+        <NotifyButton movieSlug={movie.slug} />
       </div>
     </div>
   );

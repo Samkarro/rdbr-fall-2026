@@ -1,6 +1,9 @@
+"use server"
 import { cache } from "react";
-import { api } from "./server.api";
+import { api, ApiError } from "./server.api";
 import { Movie, MovieDetail, movieDetailSchema } from "./types/movie.types";
+import { cookies } from "next/headers";
+import { NotifyResult } from "../components/homepage/notify-button";
 
 export async function searchFilms(query: string, signal: AbortSignal) {
   const { data: searchResults } = await api<{ data: Movie[] }>(`/search?q=${encodeURIComponent(query)}`, { signal });
@@ -41,3 +44,31 @@ export const getFilterOptions = cache(async () => {
   const { data } = await api<{ data: any }>("/filter-options", { next: { tags: ["filter-options"] } })
   return data;
 })
+
+export async function notifyMe(movieSlug: string): Promise<NotifyResult> {
+  const token = (await cookies()).get("token")?.value;
+  if (!token) {
+    return { ok: false, status: 401, message: "Please sign in to continue." };
+  }
+
+  try {
+    const res = await api<any>(`/movies/${movieSlug}/notify`, {
+      method: "POST",
+      token,
+    });
+
+
+    if (res?.data?.subscribed === true) return { ok: true };
+    return { ok: false, status: 404, message: res?.message ?? "Couldn't subscribe. Please try again." };
+  } catch (err) {
+    if (err instanceof ApiError) {
+      const body = err.body as any;
+      return {
+        ok: false,
+        status: err.status,
+        message: body?.message ?? "Something went wrong. Please try again.",
+      };
+    }
+    return { ok: false, status: 0, message: "Couldn't reach the server. Please try again." };
+  }
+}

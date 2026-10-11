@@ -72,7 +72,7 @@
 }
 
 .seat.selected {
-  border: none;
+  border: var(--bg-page);
   background-color: var(--color-red);
 }
 

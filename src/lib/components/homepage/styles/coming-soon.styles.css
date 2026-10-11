@@ -77,15 +77,26 @@
 }
 
 .coming-soon-card-notify-button {
+  appearance: none;
+  background: none;
+  color: var(--text-primary);
+  font-family: Archivo;
+
   padding: 6px 12px;
   display: flex;
   align-items: center;
   border-radius: 99px;
   gap: 4px;
+  flex-wrap: nowrap;
   border: 1px solid var(--text-secondary);
-  width: 100px;
+  width: fit-content;
 
   transition: background-color 200ms;
+}
+
+.coming-soon-card-notify-button.subscribed {
+  background-color: var(--tint-white);
+  border: none;
 }
 
 .coming-soon-card-notify-button img {
