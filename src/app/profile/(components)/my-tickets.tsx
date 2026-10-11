@@ -7,6 +7,7 @@ import { refundOrder } from "@/lib/api/refunds.api";
 import { useTimedMessage } from "@/lib/hooks/use-timed-message";
 import EmptyState from "@/lib/components/global/empty-state";
 import Link from "next/link";
+import { formatSessionDateShort } from "@/lib/utils/dates";
 
 export const REFUND_CUTOFF_MS = 2 * 60 * 60 * 1000;
 
@@ -137,7 +138,8 @@ export default function MyTickets() {
                     <div className="my-ticket-detail">
                       <p className="my-ticket-detail-heading overline">DATE</p>
                       <p className="my-ticket-detail-text label-m">
-                        {ticket.session.date} · {ticket.session.time}
+                        {formatSessionDateShort(ticket.session.date)} ·{" "}
+                        {ticket.session.time}
                       </p>
                     </div>
                     <div className="my-ticket-detail">

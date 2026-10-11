@@ -75,7 +75,10 @@ export default function NotifyButton({
         onClick={handleClick}
         disabled={pending || subscribed}
       >
-        <img src={subscribed ? "/check.svg" : "/bell.svg"} alt="" />
+        <img
+          src={subscribed || isNotified ? "/check.svg" : "/bell.svg"}
+          alt=""
+        />
         {subscribed || isNotified ? "Reminder set" : "Notify Me"}
       </button>
       {errorMessage && (

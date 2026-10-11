@@ -5,6 +5,7 @@ import BookingModalContent from "./booking-content";
 import ModalShell from "./modal-shell";
 import { getMe } from "@/lib/api/user.api";
 import { cookies } from "next/headers";
+import { formatSessionDateLong } from "@/lib/utils/dates";
 
 export default async function BookingModal({
   session,
@@ -24,7 +25,7 @@ export default async function BookingModal({
     console.error("getSeatMap failed", err);
   }
 
-  const sessionDetails = `${session.venue.name} · Hall ${session.hall.name} · ${session.date} · ${session.time} · ${session.format.name} · ${session.language.name}`;
+  const sessionDetails = `${session.venue.name} · Hall ${session.hall.name} · ${formatSessionDateLong(session.date)} · ${session.time} · ${session.format.name} · ${session.language.name}`;
 
   return (
     <ModalShell>

@@ -129,12 +129,12 @@ export default function SessionFilters({
             const selected = day === selectedDate;
             return (
               <div
-                key={day}
-                className={`date-filter-button clickable ${selected ? "selected" : ""}`}
+                key={`sessions-${day}`}
+                className={`session-page-date-filter-button clickable ${selected ? "selected" : ""}`}
                 onClick={() => setDate(day)}
               >
-                <p className="date-weekday label-s">{weekday}</p>
-                <p className="date-num label-s">{dayNum}</p>
+                <p className="session-page-date-weekday label-s">{weekday}</p>
+                <p className="session-page-date-num label-s">{dayNum}</p>
               </div>
             );
           })}

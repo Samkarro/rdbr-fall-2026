@@ -4,6 +4,7 @@
 import { useRouter } from "next/navigation";
 import type { Order } from "@/lib/api/types/booking.types";
 import { formatTicketCounts } from "@/lib/misc/ticket-pricing";
+import { formatSessionDateShort } from "@/lib/utils/dates";
 
 export default function ConfirmationView({ order }: { order: Order }) {
   const router = useRouter();
@@ -42,8 +43,8 @@ export default function ConfirmationView({ order }: { order: Order }) {
               {session.movie.title}
             </p>
             <p className="confirmation-card-session-details body-s">
-              {session.venue.name} · Hall {session.hall.name} · {session.date} ·{" "}
-              {session.time}
+              {session.venue.name} · Hall {session.hall.name} ·{" "}
+              {formatSessionDateShort(session.date)} · {session.time}
             </p>
           </div>
         </div>

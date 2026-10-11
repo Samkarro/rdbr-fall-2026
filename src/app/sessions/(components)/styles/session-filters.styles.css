@@ -114,7 +114,7 @@
   display: none;
 }
 
-.date-filter-button {
+.session-page-date-filter-button {
   display: flex;
   flex-direction: column;
   gap: 6px;

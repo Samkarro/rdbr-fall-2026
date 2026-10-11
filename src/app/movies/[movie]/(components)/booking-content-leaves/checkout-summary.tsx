@@ -3,6 +3,7 @@ import type { SelectedTicket } from "@/lib/api/types/booking.types";
 import { capitalize, formatTicketCounts } from "@/lib/misc/ticket-pricing";
 import SubtotalBar from "./subtotal-bar";
 import { Session } from "@/lib/api/types/sessions.types";
+import { formatSessionDateShort } from "@/lib/utils/dates";
 
 export default function CheckoutSummary({
   movieTitle,
@@ -26,7 +27,8 @@ export default function CheckoutSummary({
             <div className="summary-card-header">
               <p className="summary-card-header-heading">{movieTitle}</p>
               <p className="summary-card-header-sub body-s">
-                Hall {session.hall.name} · {session.date} · {session.time}
+                Hall {session.hall.name} ·{" "}
+                {formatSessionDateShort(session.date)} · {session.time}
               </p>
             </div>
             <hr />

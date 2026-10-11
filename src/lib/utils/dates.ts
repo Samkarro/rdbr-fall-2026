@@ -29,3 +29,27 @@ export function formatDateParts(isoDate: string) {
     day: d.getUTCDate(),
   };
 }
+
+function formatSessionDate(
+  date: string,
+  weekday: "short" | "long",
+  month: "short" | "long",
+): string {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    weekday,
+    day: "numeric",
+    month,
+    timeZone: "UTC",
+  }).formatToParts(new Date(`${date}T00:00:00Z`));
+
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
+  return `${get("weekday")} ${get("day")} ${get("month")}`;
+}
+
+/** "Fri 14 Nov" */
+export const formatSessionDateShort = (date: string) =>
+  formatSessionDate(date, "short", "short");
+
+/** "Friday 14 November" */
+export const formatSessionDateLong = (date: string) =>
+  formatSessionDate(date, "long", "long");
