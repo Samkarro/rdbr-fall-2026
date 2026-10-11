@@ -33,13 +33,15 @@
 
 .my-ticket-list {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   gap: 20px;
 }
 
 /* Ticket card */
 .my-ticket {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: var(--bg-card);
   border-radius: 26px;
 }
@@ -48,6 +50,7 @@
   display: flex;
   align-items: center;
   gap: 18px;
+  flex-wrap: nowrap;
 
   width: 100%;
   padding-left: 30px;
@@ -162,6 +165,7 @@
   border: none;
   border-radius: 999px;
   padding: 10px 22px;
+  width: 100%;
 
   font-weight: 800;
   font-size: 14px;
@@ -180,4 +184,28 @@
 .refundability-notice {
   width: 100%;
   text-align: center;
+}
+
+.refund-button-wrapper {
+  position: relative;
+}
+
+.refund-blocked-label {
+  position: absolute;
+  top: calc(100% + 5px);
+  box-shadow: 0px 1px 4px 0px var(--shadow);
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: var(--color-red);
+  background-color: var(--bg-page);
+  padding: 4px 6px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  border-radius: 99px;
+}
+
+.refund-button-wrapper:hover .refund-blocked-label {
+  opacity: 1;
 }

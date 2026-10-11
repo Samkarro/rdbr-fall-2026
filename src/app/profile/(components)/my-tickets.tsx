@@ -1,9 +1,22 @@
 "use client";
 import { getMyTickets } from "@/lib/api/booking.api";
 import { Order } from "@/lib/api/types/booking.types";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./styles/my-tickets.styles.css";
-import { formatRefundDeadline } from "@/lib/api/refunds.api";
+import { refundOrder } from "@/lib/api/refunds.api";
+import { useTimedMessage } from "@/lib/hooks/use-timed-message";
+
+export const REFUND_CUTOFF_MS = 2 * 60 * 60 * 1000;
+
+export function formatRefundDeadline(startsAt: string): string {
+  const deadline = new Date(new Date(startsAt).getTime() - REFUND_CUTOFF_MS);
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    weekday: "short",
+    month: "short",
+    timeZone: "Asia/Tbilisi",
+  }).format(deadline);
+}
 
 export default function MyTickets() {
   const [activeTimeframe, setActiveTimeframe] = useState<"upcoming" | "past">(
@@ -11,20 +24,47 @@ export default function MyTickets() {
   );
   const [upcoming, setUpcoming] = useState<Order[]>([]);
   const [past, setPast] = useState<Order[]>([]);
+  const [refundingId, setRefundingId] = useState<number | null>(null);
+  const [errorMessage, showError] = useTimedMessage(5000);
 
+  const loadTickets = useCallback(async () => {
+    const [upcomingTickets, pastTickets] = await Promise.all([
+      getMyTickets("upcoming"),
+      getMyTickets("past"),
+    ]);
+    setUpcoming(upcomingTickets ?? []);
+    setPast(pastTickets ?? []);
+  }, []);
+
+  // Extracted hook logic to allow reset after refund
   useEffect(() => {
-    async function fetchTickets() {
-      const [upcomingTickets, pastTickets] = await Promise.all([
-        getMyTickets("upcoming"),
-        getMyTickets("past"),
-      ]);
+    loadTickets();
+  }, [loadTickets]);
 
-      setUpcoming(upcomingTickets ?? []);
-      setPast(pastTickets ?? []);
+  const handleRefund = async (order: Order) => {
+    if (refundingId !== null) return;
+
+    setRefundingId(order.id);
+    const result = await refundOrder(order.reference);
+    setRefundingId(null);
+
+    if (!result.ok) {
+      showError(result.message);
+      if (result.status === 422) loadTickets();
+      return;
     }
 
-    fetchTickets();
-  }, []);
+    if (result.order) {
+      const refunded = result.order;
+      setUpcoming((prev) => prev.filter((o) => o.id !== refunded.id));
+      setPast((prev) => [
+        refunded,
+        ...prev.filter((o) => o.id !== refunded.id),
+      ]);
+    } else {
+      loadTickets();
+    }
+  };
 
   const ticketListRef = activeTimeframe == "upcoming" ? upcoming : past;
 
@@ -119,11 +159,20 @@ export default function MyTickets() {
                     </p>
                     <p className="my-ticket-price h1">₾{ticket.totalPrice}</p>
                   </div>
-                  <button
-                    className={`refund-button gray-button clickable ${ticket.isRefundable ? "" : "disabled"}`}
-                  >
-                    {ticket.refundedAt !== null ? "Refunded" : "Refund"}
-                  </button>
+                  <div className="refund-button-wrapper">
+                    {activeTimeframe === "upcoming" && !ticket.isRefundable && (
+                      <p className="refund-blocked-label body-s">
+                        Refunds close 2 hours before the session
+                      </p>
+                    )}
+                    <button
+                      className={`refund-button gray-button clickable ${ticket.isRefundable && refundingId === null ? "" : "disabled"}`}
+                      disabled={!ticket.isRefundable || refundingId !== null}
+                      onClick={() => handleRefund(ticket)}
+                    >
+                      {ticket.refundedAt !== null ? "Refunded" : "Refund"}
+                    </button>
+                  </div>
                   <p className="refundability-notice body-s">
                     Refundable until{" "}
                     {`${String((+ticket.session.time.split(":")[0] - 2 + 24) % 24).padStart(2, "0")}:${ticket.session.time.split(":")[1]}`}{" "}
@@ -135,6 +184,11 @@ export default function MyTickets() {
           );
         })}
       </div>
+      {errorMessage && (
+        <div key={errorMessage} className="booking-error-label">
+          {errorMessage}
+        </div>
+      )}
     </div>
   );
 }
