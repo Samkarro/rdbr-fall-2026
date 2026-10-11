@@ -28,7 +28,10 @@ export default function ProfileDropdown({
   };
 
   return (
-    <div className="profile-dropdown-container">
+    <div
+      className="profile-dropdown-container"
+      onClick={(e) => e.stopPropagation()}
+    >
       <div className="top-section">
         <div className="profile-dropdown-account-info-container">
           <div className="header-components-avatar dropdown-version">
