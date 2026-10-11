@@ -35,6 +35,7 @@ export default async function SessionsPage({
       <div className="sessions-content">
         <SessionFilters filters={filters} days={days}></SessionFilters>
         <div className="sessions-movie-list">
+          <SessionSorter sorts={filters.sorts} meta={sessionData.meta} />
           {sessionData.data.length === 0 ? (
             <EmptyState
               title="No sessions found"
