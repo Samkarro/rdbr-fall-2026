@@ -1,5 +1,5 @@
 import { SelectedTicket } from "@/app/movies/[movie]/(components)/booking-content";
-import { MAX_SEATS } from "@/app/movies/[movie]/(components)/seat-picker";
+import { MAX_SEATS } from "@/app/movies/[movie]/(components)/booking-content-leaves/seat-picker";
 import type { Seat, SeatMap, TicketType } from "@/lib/api/types/booking.types";
 
 

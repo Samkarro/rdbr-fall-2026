@@ -1,7 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import {
+import { useCallback, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import type {
+  BookingPhase,
   FieldErrors,
   HoldResult,
   Order,
@@ -9,33 +11,28 @@ import {
   Seat,
   SeatHold,
   SeatMap,
+  SelectedTicket,
   TicketType,
 } from "@/lib/api/types/booking.types";
-import { Session } from "@/lib/api/types/sessions.types";
-import { User } from "@/lib/api/types/user.types";
-import SeatPicker, { MAX_SEATS } from "./seat-picker";
-import SelectedSeatCard from "./selected-seat-card";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { clearDraft, restoreDraft, saveDraft } from "@/lib/misc/booking-draft";
+import type { Session } from "@/lib/api/types/sessions.types";
+import type { User } from "@/lib/api/types/user.types";
+import { holdSeats, submitOrder } from "@/lib/api/booking.api";
+import { clearHoldId, saveHoldId } from "@/lib/api/drafts.api";
+import { saveDraft } from "@/lib/misc/booking-draft";
+import { calculateSubtotal } from "@/lib/misc/ticket-pricing";
+import { selectionMatchesHold } from "@/lib/misc/hold-selection";
 import { useTimedMessage } from "@/lib/hooks/use-timed-message";
 import { useHoldCountdown } from "@/lib/hooks/use-hold-countdown";
-import { getHold, holdSeats, submitOrder } from "@/lib/api/booking.api";
-import {
-  clearHoldId,
-  loadHoldId,
-  saveHoldId,
-  ticketsFromHold,
-} from "@/lib/api/drafts.api";
+import { useHoldResume } from "@/lib/hooks/use-hold-resume";
 import "./styles/checkout.styles.css";
-import CheckoutForm from "./checkout-form";
 import "./styles/booking-confirmation.styles.css";
-
-type BookingPhase = "seats" | "checkout" | "confirmation";
-
-export type SelectedTicket = {
-  seat: Seat;
-  type: TicketType;
-};
+import ConfirmationView from "./booking-content-leaves/confirmation-view";
+import CheckoutForm from "./booking-content-leaves/checkout-form";
+import SeatsSidebar from "./booking-content-leaves/seats-sidebar";
+import CheckoutSummary from "./booking-content-leaves/checkout-summary";
+import BookingHeader from "./booking-content-leaves/booking-header";
+import SeatPicker from "./booking-content-leaves/seat-picker";
+export type { SelectedTicket } from "@/lib/api/types/booking.types";
 
 export default function BookingModalContent({
   session,
@@ -52,18 +49,14 @@ export default function BookingModalContent({
   movieTitle: string;
   sessionDetails: string;
 }) {
-  const [hold, setHold] = useState<SeatHold | null>(null);
-  const [isHolding, setIsHolding] = useState(false);
-  const [errorMessage, showError] = useTimedMessage(5000);
-
   const [phase, setPhase] = useState<BookingPhase>("seats");
   const [selectedTickets, setSelectedTickets] = useState<SelectedTicket[]>([]);
-
-  const [isResuming, setIsResuming] = useState(true);
-
+  const [hold, setHold] = useState<SeatHold | null>(null);
   const [order, setOrder] = useState<Order | null>(null);
+  const [isHolding, setIsHolding] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, showError] = useTimedMessage(5000);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -77,152 +70,7 @@ export default function BookingModalContent({
     setPhase("seats");
     showError("Your hold time expired. Please re-select your seats.");
     router.refresh();
-  }, [router, showError]);
-
-  const secondsLeft = useHoldCountdown(hold?.expiresAt ?? null, handleExpire);
-
-  const handleHoldError = (result: Extract<HoldResult, { ok: false }>) => {
-    if (result.status === 409 && "contested" in result) {
-      const lost = new Set(result.contested);
-      // drop only the lost seats, keep the rest
-      setSelectedTickets((prev) =>
-        prev.filter(({ seat }) => !lost.has(seat.code)),
-      );
-      showError(
-        result.contested.length
-          ? `${result.contested.join(", ")} just got taken. Please pick other seats.`
-          : result.message,
-      );
-      router.refresh();
-      return;
-    }
-    showError(result.message);
-  };
-
-  const requestHold = async (tickets: SelectedTicket[]) => {
-    if (tickets.length === 0) return;
-
-    setIsHolding(true);
-    const result = await holdSeats(
-      session.id,
-      tickets.map(({ seat, type }) => ({ seatId: seat.id, ticketType: type })),
-    );
-    setIsHolding(false);
-
-    if (result.ok) {
-      saveHoldId(session.id, result.hold.holdId);
-      setHold(result.hold);
-      setPhase("checkout");
-      return;
-    }
-    handleHoldError(result);
-  };
-
-  // Restoring previous inputs
-  useEffect(() => {
-    if (!isAuthed) {
-      setIsResuming(false);
-      return;
-    }
-
-    const holdId = loadHoldId(session.id);
-
-    if (!holdId) {
-      const restored = restoreDraft(session.id, seatMap);
-      clearDraft(session.id);
-
-      if (restored.length === 0) {
-        setIsResuming(false);
-        return;
-      }
-
-      setSelectedTickets(restored);
-      requestHold(restored).finally(() => setIsResuming(false));
-      return;
-    }
-
-    let cancelled = false;
-    getHold(holdId).then((result) => {
-      if (cancelled) return;
-
-      if (
-        result.status === "live" &&
-        result.hold.sessionId === Number(session.id)
-      ) {
-        setSelectedTickets(ticketsFromHold(result.hold, seatMap));
-        setHold(result.hold);
-        setPhase("checkout");
-      } else {
-        clearHoldId(session.id);
-        if (result.status === "expired") handleExpire();
-      }
-      setIsResuming(false);
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [isAuthed, session.id]);
-
-  const handleNext = async () => {
-    if (selectedTickets.length === 0 || isHolding) return;
-
-    if (!isAuthed) {
-      saveDraft(session.id, selectedTickets);
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("auth", "true");
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-      return;
-    }
-
-    await requestHold(selectedTickets);
-  };
-
-  const handleTicketTypeChange = (seatId: Seat["id"], type: TicketType) => {
-    setSelectedTickets((prev) =>
-      prev.map((ticket) =>
-        ticket.seat.id === seatId ? { ...ticket, type } : ticket,
-      ),
-    );
-  };
-
-  const calculateSubtotal = () => {
-    let sum = 0;
-
-    selectedTickets.forEach(({ type }) => {
-      switch (type) {
-        case "child":
-          sum += Math.round(session.price * 60);
-          break;
-        case "student":
-          sum += Math.round(session.price * 75);
-          break;
-        default:
-          sum += Math.round(session.price * 100);
-          break;
-      }
-    });
-
-    return sum / 100;
-  };
-
-  const calculateTicketTypeAmt = () => {
-    return Object.entries(
-      selectedTickets.reduce(
-        (counts, { type }) => {
-          counts[type]++;
-          return counts;
-        },
-        { child: 0, student: 0, adult: 0 },
-      ),
-    )
-      .filter(([, count]) => count > 0)
-      .map(
-        ([type, count]) =>
-          `${count} x ${type.charAt(0).toUpperCase() + type.slice(1)}`,
-      )
-      .join(", ");
-  };
+  }, [router, showError, session.id]);
 
   const dropContested = (codes: string[], fallback: string) => {
     const lost = new Set(codes);
@@ -235,6 +83,85 @@ export default function BookingModalContent({
         : fallback,
     );
     router.refresh();
+  };
+
+  const resetToSeats = () => {
+    clearHoldId(session.id);
+    setHold(null);
+    setPhase("seats");
+  };
+
+  const showSeats = () => setPhase("seats");
+
+  const secondsLeft = useHoldCountdown(hold?.expiresAt ?? null, handleExpire);
+
+  const handleHoldError = (result: Extract<HoldResult, { ok: false }>) => {
+    if (result.status === 409 && "contested" in result) {
+      dropContested(result.contested, result.message);
+      return;
+    }
+    showError(result.message);
+  };
+
+  const holdAndContinue = async (tickets: SelectedTicket[]) => {
+    if (tickets.length === 0) return;
+
+    setIsHolding(true);
+    let result: HoldResult;
+    try {
+      result = await holdSeats(
+        session.id,
+        tickets.map(({ seat, type }) => ({
+          seatId: seat.id,
+          ticketType: type,
+        })),
+      );
+    } finally {
+      setIsHolding(false);
+    }
+
+    if (result.ok) {
+      saveHoldId(session.id, result.hold.holdId);
+      setHold(result.hold);
+      setPhase("checkout");
+      return;
+    }
+    handleHoldError(result);
+  };
+
+  const { isResuming } = useHoldResume({
+    isAuthed,
+    sessionId: session.id,
+    seatMap,
+    onRestoreDraft: async (restored) => {
+      setSelectedTickets(restored);
+      await holdAndContinue(restored);
+    },
+    onResumeHold: (resumed, tickets) => {
+      setSelectedTickets(tickets);
+      setHold(resumed);
+      setPhase("checkout");
+    },
+    onExpired: handleExpire,
+  });
+
+  const handleNext = async () => {
+    if (selectedTickets.length === 0 || isHolding) return;
+
+    if (!isAuthed) {
+      saveDraft(session.id, selectedTickets);
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("auth", "true");
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      return;
+    }
+
+    if (selectionMatchesHold(hold, selectedTickets)) {
+      setPhase("checkout");
+      return;
+    }
+
+    await holdAndContinue(selectedTickets);
   };
 
   const clearFieldError = (name: string) =>
@@ -272,22 +199,17 @@ export default function BookingModalContent({
     }
 
     if (result.status === 409 && "contested" in result) {
-      clearHoldId(session.id);
-      setHold(null);
-      setPhase("seats");
+      resetToSeats();
       dropContested(result.contested, result.message);
       return;
     }
 
     if (result.status === 403) {
-      clearHoldId(session.id);
-      setHold(null);
-      setPhase("seats");
+      resetToSeats();
       showError(result.message);
       return;
     }
 
-    // auth=true handles unauthorized codes already
     if (result.status === 401) return;
 
     if (result.status === 422) {
@@ -302,120 +224,50 @@ export default function BookingModalContent({
     showError(result.message);
   };
 
+  const handleTicketTypeChange = (seatId: Seat["id"], type: TicketType) => {
+    setSelectedTickets((prev) =>
+      prev.map((ticket) =>
+        ticket.seat.id === seatId ? { ...ticket, type } : ticket,
+      ),
+    );
+  };
+
+  const handleRemoveSeat = (seatId: Seat["id"]) => {
+    setSelectedTickets((prev) => prev.filter((t) => t.seat.id !== seatId));
+  };
+
+  const subtotal = calculateSubtotal(selectedTickets, session.price);
+  const tabsBusy = isHolding || isResuming || isSubmitting;
+
   return (
     <div className="booking-modal-content-wrapper">
       {phase === "confirmation" ? (
-        order && (
-          <div className="confirmation-container">
-            <div className="confirmation-info-box">
-              <div className="confirmation-checkmark-container">
-                <img
-                  className="confirmation-checkmark"
-                  src="/confirmation-check.svg"
-                  alt=""
-                />
-              </div>
-              <div className="confirmation-message-container">
-                <h1 className="confirmation-message-heading">
-                  Booking confirmed!
-                </h1>
-                <p className="confirmation-message body-s">
-                  Your tickets are ready. We've sent the confirmation to your
-                  email.
-                </p>
-                <div className="confirmation-order-reference label-s">
-                  ORDER #{order.reference}
-                </div>
-              </div>
-            </div>
-
-            <div className="confirmation-card">
-              <div className="confirmation-card-session-info">
-                <img
-                  className="confirmation-card-movie-poster"
-                  src={order.session.movie.posterUrl ?? ""}
-                  alt=""
-                />
-                <div className="confirmation-card-session-info-text">
-                  <p className="confirmation-card-movie-title">
-                    {order.session.movie.title}
-                  </p>
-                  <p className="confirmation-card-session-details body-s">
-                    {order.session.venue.name} · Hall {order.session.hall.name}{" "}
-                    · {order.session.date} · {order.session.time}
-                  </p>
-                </div>
-              </div>
-              <hr />
-              <div className="summary-card-info-container">
-                <p className="confirmation-card-info-label body-s">Seats</p>
-                <p className="confirmation-card-info-content label-s">
-                  {order.tickets.map((t) => t.seatCode).join(", ")}
-                </p>
-              </div>
-              <div className="summary-card-info-container">
-                <p className="confirmation-card-info-label body-s">Tickets</p>
-                <p className="confirmation-card-info-content body-s">
-                  {Object.entries(
-                    order.tickets.reduce<Record<string, number>>(
-                      (counts, t) => {
-                        counts[t.ticketType.name] =
-                          (counts[t.ticketType.name] ?? 0) + 1;
-                        return counts;
-                      },
-                      {},
-                    ),
-                  )
-                    .map(([name, count]) => `${count} x ${name}`)
-                    .join(", ")}
-                </p>
-              </div>
-              <hr />
-              <div className="summary-card-info-container">
-                <p className="confirmation-card-info-label body-s">TOTAL</p>
-                <p className="confirmation-card-total-price">
-                  ₾ {order.totalPrice}
-                </p>
-              </div>
-            </div>
-            <div className="confirmation-card-buttons-container">
-              <button
-                className="custom-button-large red-button clickable"
-                onClick={() => router.push("/profile?page=my-tickets")}
-              >
-                View my tickets
-              </button>
-              <button
-                className="custom-button-large gray-button clickable"
-                onClick={() => router.push("/")}
-              >
-                Back to home
-              </button>
-            </div>
-          </div>
-        )
+        order && <ConfirmationView order={order} />
       ) : (
         <>
-          <div className="booking-modal-header">
-            <div className="booking-modal-info">
-              <h2 className="booking-modal-session-title">{movieTitle}</h2>
-              <p className="booking-modal-session-details body-s">
-                {sessionDetails}
-              </p>
-            </div>
-          </div>
+          <BookingHeader
+            movieTitle={movieTitle}
+            sessionDetails={sessionDetails}
+          />
 
           <div className="booking-modal-content">
             <div className="booking-modal-left-content">
               <div className="booking-phase-switcher-container">
                 <button
-                  className={`booking-phase-switcher label-s ${phase === "seats" ? "active" : ""}`}
+                  type="button"
+                  className={`booking-phase-switcher label-s clickable ${phase === "seats" ? "active" : ""}`}
+                  onClick={() => {
+                    if (!tabsBusy && phase !== "seats") showSeats();
+                  }}
                 >
                   SEATS
                 </button>
                 <button
-                  className={`booking-phase-switcher label-s ${phase === "checkout" ? "active" : ""}`}
-                  onClick={handleNext}
+                  type="button"
+                  className={`booking-phase-switcher label-s clickable ${phase === "checkout" ? "active" : ""}`}
+                  onClick={() => {
+                    if (!tabsBusy && phase !== "checkout") handleNext();
+                  }}
                 >
                   CHECKOUT
                 </button>
@@ -443,106 +295,26 @@ export default function BookingModalContent({
 
             <div className="booking-modal-right-content">
               {phase === "seats" && (
-                <div className="seats-right-container">
-                  <div className="selected-seats-container">
-                    <p className="selected-seats-heading">
-                      Your seats · Max {MAX_SEATS}
-                    </p>
-
-                    {selectedTickets.length > 0 ? (
-                      selectedTickets.map(({ seat, type }) => (
-                        <SelectedSeatCard
-                          key={seat.id}
-                          seat={seat}
-                          ageRating={movieAgeRating}
-                          type={type}
-                          price={session.price}
-                          onTypeChange={(newType) =>
-                            handleTicketTypeChange(seat.id, newType)
-                          }
-                        />
-                      ))
-                    ) : (
-                      <p className="seat-guide-message body-s">
-                        Pick up to {MAX_SEATS} seats from the map. Each seat can
-                        carry its own ticket type.
-                      </p>
-                    )}
-                  </div>
-                  <div className="subtotal-container">
-                    <div className="subtotal-text-container">
-                      <p className="subtotal-text label-s">SUBTOTAL</p>
-                      <p className="subtotal-amt h1">₾ {calculateSubtotal()}</p>
-                    </div>
-                    <button
-                      className={`custom-button-large red-button clickable ${
-                        selectedTickets.length === 0 || isHolding
-                          ? "disabled"
-                          : ""
-                      }`}
-                      disabled={selectedTickets.length === 0 || isHolding}
-                      onClick={handleNext}
-                    >
-                      Next: Checkout
-                    </button>
-                  </div>
-                </div>
+                <SeatsSidebar
+                  selectedTickets={selectedTickets}
+                  ageRating={movieAgeRating}
+                  basePrice={session.price}
+                  subtotal={subtotal}
+                  isHolding={isHolding}
+                  onTypeChange={handleTicketTypeChange}
+                  onRemove={handleRemoveSeat}
+                  onNext={handleNext}
+                />
               )}
 
               {phase === "checkout" && (
-                <div className="payment-left-container">
-                  <div className="summary-container">
-                    <div>
-                      <p className="summary-heading">Summary</p>
-                      <div className="summary-card">
-                        <div className="summary-card-header">
-                          <p className="summary-card-header-heading">
-                            {movieTitle}
-                          </p>
-                          <p className="summary-card-header-sub body-s">
-                            {sessionDetails}
-                          </p>
-                        </div>
-                        <hr />
-
-                        <div className="summary-card-info-container">
-                          <p className="summary-card-info-label body-s">
-                            Seats
-                          </p>
-                          <p className="summary-card-info body-s">
-                            {selectedTickets
-                              .map(({ seat }) => seat.code)
-                              .join(", ")}
-                          </p>
-                        </div>
-                        <div className="summary-card-info-container">
-                          <p className="summary-card-info-label body-s">
-                            Tickets
-                          </p>
-                          <p className="summary-card-info ticket-type-info body-s">
-                            {calculateTicketTypeAmt()}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="subtotal-container">
-                      <div className="subtotal-text-container">
-                        <p className="subtotal-text label-s">SUBTOTAL</p>
-                        <p className="subtotal-amt h1">
-                          ₾ {calculateSubtotal()}
-                        </p>
-                      </div>
-                      <button
-                        type="submit"
-                        form="checkout-form"
-                        className={`custom-button-large red-button clickable ${isSubmitting ? "disabled" : ""}`}
-                        disabled={isSubmitting}
-                      >
-                        {isSubmitting ? "Processing…" : "Pay: Complete order"}
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <CheckoutSummary
+                  movieTitle={movieTitle}
+                  sessionDetails={sessionDetails}
+                  selectedTickets={selectedTickets}
+                  subtotal={subtotal}
+                  isSubmitting={isSubmitting}
+                />
               )}
             </div>
 

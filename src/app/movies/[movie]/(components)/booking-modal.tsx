@@ -6,23 +6,6 @@ import ModalShell from "./modal-shell";
 import { getMe } from "@/lib/api/user.api";
 import { cookies } from "next/headers";
 
-export function BookingHeader({
-  movieTitle,
-  sessionDetails,
-}: {
-  movieTitle: string;
-  sessionDetails: string;
-}) {
-  return (
-    <div className="booking-modal-header">
-      <div className="booking-modal-info">
-        <h2 className="booking-modal-session-title">{movieTitle}</h2>
-        <p className="booking-modal-session-details body-s">{sessionDetails}</p>
-      </div>
-    </div>
-  );
-}
-
 export default async function BookingModal({
   session,
   movieTitle,

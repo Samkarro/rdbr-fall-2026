@@ -1,7 +1,7 @@
 "use client";
 
 import { Seat, TicketType } from "@/lib/api/types/booking.types";
-import "./styles/selected-seat-card.styles.css";
+import "../styles/selected-seat-card.styles.css";
 
 export default function SelectedSeatCard({
   seat,

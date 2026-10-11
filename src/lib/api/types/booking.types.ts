@@ -1,5 +1,13 @@
 import { z } from "zod";
-import { orderSessionSchema, sessionSchema, venueSchema } from "./sessions.types";
+import { orderSessionSchema, venueSchema } from "./sessions.types";
+
+export type BookingPhase = "seats" | "checkout" | "confirmation";
+
+export type SelectedTicket = {
+  seat: Seat;
+  type: TicketType;
+};
+
 
 export type FieldErrors = Record<string, string>;
 

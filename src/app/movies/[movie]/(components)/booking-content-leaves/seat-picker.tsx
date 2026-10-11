@@ -14,10 +14,10 @@ import {
   SeatMap,
   SeatRow,
   SeatSection,
+  SelectedTicket,
   TicketType,
 } from "@/lib/api/types/booking.types";
-import { SelectedTicket } from "./booking-content";
-import "./styles/seat-picker.styles.css";
+import "../styles/seat-picker.styles.css";
 import {
   TransformComponent,
   TransformWrapper,

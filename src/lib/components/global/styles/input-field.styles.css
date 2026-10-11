@@ -14,6 +14,13 @@
   height: 40px;
   outline: none;
   font-family: Archivo;
+  transition: 300ms ease;
+  border: 1px solid rgba(255, 255, 255, 0);
+}
+
+.custom-input input:hover {
+  background-color: var(--bg-raised);
+  border: 1px solid var(--text-disabled);
 }
 
 .custom-input label {
