@@ -45,7 +45,7 @@
   gap: 12px;
 }
 
-.header-components-user img {
+.profile-dropdown-arrow {
   margin-left: 10px;
   height: 18px;
   width: 18px;
@@ -71,7 +71,6 @@
 
 .header-components-avatar-image {
   object-fit: cover;
-  display: block;
 }
 
 .header-components-avatar-initials {

@@ -65,7 +65,7 @@ function LoggedInButtons({ user }: { user: User }) {
         </div>
         <p className="header-components-username clickable">{username}</p>
         <img
-          className={`${profileDropdownOpen ? "active" : ""} clickable`}
+          className={`profile-dropdown-arrow ${profileDropdownOpen ? "active" : ""} clickable`}
           src="/dropdown-arrow.svg"
           alt=""
         />

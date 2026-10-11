@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { authenticate } from "../../../api/auth.api";
 import Field from "../input-field";
+import AvatarUpload from "./avatar-upload";
 
 export type AuthType = "login" | "signup";
 
@@ -37,10 +38,13 @@ export default function AuthForm({
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.currentTarget)) as Record<
-      string,
-      string
-    >;
+    const formData = new FormData(e.currentTarget);
+    const avatar = formData.get("avatar");
+    if (avatar instanceof File && avatar.size === 0) formData.delete("avatar");
+
+    const data = Object.fromEntries(
+      [...formData].filter(([, v]) => typeof v === "string"),
+    ) as Record<string, string>;
 
     const clientErrors: Record<string, string> = {};
     for (const [name, value] of Object.entries(data)) {
@@ -59,7 +63,7 @@ export default function AuthForm({
     setErrors({});
     setValid([]);
     setPending(true);
-    const result = await authenticate(authType, data);
+    const result = await authenticate(authType, isSignup ? formData : data);
     if (result.ok) {
       setValid(Object.keys(data));
       await new Promise((resolve) => setTimeout(resolve, 800));
@@ -128,6 +132,7 @@ export default function AuthForm({
         if (message) setErrors((prev) => ({ ...prev, [name]: message }));
       }}
     >
+      {isSignup && <AvatarUpload error={errors.avatar} />}
       <div className="auth-modal-form-text-fields-container">
         {isSignup && (
           <Field
