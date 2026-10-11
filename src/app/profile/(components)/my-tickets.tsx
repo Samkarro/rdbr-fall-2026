@@ -50,34 +50,37 @@ export default function MyTickets() {
           return (
             <div className="my-ticket" key={ticket.id}>
               <div className="my-ticket-left">
-                <img className="my-ticket-poster" src="/x.svg" alt="" />
+                <img
+                  className="my-ticket-poster"
+                  src={ticket.session.movie.posterUrl ?? ""}
+                />
                 <div className="my-ticket-session-info-container">
                   <div className="my-ticket-movie-texts">
                     <h2 className="my-ticket-movie-title">
                       {ticket.session.movie.title}
                     </h2>
-                    <p className="my-ticket-movie-age-rating">
+                    <p className="my-ticket-movie-age-rating label-s">
                       {ticket.session.movie.ageRating.code}
                     </p>
-                    <p className="my-ticket-movie-runtime">
-                      {ticket.session.movie.runtimeMinutes}
+                    <p className="my-ticket-movie-runtime body-m">
+                      {ticket.session.movie.runtimeMinutes} min
                     </p>
                   </div>
                   <div className="my-ticket-detail-container">
-                    <div className="-my-ticket-detail">
+                    <div className="my-ticket-detail">
                       <p className="my-ticket-detail-heading overline">DATE</p>
                       <p className="my-ticket-detail-text label-m">
                         {ticket.session.date} · {ticket.session.time}
                       </p>
                     </div>
-                    <div className="-my-ticket-detail">
+                    <div className="my-ticket-detail">
                       <p className="my-ticket-detail-heading overline">VENUE</p>
                       <p className="my-ticket-detail-text label-m">
                         {ticket.session.venue.name} · Hall{" "}
                         {ticket.session.hall.name}
                       </p>
                     </div>
-                    <div className="-my-ticket-detail">
+                    <div className="my-ticket-detail">
                       <p className="my-ticket-detail-heading overline">
                         FORMAT
                       </p>
@@ -87,11 +90,12 @@ export default function MyTickets() {
                       </p>
                     </div>
                   </div>
-                  <div className="my-ticket-seats">
+                  <div className="my-ticket-seats-container">
+                    <p className="my-ticket-detail-heading overline">SEATS</p>
                     {ticket.tickets.map((t) => {
                       return (
-                        <p key={t.id} className="my-ticket-seat">
-                          {t.price} ·{" "}
+                        <p key={t.id} className="my-ticket-seat label-s">
+                          {t.seatCode} ·{" "}
                           {t.ticketType.name[0] + t.ticketType.name.slice(1)}
                         </p>
                       );
@@ -104,23 +108,23 @@ export default function MyTickets() {
                   <p className="my-ticket-order-reference-label overline">
                     ORDER
                   </p>
-                  <p className="my-ticket-order-reference">
+                  <p className="my-ticket-order-reference label-m">
                     #{ticket.reference}
                   </p>
                 </div>
                 <div className="my-ticket-refundability-container">
-                  <div className="my-ticket-price-containr">
+                  <div className="my-ticket-price-container">
                     <p className="my-ticket-total-paid-label label-m">
                       Total paid
                     </p>
                     <p className="my-ticket-price h1">₾{ticket.totalPrice}</p>
                   </div>
                   <button
-                    className={`refund-button gray-button ${ticket.isRefundable ? "" : "disabled"}`}
+                    className={`refund-button gray-button clickable ${ticket.isRefundable ? "" : "disabled"}`}
                   >
-                    Refund
+                    {ticket.refundedAt !== null ? "Refunded" : "Refund"}
                   </button>
-                  <p className="refundability-notice">
+                  <p className="refundability-notice body-s">
                     Refundable until{" "}
                     {`${String((+ticket.session.time.split(":")[0] - 2 + 24) % 24).padStart(2, "0")}:${ticket.session.time.split(":")[1]}`}{" "}
                     {refundLabel}

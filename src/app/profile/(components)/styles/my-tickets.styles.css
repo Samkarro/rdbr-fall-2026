@@ -30,3 +30,154 @@
   color: var(--text-primary);
   background-color: var(--bg-raised);
 }
+
+.my-ticket-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Ticket card */
+.my-ticket {
+  display: flex;
+  background-color: var(--bg-card);
+  border-radius: 26px;
+}
+
+.my-ticket-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  width: 100%;
+  padding-left: 30px;
+  width: 1300px;
+  height: 183px;
+}
+
+.my-ticket-poster {
+  height: 133.5px;
+  width: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.my-ticket-session-info-container {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.my-ticket-movie-texts,
+.my-ticket-detail-container,
+.my-ticket-seats {
+  display: flex;
+  align-items: center;
+}
+
+.my-ticket-movie-texts {
+  gap: 10px;
+}
+
+.my-ticket-movie-age-rating {
+  padding: 3px 8px;
+  border-radius: 99px;
+  background-color: var(--tint-red);
+  color: var(--color-red);
+}
+
+.refundability-notice,
+.my-ticket-total-paid-label,
+.my-ticket-order-reference-label,
+.my-ticket-detail-heading,
+.my-ticket-movie-runtime {
+  color: var(--text-secondary);
+}
+
+.my-ticket-detail-container {
+  display: flex;
+  gap: 40px;
+}
+
+.my-ticket-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.my-ticket-seats-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.my-ticket-seat {
+  padding: 4px 10px;
+  background-color: var(--tint-white);
+  border-radius: 6px;
+}
+
+.my-ticket-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  padding: 20px 24px;
+
+  border-left: 2px dashed var(--bg-raised);
+
+  width: 300px;
+}
+
+.my-ticket-order-reference-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+}
+
+.my-ticket-refundability-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.my-ticket-price-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.h1 {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.refund-button {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 22px;
+
+  font-weight: 800;
+  font-size: 14px;
+  font-family: Archivo;
+}
+
+.refund-button.disabled {
+  background-color: var(--tint-white);
+  opacity: 0.2;
+}
+
+.refund-button.disabled:hover {
+  background-color: var(--tint-white);
+}
+
+.refundability-notice {
+  width: 100%;
+  text-align: center;
+}
