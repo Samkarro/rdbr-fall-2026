@@ -3,7 +3,7 @@ import "../../../lib/components/homepage/styles/hero.styles.css";
 import "./styles/movie-detail.styles.css";
 import { MovieDetail, MovieFormat } from "@/lib/api/types/movie.types";
 import { notFound } from "next/navigation";
-import { RecentMovie } from "@/lib/recently-viewed";
+import { RecentMovie } from "@/lib/misc/recently-viewed";
 import TrackView from "./(components)/view-tracker";
 import { getMe } from "@/lib/api/user.api";
 import { getNextSevenDays, getToday } from "@/lib/utils/dates";

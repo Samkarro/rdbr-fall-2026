@@ -1,5 +1,5 @@
 "use client";
-import { getRecent, RecentMovie } from "@/lib/recently-viewed";
+import { getRecent, RecentMovie } from "@/lib/misc/recently-viewed";
 import { useEffect, useState } from "react";
 import "./styles/recently-viewed.styles.css";
 import { useRouter } from "next/navigation";

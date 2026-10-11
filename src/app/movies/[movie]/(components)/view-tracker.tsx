@@ -1,7 +1,7 @@
 // lib/components/movie-detail/track-view.tsx
 "use client";
 import { useEffect } from "react";
-import { addRecent, RecentMovie } from "@/lib/recently-viewed";
+import { addRecent, RecentMovie } from "@/lib/misc/recently-viewed";
 
 export default function TrackView({ movie }: { movie: RecentMovie }) {
   useEffect(() => {
