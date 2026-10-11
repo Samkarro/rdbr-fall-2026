@@ -10,9 +10,11 @@ import { useHoldReleaseOnClose } from "@/lib/hooks/use-hold-release-on-close";
 export default function DetailSessions({
   days,
   sessionData,
+  disabled = false,
 }: {
   days: string[];
   sessionData: { venue: Venue; sessions: Session[] }[];
+  disabled?: boolean;
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -39,11 +41,16 @@ export default function DetailSessions({
       params.delete("session");
     });
 
-  const openSession = (id: string) =>
+  const openSession = (id: string) => {
+    if (disabled) return;
     updateParams((params) => params.set("session", id), { push: true });
+  };
 
   return (
-    <div id="movie-detail-session-section">
+    <div
+      id="movie-detail-session-section"
+      className={disabled ? "disabled" : undefined}
+    >
       <h2>Sessions</h2>
       <div className="movie-detail-session-date-list">
         {days.map((day: string) => {

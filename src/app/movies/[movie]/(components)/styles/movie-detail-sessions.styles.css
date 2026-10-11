@@ -4,6 +4,11 @@
   gap: 24px;
 }
 
+#movie-detail-session-section.disabled .session-ticket-container {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 .movie-detail-session-date-list {
   display: flex;
   gap: 6px;

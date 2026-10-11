@@ -24,11 +24,15 @@ export default async function MovieDetailsPage({
   let movie: MovieDetail = await getMovieDetail(slug);
   if (!movie) notFound();
 
-  const accountInvalid = Boolean(
-    user !== null &&
-    (user.dateOfBirth === null ||
-      (user.dateOfBirth && getToday({ years: -16 })) <= user.dateOfBirth),
-  );
+  const cutoff = getToday({ years: -movie.ageRating.minAge });
+
+  const profileIncomplete =
+    user !== null && (!user.profileComplete || !user.dateOfBirth);
+
+  const tooYoung =
+    user !== null && !!user.dateOfBirth && user.dateOfBirth > cutoff;
+
+  const accountInvalid = profileIncomplete || tooYoung;
 
   const days = getNextSevenDays();
   const sessionData = await getMovieSessionData(sp, slug);
@@ -39,15 +43,21 @@ export default async function MovieDetailsPage({
     year: "numeric",
   });
 
+  const ageNotice =
+    movie.ageRating.minAge >= 18
+      ? "This film is rated 18+. You cannot buy tickets for it with this account."
+      : movie.ageRating.minAge >= 16
+        ? "Not recommended for under-16s. Tickets require an account aged 16 or over."
+        : null;
+
   const sessionId = typeof sp.session === "string" ? sp.session : undefined;
 
   const selected =
-    !accountInvalid &&
-    (sessionId
+    sessionId && !accountInvalid
       ? sessionData
-          .flatMap(({ sessions }: { sessions: Session }) => sessions)
-          .find((session: Session) => String(session.id) === sessionId)
-      : undefined);
+          .flatMap(({ sessions }: { sessions: Session[] }) => sessions)
+          .find((s: Session) => String(s.id) === sessionId)
+      : undefined;
 
   return (
     <div className="movie-details-page-container">
@@ -100,7 +110,11 @@ export default async function MovieDetailsPage({
         </div>
       </section>
       <section id="movie-detail-booking">
-        <DetailSessions days={days} sessionData={sessionData} />
+        <DetailSessions
+          days={days}
+          sessionData={sessionData}
+          disabled={accountInvalid}
+        />
         <div className="movie-extensive-detail-container">
           <div className="movie-extensive-detail-text-container">
             <h2>Details</h2>
@@ -130,20 +144,23 @@ export default async function MovieDetailsPage({
               from
               <p className="label-m">₾{movie.fromPrice}</p>
             </label>
-            {accountInvalid && (
+            {profileIncomplete ? (
               <div className="rating-note-container">
-                <p className="rating-note-heading label-s">RATING NOTE</p>
-                <div className="rating-note-sub-container">
-                  <p className="label-s">{movie.ageRating.code}</p>
-                  <p className="body-s">
-                    {/* FIXME: dynamic message isn't accurate enough,
-                    take into account the account age vs no account distinction */}
-                    {movie.ageRating.code == "16+"
-                      ? "Not recommended for under-16s. Tickets require an account aged 16 or over."
-                      : "This film is rated 18+. You cannot buy tickets for it with this account."}
-                  </p>
-                </div>
+                <p className="body-s">
+                  Complete your profile to unlock booking.
+                </p>
               </div>
+            ) : (
+              tooYoung &&
+              ageNotice && (
+                <div className="rating-note-container">
+                  <p className="rating-note-heading label-s">RATING NOTE</p>
+                  <div className="rating-note-sub-container">
+                    <p className="label-s">{movie.ageRating.code}</p>
+                    <p className="body-s">{ageNotice}</p>
+                  </div>
+                </div>
+              )
             )}
           </div>
         </div>
