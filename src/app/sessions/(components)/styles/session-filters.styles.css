@@ -128,10 +128,10 @@
   box-shadow: 0px 1px 2px 0px var(--shadow);
 }
 
-.date-filter-button:hover {
+.session-page-date-filter-button:hover {
   background-color: var(--bg-card);
 }
 
-.date-filter-button.selected {
+.session-page-date-filter-button.selected {
   background-color: var(--color-red);
 }
