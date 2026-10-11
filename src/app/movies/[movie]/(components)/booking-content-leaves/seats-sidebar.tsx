@@ -42,7 +42,7 @@ export default function SeatsSidebar({
               type={type}
               price={basePrice}
               onTypeChange={(newType) => onTypeChange(seat.id, newType)}
-              // onRemove={() => onRemove(seat.id)}
+              onRemove={() => onRemove(seat.id)}
             />
           ))
         ) : (

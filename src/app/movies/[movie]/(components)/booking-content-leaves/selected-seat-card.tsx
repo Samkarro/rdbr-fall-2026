@@ -9,12 +9,14 @@ export default function SelectedSeatCard({
   price,
   ageRating,
   onTypeChange,
+  onRemove,
 }: {
   seat: Seat;
   type: TicketType;
   price: number;
   ageRating: string;
   onTypeChange: (type: TicketType) => void;
+  onRemove: () => void;
 }) {
   const ageRatingCheck = `${ageRating === "16+" || ageRating === "18+" ? "disabled" : ""}`;
   return (
@@ -26,7 +28,12 @@ export default function SelectedSeatCard({
         </div>
         <div className="seat-price-x">
           <p className="seat-price label-s">₾{price}</p>
-          <img className="clickable" src="/x-small.svg" alt="" />
+          <img
+            className="clickable"
+            src="/x-small.svg"
+            onClick={onRemove}
+            alt=""
+          />
         </div>
       </div>
       <hr />
