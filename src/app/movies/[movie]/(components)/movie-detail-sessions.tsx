@@ -6,6 +6,7 @@ import { formatDateParts } from "@/lib/utils/dates";
 import { Session, Venue } from "@/lib/api/types/sessions.types";
 import Ticket from "@/lib/misc/ticket";
 import { useHoldReleaseOnClose } from "@/lib/hooks/use-hold-release-on-close";
+import EmptyState from "@/lib/components/global/empty-state";
 
 export default function DetailSessions({
   days,
@@ -46,6 +47,15 @@ export default function DetailSessions({
     updateParams((params) => params.set("session", id), { push: true });
   };
 
+  // Handling empty states with these
+  const hasSessionsOn = (day: string) =>
+    sessionData.some(({ sessions }) => sessions.some((s) => s.date === day));
+
+  const dayIsEmpty = !hasSessionsOn(selectedDate);
+  const nextDayWithSessions = days.find(
+    (d) => d > selectedDate && hasSessionsOn(d),
+  );
+
   return (
     <div
       id="movie-detail-session-section"
@@ -67,6 +77,12 @@ export default function DetailSessions({
           );
         })}
       </div>
+      {dayIsEmpty && (
+        <EmptyState
+          title="No sessions on this day"
+          message={"There's nothing scheduled for this date."}
+        ></EmptyState>
+      )}
       {sessionData.map(({ venue, sessions }) => {
         const dateSessions = sessions.filter(
           (session) => session.date === selectedDate,

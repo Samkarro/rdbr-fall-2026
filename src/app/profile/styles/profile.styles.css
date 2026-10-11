@@ -54,3 +54,16 @@ h1 {
   margin-top: 42px;
   margin-bottom: 36px;
 }
+
+.profile-nav-my-tickets-button-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ticket-amt-label {
+  padding: 2px 6px;
+  border-radius: 99px;
+  background-color: var(--color-red);
+  color: var(--text-primary);
+}

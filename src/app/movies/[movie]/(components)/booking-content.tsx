@@ -310,7 +310,7 @@ export default function BookingModalContent({
               {phase === "checkout" && (
                 <CheckoutSummary
                   movieTitle={movieTitle}
-                  sessionDetails={sessionDetails}
+                  session={session}
                   selectedTickets={selectedTickets}
                   subtotal={subtotal}
                   isSubmitting={isSubmitting}

@@ -5,6 +5,7 @@ import ProfileNav from "./(components)/profile-nav";
 import PersonalInformationForm from "./(components)/profile-form";
 import { getFilterOptions } from "@/lib/api/catalog.api";
 import MyTickets from "./(components)/my-tickets";
+import { getMyTickets } from "@/lib/api/booking.api";
 
 export default async function ProfilePage({
   searchParams,
@@ -17,12 +18,14 @@ export default async function ProfilePage({
     redirect("/?auth=true");
   }
 
+  const tickets = await getMyTickets("upcoming");
+
   const filterOptions = await getFilterOptions();
 
   return (
     <section id="my-profile">
       <h1>My profile</h1>
-      <ProfileNav />
+      <ProfileNav ticketAmt={tickets?.length ?? 0} />
       <hr />
       {page === "my-tickets" ? (
         <MyTickets />

@@ -26,6 +26,16 @@
   position: relative;
 }
 
+.loading-seats {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 20px;
+}
+
 .booking-modal-info {
   width: 100%;
 }

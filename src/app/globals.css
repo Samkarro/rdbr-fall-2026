@@ -127,6 +127,10 @@ hr {
   animation: page-fade 300ms ease-out both;
 }
 
+.fit-content {
+  width: fit-content;
+}
+
 /* Text */
 
 .display {

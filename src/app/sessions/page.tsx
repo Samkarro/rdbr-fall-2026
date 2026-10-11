@@ -8,6 +8,8 @@ import SessionCard from "./(components)/session-card";
 import { getNextSevenDays } from "@/lib/utils/dates";
 import SessionSorter from "./(components)/session-sorter";
 import SessionPagination from "./(components)/session-pagination";
+import EmptyState from "@/lib/components/global/empty-state";
+import Link from "next/link";
 
 export default async function SessionsPage({
   searchParams,
@@ -33,25 +35,38 @@ export default async function SessionsPage({
       <div className="sessions-content">
         <SessionFilters filters={filters} days={days}></SessionFilters>
         <div className="sessions-movie-list">
-          <SessionSorter sorts={filters.sorts} meta={sessionData.meta} />
-          {sessionData.data.map(
-            (
-              sessionDataItem: { movie: Movie; sessions: Session[] },
-              index: number,
-            ) => {
-              return (
-                <SessionCard
-                  key={sessionDataItem.movie.id}
-                  movie={sessionDataItem.movie}
-                  sessions={sessionDataItem.sessions}
-                  last={index === sessionData.data.length - 1}
-                ></SessionCard>
-              );
-            },
+          {sessionData.data.length === 0 ? (
+            <EmptyState
+              title="No sessions found"
+              message="Nothing matches your current filters. Try a different date or venue, or clear the filters to see everything."
+            >
+              <Link
+                href="/sessions"
+                className="custom-button-large red-button clickable fit-content"
+              >
+                Clear filters
+              </Link>
+            </EmptyState>
+          ) : (
+            <>
+              {sessionData.data.map(
+                (
+                  sessionDataItem: { movie: Movie; sessions: Session[] },
+                  index: number,
+                ) => (
+                  <SessionCard
+                    key={sessionDataItem.movie.id}
+                    movie={sessionDataItem.movie}
+                    sessions={sessionDataItem.sessions}
+                    last={index === sessionData.data.length - 1}
+                  />
+                ),
+              )}
+              <div className="session-data-pagination">
+                <SessionPagination meta={sessionData.meta} />
+              </div>
+            </>
           )}
-          <div className="session-data-pagination">
-            <SessionPagination meta={sessionData.meta} />
-          </div>
         </div>
       </div>
     </section>

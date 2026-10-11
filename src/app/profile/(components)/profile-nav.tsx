@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function ProfileNav() {
+export default function ProfileNav({ ticketAmt }: { ticketAmt: number }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -27,7 +27,12 @@ export default function ProfileNav() {
         }`}
         onClick={() => router.push("/profile?page=my-tickets")}
       >
-        My Tickets
+        <div className="profile-nav-my-tickets-button-container">
+          My Tickets
+          {ticketAmt > 0 && (
+            <div className="ticket-amt-label label-s">{ticketAmt}</div>
+          )}
+        </div>
         <div className="profile-nav-highlight"></div>
       </button>
     </div>

@@ -5,6 +5,8 @@ import { useCallback, useEffect, useState } from "react";
 import "./styles/my-tickets.styles.css";
 import { refundOrder } from "@/lib/api/refunds.api";
 import { useTimedMessage } from "@/lib/hooks/use-timed-message";
+import EmptyState from "@/lib/components/global/empty-state";
+import Link from "next/link";
 
 export const REFUND_CUTOFF_MS = 2 * 60 * 60 * 1000;
 
@@ -19,6 +21,7 @@ export function formatRefundDeadline(startsAt: string): string {
 }
 
 export default function MyTickets() {
+  const [isLoaded, setIsLoaded] = useState(false);
   const [activeTimeframe, setActiveTimeframe] = useState<"upcoming" | "past">(
     "upcoming",
   );
@@ -34,6 +37,7 @@ export default function MyTickets() {
     ]);
     setUpcoming(upcomingTickets ?? []);
     setPast(pastTickets ?? []);
+    setIsLoaded(true);
   }, []);
 
   // Extracted hook logic to allow reset after refund
@@ -85,6 +89,29 @@ export default function MyTickets() {
         </button>
       </div>
       <div className="my-ticket-list">
+        {!isLoaded && ticketListRef.length === 0 && (
+          <p className="label-s">Loading...</p>
+        )}
+        {isLoaded &&
+          ticketListRef.length === 0 &&
+          (activeTimeframe === "upcoming" ? (
+            <EmptyState
+              title="No upcoming tickets"
+              message="You haven't booked anything yet. Find a session and grab your seats."
+            >
+              <Link
+                href="/sessions"
+                className="custom-button-large red-button clickable fit-content"
+              >
+                Browse sessions
+              </Link>
+            </EmptyState>
+          ) : (
+            <EmptyState
+              title="No past tickets"
+              message="Tickets for sessions you've attended or refunded will show up here."
+            />
+          ))}
         {ticketListRef.map((ticket: Order) => {
           const refundLabel = formatRefundDeadline(ticket.session.startsAt);
           return (

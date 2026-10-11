@@ -170,7 +170,7 @@ export default async function MovieDetailsPage({
           key={selected.od}
           fallback={
             <ModalShell>
-              <p>Loading seats…</p>
+              <p className="loading-seats">Loading seats…</p>
             </ModalShell>
           }
         >
