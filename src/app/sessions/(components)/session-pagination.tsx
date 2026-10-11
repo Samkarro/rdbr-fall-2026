@@ -12,7 +12,7 @@ export default function SessionPagination({ meta }: { meta: any }) {
   const goTo = (page: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", String(page));
-    router.replace(`${pathname}?${params.toString()}`, { scroll: true });
+    router.push(`${pathname}?${params.toString()}`, { scroll: true });
   };
 
   const getVisiblePages = () => {
