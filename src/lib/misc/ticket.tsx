@@ -1,3 +1,4 @@
+// I was tired of having 4 different variations of the same svg, so I did this:
 export default function Ticket({ fill }: { fill: string }) {
   return (
     <svg

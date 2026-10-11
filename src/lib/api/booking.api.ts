@@ -13,7 +13,7 @@ export const getMyTickets = async (type: "upcoming" | "past") => {
   const token = (await cookies()).get("token")?.value;
   if (!token) return null;
 
-  const res = await api<{ data: Order[] }>(`/tickets?${type}`, { token })
+  const res = await api<{ data: Order[] }>(`/tickets?filter=${type}`, { token })
   return res.data;
 }
 
