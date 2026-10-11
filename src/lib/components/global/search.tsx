@@ -12,13 +12,13 @@ export default function GlobalSearch() {
   const [resolvedQuery, setResolvedQuery] = useState("");
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const controllerRef = useRef<AbortController | null>(null);
+  const requestIdRef = useRef(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const router = useRouter();
 
   const handleSearch = useDebouncedCallback(async (term: string) => {
-    controllerRef.current?.abort();
+    const requestId = ++requestIdRef.current;
 
     const searchQuery = term.trim();
     if (!searchQuery) {
@@ -27,15 +27,13 @@ export default function GlobalSearch() {
       return;
     }
 
-    const controller = new AbortController();
-    controllerRef.current = controller;
-
     try {
-      const res: Movie[] = await searchFilms(searchQuery, controller.signal);
+      const res: Movie[] = await searchFilms(searchQuery);
+      if (requestId !== requestIdRef.current) return; // a newer search started, drop this one
       setResults(res);
       setResolvedQuery(searchQuery);
     } catch (err) {
-      if ((err as Error).name !== "AbortError") console.error(err);
+      if (requestId === requestIdRef.current) console.error(err);
     }
   }, 300);
 
@@ -73,8 +71,11 @@ export default function GlobalSearch() {
           className="search-x clickable"
           type="button"
           onClick={() => {
+            handleSearch.cancel();
+            requestIdRef.current++;
             setQuery("");
             setResolvedQuery("");
+            setResults([]);
           }}
         >
           <img src="/x-symbol.svg" alt="" />

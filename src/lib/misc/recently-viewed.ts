@@ -14,7 +14,6 @@ export function getRecent(): RecentMovie[] {
   try {
 
     const recent = JSON.parse(localStorage.getItem(KEY) ?? "[]");
-    console.log("get recent called, ", recent)
 
     return recent;
   } catch {

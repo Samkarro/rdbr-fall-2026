@@ -5,8 +5,8 @@ import { Movie, MovieDetail, movieDetailSchema } from "./types/movie.types";
 import { cookies } from "next/headers";
 import { NotifyResult } from "../components/homepage/notify-button";
 
-export async function searchFilms(query: string, signal: AbortSignal) {
-  const { data: searchResults } = await api<{ data: Movie[] }>(`/search?q=${encodeURIComponent(query)}`, { signal });
+export async function searchFilms(query: string) {
+  const { data: searchResults } = await api<{ data: Movie[] }>(`/search?q=${encodeURIComponent(query)}`, {});
   return searchResults;
 }
 
