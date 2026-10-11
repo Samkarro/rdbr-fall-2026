@@ -3,9 +3,10 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "./styles/header.styles.css";
 import GlobalSearch from "./search";
 import AuthModal from "./auth/auth-modal";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { User } from "@/lib/api/types/user.types";
 import ProfileDropdown from "./profile-dropdown";
+import { useEscapeKey } from "@/lib/hooks/use-escape-key";
 
 export function getInitials(name: string) {
   return name
@@ -43,6 +44,8 @@ function LoggedOutButtons({
 function LoggedInButtons({ user }: { user: User }) {
   const { username, avatar, profileComplete } = user;
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+
+  useEscapeKey(() => setProfileDropdownOpen(false), profileDropdownOpen);
 
   return (
     <div
@@ -93,6 +96,7 @@ export default function KinoHeader({ user }: { user: User | null }) {
   );
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   useEffect(() => {
     const auth = searchParams.get("auth");
@@ -101,6 +105,17 @@ export default function KinoHeader({ user }: { user: User | null }) {
       setAuthModalOpen("login");
     }
   }, [searchParams]);
+
+  const closeAuthModal = () => {
+    setAuthModalOpen(null);
+    if (searchParams.get("auth")) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("auth");
+      router.replace(params.toString() ? `${pathname}?${params}` : pathname, {
+        scroll: false,
+      });
+    }
+  };
 
   return (
     <header>
@@ -131,10 +146,7 @@ export default function KinoHeader({ user }: { user: User | null }) {
         </div>
       </div>
       {authModalOpen && (
-        <AuthModal
-          type={authModalOpen}
-          closeAuthModal={() => setAuthModalOpen(null)}
-        />
+        <AuthModal type={authModalOpen} closeAuthModal={closeAuthModal} />
       )}
     </header>
   );

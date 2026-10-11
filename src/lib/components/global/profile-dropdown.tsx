@@ -70,14 +70,20 @@ export default function ProfileDropdown({
         <div className="profile-buttons-container">
           <button
             className="profile-button clickable label-m"
-            onClick={() => handleLink("/profile?page-personal-information")}
+            onClick={() => {
+              handleLink("/profile?page=personal-information");
+              setProfileDropdownOpen(false);
+            }}
           >
             <img className="my-profile-icon" src="/profile-icon.svg" />
             My Profile
           </button>
           <button
             className="profile-button clickable label-m"
-            onClick={() => handleLink("/profile?page=my-tickets")}
+            onClick={() => {
+              handleLink("/profile?page=my-tickets");
+              setProfileDropdownOpen(false);
+            }}
           >
             <img src="/ticket.svg" />
             My Tickets

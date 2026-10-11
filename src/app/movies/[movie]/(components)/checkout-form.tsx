@@ -1,6 +1,7 @@
 import { FieldErrors } from "@/lib/api/types/booking.types";
 import { User } from "@/lib/api/types/user.types";
 import Field from "@/lib/components/global/input-field";
+import { formatExpiry } from "@/lib/utils/format-expiry";
 
 export default function CheckoutForm({
   user,
@@ -65,9 +66,26 @@ export default function CheckoutForm({
             name="expiry"
             label="Expiry"
             placeholder="MM/YY"
+            inputMode="numeric"
+            autoComplete="cc-exp"
             error={errors.expiry}
+            onChange={(e) => {
+              const deleting = (
+                e.nativeEvent as InputEvent
+              ).inputType?.startsWith("delete");
+              e.currentTarget.value = formatExpiry(
+                e.currentTarget.value,
+                deleting,
+              );
+            }}
           />
-          <Field name="cvv" label="CVV" placeholder="XXX" error={errors.cvv} />
+          <Field
+            name="cvv"
+            label="CVV"
+            placeholder="XXX"
+            maxLength={3}
+            error={errors.cvv}
+          />
         </div>
       </div>
     </form>

@@ -1,8 +1,10 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import "./styles/booking-modal.styles.css";
+import { useScrollBlock } from "@/lib/hooks/use-scroll-block";
+import { useEscapeKey } from "@/lib/hooks/use-escape-key";
 export default function ModalShell({
   children,
 }: {
@@ -18,17 +20,15 @@ export default function ModalShell({
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }, [router, pathname, searchParams]);
 
-  // TODO: maybe extract this to use on other modals
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [close]);
+  useScrollBlock();
+  useEscapeKey(close, searchParams.get("auth") !== "true");
 
   return (
-    <div className="booking-modal-overlay" onClick={close}>
+    <div
+      className="booking-modal-overlay"
+      onClick={close}
+      onScroll={(e) => e.stopPropagation()}
+    >
       <div
         className="booking-modal-container"
         role="dialog"

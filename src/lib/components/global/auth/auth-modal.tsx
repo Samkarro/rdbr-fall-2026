@@ -4,6 +4,8 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import "./styles/auth-modal.styles.css";
 import AuthForm, { AuthType } from "./auth-form";
+import { useScrollBlock } from "@/lib/hooks/use-scroll-block";
+import { useEscapeKey } from "@/lib/hooks/use-escape-key";
 
 // Extracted the values here to prevent duplication, I'm tired
 const COPY = {
@@ -32,6 +34,9 @@ export default function AuthModal({
 }) {
   const [authType, setAuthType] = useState<AuthType>(type);
   const { title, subtitle, prompt, switchLabel, other } = COPY[authType];
+
+  useScrollBlock();
+  useEscapeKey(closeAuthModal);
 
   return createPortal(
     <div

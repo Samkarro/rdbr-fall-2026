@@ -127,6 +127,7 @@ export default function PersonalInformationForm({
           defaultValue={defaultValues.fullName}
           error={errors.fullName}
           valid={valid.includes("fullName")}
+          placeholder="John Smith"
         />
         <Field
           label="Email"
